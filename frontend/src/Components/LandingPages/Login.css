@@ -1,0 +1,72 @@
+.login {
+width: 60%;
+max-width: 40rem;
+margin: 2rem auto;
+padding: 2rem;
+}
+
+.control {
+margin: 1rem 0;
+display: flex;
+/* align-items: stretch; */
+flex-direction: column;
+}
+
+.control label,
+.control input {
+display: block;
+}
+
+.control label {
+font-weight: bold;
+flex: 1;
+color: #464646;
+margin-bottom: 0.5rem;
+}
+
+.control input {
+flex: 3;
+font: inherit;
+padding: 0.35rem 0.35rem;
+border-radius: 6px;
+border: 1px solid #ccc;
+}
+
+.control input:focus {
+outline: none;
+border-color: #a3a2a3;
+background: #f6dbfc;
+}
+
+.control.invalid input {
+border-color: red;
+background: #fbdada;
+}
+.switchcase {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+    margin-left: 0.3rem;
+    align-items: center;
+}
+.actions {
+text-align: center;
+}
+
+.hyperlink {
+    display: flex;
+    justify-content: center;
+    font-style: italic;
+    display: inline-block;
+}
+.hyperlink p:hover{
+    
+    background: rgb(240, 235, 190);
+}
+@media (min-width: 768px) {
+.control {
+    align-items: center;
+    flex-direction: row;
+}
+
+}
