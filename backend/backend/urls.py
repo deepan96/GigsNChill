@@ -17,12 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from login import views
 from rest_framework import routers
+from register import views as view_register
 
 # Maps LoginCls ViewSet to ~/api/login
-router = routers.DefaultRouter()
-router.register(r'login', views.LoginClsView)
+"""router = routers.DefaultRouter()
+router.register(r'login', views.LoginClsView, 'login')
+router.register(r'register', view_register.RegisterView.as_view(), 'register')"""
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)) # put router urls at ~/api
+    path('login/', views.LoginClsView.as_view({'get': 'list'}), name='login'), # put router urls at ~/api
+    path('register/', view_register.RegisterView.as_view(), name="register"),
 ]
