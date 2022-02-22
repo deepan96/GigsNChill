@@ -3,6 +3,7 @@ import "./Login.css";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { Switch } from "@material-ui/core";
+import { NavLink } from "react-router-dom";
 
 const Login = (props) => {
   
@@ -11,11 +12,9 @@ const Login = (props) => {
     const [typeOfUser, setTypeofUser] = useState(false);
     const [formIsValid, setFormIsValid] = useState(true);
     function handleUserName(event) {
-      console.log(event.target.value);
         setUserName(event.target.value);
     }
     function handleUserPassword(event) {
-      console.log(event.target.value)
         setUserPassword(event.target.value);
     }
     // turning on Signup component invoking
@@ -39,14 +38,10 @@ const Login = (props) => {
       
       console.log("person=true is user, else owner", person);
     }
-    // function clickingon(event){
-    //   console.log("entered clicke")
-    //   props.makeRegisterOn(true);
-    // }
   return (
     
       <Card className='login'>
-        <div >
+        <div className="heading">
           <h4>User Login</h4>
         </div>
         <form onSubmit={submitHandler}>
@@ -84,15 +79,18 @@ const Login = (props) => {
               onChange={handleUserPassword}
             />
           </div>
-          <div className='action'>
+          <div className='actions'>
             <Button type="submit" className='btn' disabled={!formIsValid}>Submit</Button>
             
           </div>
+          <p className="forgot-password">
+            
+              <NavLink to="/forgotpassword">ForgotPassword?</NavLink>
+            </p>
           <div className="hyperlink">
-            <p onClick={handleRegister}>Not a user?<span style={{color:'red'}}> Sign-up.</span></p>
+            <p>Not a user? <NavLink to="/signup">SignUp</NavLink></p>
           </div>
         </form>
-        {/* <Button type='button' onClick={clickingon}>Register</Button> */}
       </Card>
   );
 };

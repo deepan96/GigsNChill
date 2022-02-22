@@ -1,8 +1,10 @@
 import React, { useReducer, useState, useEffect } from "react";
 import "./SignUp.css";
+import passwordStrength from "../PasswordChecker";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { Switch } from "@material-ui/core";
+import { NavLink } from "react-router-dom";
 
 const SignUp = (props) => {
   
@@ -24,7 +26,12 @@ const SignUp = (props) => {
       setUserEmail(event.target.value);
     }
     function handleUserPassword(event) {
-        setUserPassword(event.target.value);
+      let pd = event.target.value;
+      const result = passwordStrength(pd);
+      if (!result) {
+        window.alert("check password criteria");
+      }
+        setUserPassword(pd);
     }
     function handleUserConfirmPassword(event) {
       setUserConfirmPassword(event.target.value);
@@ -38,22 +45,20 @@ const SignUp = (props) => {
     function submitHandler(event) {
         event.preventDefault();
         let flag = false;
-        if(userEmail.includes("@") && (userPassword.trim().length > 6) && (userPassword.trim().length === userConfirmPassword.trim().length)) {
+        if(userEmail.includes("@") && passwordStrength(userPassword) && (userPassword.trim().length === userConfirmPassword.trim().length)) {
           console.log("login success")
           flag = true;
         }
+        // props.onSuccess(true);
         setFormIsValid(!flag);
         setUserFirstName('');
         setUserLastName('');
         setUserPassword('');
         setUserConfirmPassword('');
     }
-    const changetoLogin = () => {
-      props.makeRegisterOn(false);
-    }
   return (
       <Card className="signup">
-        <div >
+        <div className="heading" >
           <h4>Sign-Up here</h4>
         </div>
         <form onSubmit={submitHandler}>
@@ -121,9 +126,10 @@ const SignUp = (props) => {
             />
           </div>
           <div className="actions">
+            {!formIsValid && <NavLink to="/home"></NavLink>}
             <Button type="submit"className="button" disabled={!formIsValid}>Register</Button>
-            <p onClick={changetoLogin}>Already a user? <span style={{color:'red'}}>Sign-In.</span></p>
-            {/* <p>Not a user? <a href="#">Sign-up.</a></p> */}
+            {/* <p onClick={changetoLogin}>Already a user? <span style={{color:'red'}}>Sign-In.</span></p> */}
+            <p>Already a user? <NavLink to="/login">Login</NavLink></p>
           </div>
         </form>
       </Card>

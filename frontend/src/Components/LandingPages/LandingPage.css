@@ -21,7 +21,12 @@
     display: flex;
   }
   .land-split.right{
-    align-items: center;
+/*     
+  /* width: 100%; 
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 2rem;
+    align-items: center; */
     /* margin-top: 3rem; */
     right:0;
     background-color: azure;
