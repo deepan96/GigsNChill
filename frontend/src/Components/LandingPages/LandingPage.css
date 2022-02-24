@@ -10,7 +10,7 @@
   }
   .land-split {
     /* position: relative; */
-    min-height: 100vh;
+    min-height: calc(100vh - 5rem);
     width: 50%;
     height: 100%;
     overflow: hidden;

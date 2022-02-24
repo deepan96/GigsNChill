@@ -1,9 +1,10 @@
-import React, {useState} from "react";
-import "./Login.css";
+import React, {useContext, useState} from "react";
+import styles from "./Login.module.css";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { Switch } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
+import { LoginStateContext } from "../Context";
 
 const Login = (props) => {
   
@@ -11,6 +12,7 @@ const Login = (props) => {
     const [userPassword, setUserPassword] = useState('');
     const [typeOfUser, setTypeofUser] = useState(false);
     const [formIsValid, setFormIsValid] = useState(true);
+    const {isLoggedIn, setIsLoggedIn} = useContext(LoginStateContext);
     function handleUserName(event) {
         setUserName(event.target.value);
     }
@@ -29,6 +31,7 @@ const Login = (props) => {
           flag = true;
         }
         setFormIsValid(!flag);
+        setIsLoggedIn(flag);
         setUserName('');
         setUserPassword('');
     }
@@ -40,12 +43,13 @@ const Login = (props) => {
     }
   return (
     
-      <Card className='login'>
+    <div style = {styles}>
+      <Card className={styles.login}>
         <div className="heading">
           <h4>User Login</h4>
         </div>
         <form onSubmit={submitHandler}>
-          <div className="switchcase">
+          <div className={styles.switchcase}>
             <div >
               <label>User</label>
             </div>
@@ -58,7 +62,7 @@ const Login = (props) => {
               <label>Owner</label>
             </div>
           </div>
-          <div className='control'>
+          <div className={styles.control}>
             <label htmlFor="username">User Name</label>
             <input
               id="username"
@@ -69,7 +73,7 @@ const Login = (props) => {
             />
           </div>
 
-          <div className="control">
+          <div className={styles.control}>
             <label htmlFor="password">Password</label>
             <input
               id="password"
@@ -79,19 +83,20 @@ const Login = (props) => {
               onChange={handleUserPassword}
             />
           </div>
-          <div className='actions'>
+          <div className={styles.actions}>
             <Button type="submit" className='btn' disabled={!formIsValid}>Submit</Button>
             
           </div>
-          <p className="forgot-password">
+          <p className={styles.forgotpassword}>
             
               <NavLink to="/forgotpassword">ForgotPassword?</NavLink>
             </p>
-          <div className="hyperlink">
+          <div className={styles.hyperlink}>
             <p>Not a user? <NavLink to="/signup">SignUp</NavLink></p>
           </div>
         </form>
       </Card>
+      </div>
   );
 };
 
