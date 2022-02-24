@@ -1,9 +1,10 @@
-.signup {
-  width: 60%;
+.login {
+  width: 25%;
   max-width: 40rem;
   margin: 2rem auto;
   padding: 2rem;
 }
+
 .heading {
   text-align: center;
 }
@@ -37,7 +38,7 @@
 .control input:focus {
   outline: none;
   border-color: #a3a2a3;
-  background: #e6f7ff;
+  background: #f6dbfc;
 }
 
 .control.invalid input {
@@ -54,9 +55,14 @@
 .actions {
   text-align: center;
 }
-.actions p {
-    /* float: right; */
+.forgot-password {
+  float: right;
+}
+.bottom {
+  display: flex;
+  justify-content: center;
   font-style: italic;
+  display: inline-block;
 }
 @media (min-width: 768px) {
   .control {

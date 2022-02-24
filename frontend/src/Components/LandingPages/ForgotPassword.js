@@ -1,42 +1,36 @@
-import styles from "./ForgotPassword.module.css";
+import styles from './ForgotPassword.module.css';
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { useState } from "react";
-import ResetPassword from "./ResetPassword";
-import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
   const [userEmail, setUserEmail] = useState("");
   const [acknowledgement, setAcknowledgement] = useState(false);
-  let navigate = useNavigate();
-  function changeUserEmail(event) {
-    setUserEmail(event.target.value);
-  }
+    function changeUserEmail(event) {
+        setUserEmail(event.target.value);
+    }
   function handleUser(event) {
-    event.preventDefault();
-    // check user Email in DB
-    navigate('/resetpassword');
+      event.preventDefault();
+        // check user Email in DB
+        setAcknowledgement(true);
   }
   return (
     <div style={styles}>
-      <Card className={styles.forgotpwsrd}>
-         <form onSubmit={handleUser}>
-            <div className={styles.heading}>
-              <label>User Email</label>
-            </div>
-            <div className={styles.control}>
-              <input
-                type="email"
-                value={userEmail}
-                placeholder="Email"
-                onChange={changeUserEmail}
-              />
-            </div>
-            <div className={styles.actions}>
-              <Button type="submit">Submit</Button>
-            </div>
-          </form>        
-      </Card>
+    <Card className={styles.forgotpwsrd}>
+      <form onSubmit={handleUser}>
+        <div className="heading">
+          <label>User Email</label>
+        </div>
+        <div className="control">
+            <input type="email" value={userEmail} placeholder="Email" onChange={changeUserEmail}/>
+        </div>
+        <div className="actions">
+            <Button type="submit">Submit</Button>
+        </div>
+      </form>
+
+      
+    </Card>
     </div>
   );
 }

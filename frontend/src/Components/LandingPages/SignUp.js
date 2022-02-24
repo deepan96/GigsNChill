@@ -1,10 +1,10 @@
 import React, { useReducer, useState, useEffect } from "react";
-import styles from "./SignUp.module.css";
+import "./SignUp.css";
 import passwordStrength from "../PasswordChecker";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { Switch } from "@material-ui/core";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const SignUp = (props) => {
   
@@ -14,7 +14,7 @@ const SignUp = (props) => {
     const [userPassword, setUserPassword] = useState('');
     const [userConfirmPassword, setUserConfirmPassword] = useState('');
     const [typeOfUser, setTypeofUser] = useState(false);
-    let navigate = useNavigate();
+
     const [formIsValid, setFormIsValid] = useState(true);
     function handleUserFirstName(event) {
       setUserFirstName(event.target.value);
@@ -26,7 +26,12 @@ const SignUp = (props) => {
       setUserEmail(event.target.value);
     }
     function handleUserPassword(event) {
-      setUserPassword(event.target.value);
+      let pd = event.target.value;
+      const result = passwordStrength(pd);
+      if (!result) {
+        window.alert("check password criteria");
+      }
+        setUserPassword(pd);
     }
     function handleUserConfirmPassword(event) {
       setUserConfirmPassword(event.target.value);
@@ -44,28 +49,20 @@ const SignUp = (props) => {
           console.log("login success")
           flag = true;
         }
-        else {
-          window.alert("check password criteria");
-        }
         // props.onSuccess(true);
-        if(flag) {
-          navigate('/home');
-        }
         setFormIsValid(!flag);
         setUserFirstName('');
         setUserLastName('');
-        setUserEmail('');
         setUserPassword('');
         setUserConfirmPassword('');
     }
   return (
-    <div style={styles}>
-      <Card className={styles.signup}>
+      <Card className="signup">
         <div className="heading" >
           <h4>Sign-Up here</h4>
         </div>
         <form onSubmit={submitHandler}>
-        <div className={styles.switchcase}>
+        <div className="switchcase">
             <div >
               <label>User</label>
             </div>
@@ -78,7 +75,7 @@ const SignUp = (props) => {
               <label>Owner</label>
             </div>
           </div>
-          <div className={styles.control}>
+          <div className="control">
             <label htmlFor="firstname">First Name</label>
             <input
               id="firstname"
@@ -88,7 +85,7 @@ const SignUp = (props) => {
               onChange={handleUserFirstName}
             />
           </div>
-          <div className={styles.control}>
+          <div className="control">
             <label htmlFor="lastname">Last Name</label>
             <input
               id="lastname"
@@ -98,7 +95,7 @@ const SignUp = (props) => {
               onChange={handleUserLastName}
             />
           </div>
-          <div className={styles.control}>
+          <div className="control">
             <label htmlFor="useremail">Email</label>
             <input
               id="useremail"
@@ -108,7 +105,7 @@ const SignUp = (props) => {
               onChange={handleUserEmail}
             />
           </div>
-          <div className={styles.control}>
+          <div className="control">
             <label htmlFor="userpassword">Password</label>
             <input
               id="userpassword"
@@ -118,7 +115,7 @@ const SignUp = (props) => {
               onChange={handleUserPassword}
             />
           </div>
-          <div className={styles.control}>
+          <div className="control">
             <label htmlFor="userconfpassword">Confirm Password</label>
             <input
               id="userconfpassword"
@@ -128,15 +125,14 @@ const SignUp = (props) => {
               onChange={handleUserConfirmPassword}
             />
           </div>
-          <div className={styles.actions}>
+          <div className="actions">
             {!formIsValid && <NavLink to="/home"></NavLink>}
-            <Button type="submit"className="button">Register</Button>
-            {/*  disabled={!formIsValid}  <p onClick={changetoLogin}>Already a user? <span style={{color:'red'}}>Sign-In.</span></p> */}
-            <p>Already a user? <NavLink to="/">Login</NavLink></p>
+            <Button type="submit"className="button" disabled={!formIsValid}>Register</Button>
+            {/* <p onClick={changetoLogin}>Already a user? <span style={{color:'red'}}>Sign-In.</span></p> */}
+            <p>Already a user? <NavLink to="/login">Login</NavLink></p>
           </div>
         </form>
       </Card>
-      </div>
   );
 };
 
