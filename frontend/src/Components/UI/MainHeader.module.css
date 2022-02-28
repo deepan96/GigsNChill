@@ -1,4 +1,4 @@
-.main-header {
+.mainheader {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,6 +11,6 @@
     padding: 0 2rem;
   }
   
-  .main-header h1 {
+  .mainheader h1 {
     color: white;
   }

@@ -17,14 +17,7 @@ function LandingPage(props) {
           <p></p>
         </div>
         <Card className="land-split right">
-          <div>
-            {/* <p>
-              <NavLink to="/login">Login?</NavLink>
-            </p>
-            <p>
-              <span> OR </span>
-            </p> */}
-            
+          <div>            
             
             <Routes>
             <Route path='/' element={<Login/>}></Route>

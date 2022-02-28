@@ -1,27 +1,32 @@
-import React from 'react';
+import React, { useContext } from "react";
+import { LoginStateContext } from "../Context";
+import NavBar from "../UI/NavBar";
 
-import './Navigation.css';
+import styles from "./Navigation.module.css";
 
 const Navigation = (props) => {
+  const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   return (
-    <nav className="nav">
-      {props.isLoggedIn && (<ul>
-        
-          <li>
-            <a href="/">Users</a>
-          </li>
-        
-          <li>
-            <a href="/">Admin</a>
-          </li>
-       
-          <li>
-            <button onClick={props.onLogout}>Logout</button>
-          </li>
-        
-      </ul>
-      )}
-    </nav>
+    <div styles={styles}>
+      <nav className={styles.nav}>
+        {isLoggedIn && (
+          <ul>
+            {/* <li>
+              <a href="/">Users</a>
+            </li> */}
+
+            <li>
+              <a href="/">Host a Event ?</a>
+            </li>
+
+            <li>
+              {/* <button onClick={props.onLogout}>Logout</button> */}
+              <NavBar />
+            </li>
+          </ul>
+        )}
+      </nav>
+    </div>
   );
 };
 

@@ -18,13 +18,13 @@
   
   .nav a:hover,
   .nav a:active {
-    color: #f3cafb;
+    color: #c1f39f;
   }
   
   .nav button {
     font: inherit;
-    background: #dd0db0;
-    border: 1px solid #dd0db0;
+    background: #e75b38;
+    border: 1px solid black;
     padding: 0.5rem 1.5rem;
     color: white;
     cursor: pointer;

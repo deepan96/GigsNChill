@@ -3,16 +3,23 @@ import styles from "./Login.module.css";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { Switch } from "@material-ui/core";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../Context";
+import GoogleLogin from "react-google-login";
 
 const Login = (props) => {
-  
+    const clientNumber = "1045972817888-a3oc81j71v3e1tjbld5akh4hgup4hv8f.apps.googleusercontent.com";
     const [userName, setUserName] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [typeOfUser, setTypeofUser] = useState(false);
     const [formIsValid, setFormIsValid] = useState(true);
     const {isLoggedIn, setIsLoggedIn} = useContext(LoginStateContext);
+    let navigate = useNavigate();
+
+    const onLoginSuccess = (res) => {
+      console.log('Login Success:', res.profileObj);
+    }
+
     function handleUserName(event) {
         setUserName(event.target.value);
     }
@@ -25,6 +32,9 @@ const Login = (props) => {
     }
     function submitHandler(event) {
         event.preventDefault();
+        if (userName === '' && userPassword === '') {
+          //setting error
+        }
         let flag = false;
         if(userName.includes("@") && userPassword.trim().length > 6) {
           console.log("login success")
@@ -34,6 +44,7 @@ const Login = (props) => {
         setIsLoggedIn(flag);
         setUserName('');
         setUserPassword('');
+        navigate('/home');
     }
     function handleswitchtype() {
       setTypeofUser(!typeOfUser);
@@ -95,6 +106,13 @@ const Login = (props) => {
             <p>Not a user? <NavLink to="/signup">SignUp</NavLink></p>
           </div>
         </form>
+        <GoogleLogin
+        clientId={clientNumber}
+        buttonText="Google Login"
+        onSuccess={onLoginSuccess}
+        onFailure={()=>{window.alert("invalid login with google")}}
+        cookiePolicy={'single_host_origin'}
+  />
       </Card>
       </div>
   );

@@ -1,21 +1,25 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useContext } from "react";
 import styles from "./SignUp.module.css";
 import passwordStrength from "../PasswordChecker";
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import { Switch } from "@material-ui/core";
 import { NavLink, useNavigate } from "react-router-dom";
+import { LoginStateContext } from "../Context";
 
 const SignUp = (props) => {
   
     const [userFirstName, setUserFirstName] = useState('');
     const [userLastName, setUserLastName] = useState('');
     const [userEmail, setUserEmail] = useState('');
+    const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [userConfirmPassword, setUserConfirmPassword] = useState('');
     const [typeOfUser, setTypeofUser] = useState(false);
+    const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
     let navigate = useNavigate();
     const [formIsValid, setFormIsValid] = useState(true);
+
     function handleUserFirstName(event) {
       setUserFirstName(event.target.value);
     }
@@ -24,6 +28,9 @@ const SignUp = (props) => {
     }
     function handleUserEmail(event) {
       setUserEmail(event.target.value);
+    }
+    function handleUserPhone(event) {
+      setUserPhoneNumber(event.target.value);
     }
     function handleUserPassword(event) {
       setUserPassword(event.target.value);
@@ -49,12 +56,14 @@ const SignUp = (props) => {
         }
         // props.onSuccess(true);
         if(flag) {
+          setIsLoggedIn(true);
           navigate('/home');
         }
         setFormIsValid(!flag);
         setUserFirstName('');
         setUserLastName('');
         setUserEmail('');
+        setUserPhoneNumber('');
         setUserPassword('');
         setUserConfirmPassword('');
     }
@@ -106,6 +115,16 @@ const SignUp = (props) => {
               placeholder="Email"
               value={userEmail}
               onChange={handleUserEmail}
+            />
+          </div>
+          <div className={styles.control}>
+            <label htmlFor="phonenumber">Phone</label>
+            <input
+              id="phonenumber"
+              type="tel"
+              placeholder="1234567890"
+              value={userPhoneNumber}
+              onChange={handleUserPhone}
             />
           </div>
           <div className={styles.control}>
