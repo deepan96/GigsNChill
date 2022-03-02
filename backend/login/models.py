@@ -12,8 +12,8 @@ from django.db import models
 class LoginCls(models.Model):
 
     # Each attribute of the model represents a database field.
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
+    Email = models.CharField(max_length=20, primary_key=True)
+    Password = models.CharField(max_length=20)
 
     def __str__(self) -> str:
-        return self.username
+        return self.Email

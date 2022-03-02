@@ -27,6 +27,6 @@ router.register(r'register', view_register.RegisterView.as_view(), 'register')""
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.LoginClsView.as_view({'get': 'list'}), name='login'), # put router urls at ~/api
+    path('login/', views.LoginClsView.as_view(), name='login'), # put router urls at ~/api
     path('register/', view_register.RegisterView.as_view(), name="register"),
 ]

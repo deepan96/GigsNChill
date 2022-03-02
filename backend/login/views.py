@@ -7,10 +7,20 @@
 #TODO: Understand ViewsSets better
 
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from .serializers import LoginClsSerializer
-from .models import LoginCls
+from register.models import USER
+from rest_framework.views import APIView
 
-class LoginClsView(viewsets.ModelViewSet):
+class LoginClsView(generics.CreateAPIView):
     serializer_class = LoginClsSerializer
-    queryset = LoginCls.objects.all()
+    queryset = USER.objects.all()
+
+'''class LoginClsView(APIView):
+    def post(self, request, *args, **kwargs):
+        serializer = LoginClsSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['Email']
+        update_last_login(None, user)
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({"status": status.HTTP_200_OK, "Token": token.key})'''

@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import RegisterCls
+from .models import USER
 
-class RegisterClsAdmin(admin.ModelAdmin):  # allows for a custom definition in the admin field
-    list_display = ('username', 'password', 'emailid', 'mobileno') 
-    
-admin.site.register(RegisterCls, RegisterClsAdmin)
+class USERADMIN(admin.ModelAdmin):  # allows for a custom definition in the admin field
+    list_display = ('Email', 'FirstName', 'LastName', 'Mobile', 'Password', 'DateCreated', 'DateModified')
+
+
+admin.site.register(USER, USERADMIN)
 #admin.site.register(Relationship)

@@ -7,15 +7,19 @@
 '''
 
 from django.db import models
-
+from django.utils import timezone
+from datetime import datetime
 # Each class represents a database table.
-class RegisterCls(models.Model):
-
+class USER(models.Model):
     # Each attribute of the model represents a database field.
-    username = models.CharField(max_length=20)
-    password = models.CharField(max_length=20)
-    emailid = models.EmailField(max_length=254)
-    mobileno = models.CharField(max_length=20)
+    Email = models.CharField(max_length=50, primary_key=True)
+    FirstName = models.CharField(max_length=50)
+    LastName = models.CharField(max_length=50)
+    Mobile = models.CharField(max_length=10, blank=True, default='')
+    Password = models.CharField(max_length=50)
+    DateModified = models.DateTimeField(auto_now=True)
+    DateCreated = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self) -> str:
-        return self.username
+        return self.Email
