@@ -1,8 +1,8 @@
 import styles from "./ForgotPassword.module.css";
-import Card from "../UI/Card";
-import Button from "../UI/Button";
+import Card from "../../UI/Card/Card";
+import Button from "../../UI/Button/Button";
 import { useState } from "react";
-import ResetPassword from "./ResetPassword";
+import ResetPassword from "../ResetPassword/ResetPassword";
 import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {

@@ -1,11 +1,12 @@
-import React, { useReducer, useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import styles from "./SignUp.module.css";
-import passwordStrength from "../PasswordChecker";
-import Card from "../UI/Card";
-import Button from "../UI/Button";
-import { Switch } from "@material-ui/core";
+import passwordStrength from "../../PasswordChecker";
+import Card from "../../UI/Card/Card";
+import Button from "../../UI/Button/Button";
+import { Radio, Switch } from "@material-ui/core";
 import { NavLink, useNavigate } from "react-router-dom";
-import { LoginStateContext } from "../Context";
+import { LoginStateContext } from "../../Context";
+import { Alert } from "@mui/material";
 
 const SignUp = (props) => {
   
@@ -15,8 +16,12 @@ const SignUp = (props) => {
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [userConfirmPassword, setUserConfirmPassword] = useState('');
-    const [typeOfUser, setTypeofUser] = useState(false);
+    const [switchOn, setSwitchOn] = useState(false);
+    const [radioValue, setRadioValue] = useState("user");
+    const [typeOfUser, setTypeofUser] = useState("user");
     const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
+    const [errorFound, setErrorFound] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     let navigate = useNavigate();
     const [formIsValid, setFormIsValid] = useState(true);
 
@@ -39,9 +44,9 @@ const SignUp = (props) => {
       setUserConfirmPassword(event.target.value);
   }
     function handleswitchtype() {
-      setTypeofUser(!typeOfUser);
-      const person = typeOfUser===true?'user':'owner';
-
+      setSwitchOn(!switchOn);
+      const person = switchOn===true?'user':'host';
+      setTypeofUser(person);
       console.log("person=true is user, else owner", person);
     }
     function submitHandler(event) {
@@ -73,19 +78,20 @@ const SignUp = (props) => {
         <div className="heading" >
           <h4>Sign-Up here</h4>
         </div>
+        {errorFound && <Alert severity="error">{errorMessage}</Alert>}
         <form onSubmit={submitHandler}>
-        <div className={styles.switchcase}>
+        <div className={styles.tagline}>
+          <p>Choose who you're.</p>
+          </div>
+          <div className={styles.switchcase}>
             <div >
               <label>User</label>
             </div>
-          <Switch
-            onChange={handleswitchtype}
-            color="primary"
-            name="status"
-          />
+          <Radio checked={radioValue === "user"} name="useradio" value="user" color="primary" onChange={()=> setRadioValue("user")} />
           <div >
-              <label>Owner</label>
+              <label>Host</label>
             </div>
+            <Radio checked={radioValue === "host"} name="hostradio" value="host" color="primary" onChange={()=> setRadioValue("host")}/>
           </div>
           <div className={styles.control}>
             <label htmlFor="firstname">First Name</label>

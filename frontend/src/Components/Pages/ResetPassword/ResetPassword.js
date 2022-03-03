@@ -1,9 +1,9 @@
 import styles from "./ResetPassword.module.css";
 import { useState } from "react";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
-import passwordStrength from "../PasswordChecker";
-import Button from "../UI/Button";
-import Card from "../UI/Card";
+import passwordStrength from "../../PasswordChecker";
+import Button from "../../UI/Button/Button";
+import Card from "../../UI/Card/Card";
 
 function ResetPassword(props) {
   const [userPassword, setUserPassword] = useState("");

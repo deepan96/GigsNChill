@@ -1,13 +1,17 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginStateContext } from "../Context";
-
-import Navigation from "../LandingPages/Navigation";
-import styles from "../UI/MainHeader.module.css";
+import { LoginStateContext } from "../../Context";
+import Navigation from "../../Pages/Navigation/Navigation";
+import styles from "./MainHeader.module.css";
 
 const MainHeader = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
+
+  function logoNavigate() {
+    console.log("Navigate to Home");
+    navigate('/home');
+  }
   function logoutHandler() {
 
     setIsLoggedIn(false);
@@ -17,13 +21,16 @@ const MainHeader = (props) => {
     <div style={styles}>
       {! isLoggedIn && (
         <header className={styles.mainheader}>
-          <h1>Gigs 'N Chill</h1>
+          <div className={styles.logoclick}>
+            </div>
           <Navigation />
         </header>
       )}
       {isLoggedIn && (
         <header className={styles.mainheader}>
-          <h1>Gigs 'N Chill</h1>
+          <div className={styles.logoclick} onClick={logoNavigate}>
+          <></>
+          </div>
           <Navigation onLogout={logoutHandler}/>
         </header>
       )}

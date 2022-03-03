@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "./LandingPage.css";
-import Card from "../UI/Card"
+import Card from "../../UI/Card/Card"
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Login from "./Login";
-import SignUp from "./SignUp";
-import ForgotPassword from "./ForgotPassword";
-import ResetPassword from "./ResetPassword";
+import Login from "../Login/Login";
+import SignUp from "../SignUp/SignUp";
+import ForgotPassword from "../ForgotPassword/ForgotPassword";
+import ResetPassword from "../ResetPassword/ResetPassword";
 
 function LandingPage(props) {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ function LandingPage(props) {
           <div>            
             
             <Routes>
-            <Route path='/' element={<Login/>}></Route>
+            <Route path='*' element={<Login/>}></Route>
             {/* <Route path='login' element={<Login/>}></Route> */}
             
             <Route path="signup" element={<SignUp/>} />

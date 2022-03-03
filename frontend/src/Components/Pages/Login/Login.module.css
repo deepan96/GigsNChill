@@ -48,12 +48,23 @@
 .switchcase {
   display: flex;
   flex-direction: row;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
   margin-left: 0.3rem;
   align-items: center;
 }
+.tagline {
+  padding-left: 0rem;
+  display: flex;
+  flex-direction: row;
+  margin-top: 1rem;
+  margin-left: 0.3rem;
+}
 .actions {
   text-align: center;
+}
+.hyperlink {
+  float: left;
+  left: 0;
 }
 .forgotpassword {
   float: right;
@@ -63,6 +74,14 @@
   justify-content: center;
   font-style: italic;
   display: inline-block;
+}
+.googlediv {
+  
+}
+.googlediv button {
+  font-weight: bold  !important;
+  color: white !important;
+  background-color: #1976d2 !important;
 }
 @media (min-width: 768px) {
   .control {
