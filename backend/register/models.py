@@ -20,6 +20,5 @@ class USER(models.Model):
     DateModified = models.DateTimeField(auto_now=True)
     DateCreated = models.DateTimeField(auto_now_add=True)
 
-
     def __str__(self) -> str:
         return self.Email

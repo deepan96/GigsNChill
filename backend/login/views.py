@@ -24,3 +24,4 @@ class LoginClsView(generics.CreateAPIView):
         update_last_login(None, user)
         token, created = Token.objects.get_or_create(user=user)
         return Response({"status": status.HTTP_200_OK, "Token": token.key})'''
+

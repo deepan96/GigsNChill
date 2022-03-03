@@ -11,10 +11,10 @@ from django.contrib.auth import authenticate, get_user_model
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password,check_password
 
-class LoginClsSerializer(serializers.ModelSerializer):
+class LoginClsSerializer(serializers.Serializer):
     class Meta:
         model = USER
-        fields = ('Email', 'Password')
+        #fields = ('Email', 'Password')
     Email = serializers.CharField(max_length=255)
     Password = serializers.CharField(
         label=("Password"),
@@ -42,6 +42,9 @@ class LoginClsSerializer(serializers.ModelSerializer):
 
         data['Email'] = user
         return data
+    def create(self, data):
+        username = data.get('Email')
+        return USER.objects.get(Email__exact=username)
 # The ModelSerializer class provides a shortcut that lets you automatically create a "Serializer class" with fields that correspond to the Model fields.
 
         #fields = '__all__'

@@ -29,4 +29,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', views.LoginClsView.as_view(), name='login'), # put router urls at ~/api
     path('register/', view_register.RegisterView.as_view(), name="register"),
+    path('recoverpassword/', view_register.RecoverPasswordView.as_view(), name="recoverpassword"),
+    path('updatepassword/', view_register.UpdatePasswordView.as_view(), name="updatepassword"),
 ]
