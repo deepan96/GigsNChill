@@ -5,28 +5,26 @@
 '''
 
 from rest_framework import serializers
-from register.models import USER
-
+from register.models import USER, HOST
 from django.contrib.auth import authenticate, get_user_model
-from rest_framework import serializers
 from django.contrib.auth.hashers import make_password,check_password
 
 class LoginClsSerializer(serializers.Serializer):
+    Email = serializers.CharField(required=True)
+    Password = serializers.CharField(required=True)
+    Type = serializers.CharField(required=True)
     class Meta:
         model = USER
         #fields = ('Email', 'Password')
-    Email = serializers.CharField(max_length=255)
-    Password = serializers.CharField(
-        label=("Password"),
-        style={'input_type': 'password'},
-        trim_whitespace=False,
-        max_length=128,
-        write_only=True
-    )
 
+'''
     def validate(self, data):
         username = data.get('Email')
         password = data.get('Password')
+        if data.get('Type') == 'User':
+            db_table = USER
+        else:
+            db_table = HOST
         try:
             user = USER.objects.get(Email__exact=username)
         except:
@@ -34,7 +32,7 @@ class LoginClsSerializer(serializers.Serializer):
             raise serializers.ValidationError(msg, code='authorization')
         if username and password:
             if not check_password(password, user.Password):
-                msg = ('Unable to log in with provided credentials.'+ str(user.Password) + str(password))
+                msg = ('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
         else:
             msg = ('Must include "username" and "password".')
@@ -43,8 +41,13 @@ class LoginClsSerializer(serializers.Serializer):
         data['Email'] = user
         return data
     def create(self, data):
+        if data.get('Type') == 'User':
+            db_table = USER
+        else:
+            db_table = HOST
         username = data.get('Email')
-        return USER.objects.get(Email__exact=username)
+        return db_table.objects.get(Email__exact=username)
 # The ModelSerializer class provides a shortcut that lets you automatically create a "Serializer class" with fields that correspond to the Model fields.
 
         #fields = '__all__'
+'''

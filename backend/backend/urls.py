@@ -18,6 +18,7 @@ from django.urls import path, include
 from login import views
 from rest_framework import routers
 from register import views as view_register
+from event import views as view_event
 
 # Maps LoginCls ViewSet to ~/api/login
 """router = routers.DefaultRouter()
@@ -31,4 +32,7 @@ urlpatterns = [
     path('register/', view_register.RegisterView.as_view(), name="register"),
     path('recoverpassword/', view_register.RecoverPasswordView.as_view(), name="recoverpassword"),
     path('updatepassword/', view_register.UpdatePasswordView.as_view(), name="updatepassword"),
+    path(r'profile/(?P<Email>\w+)/', view_register.ProfileView.as_view(), name="profile"),
+    path('addnewevent/', view_event.AddNewEventView.as_view(), name="addnewevent"),
+    #path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
 ]
