@@ -1,0 +1,32 @@
+.eventcard {
+    /* display: flex;
+    flex-direction: column; */
+    margin-top: 3rem;
+    margin-left: 4rem;
+    overflow: hidden;
+    transition: 0.35;
+    animation: ease-in;
+}
+
+.eventcard:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 15px 0px;
+}
+.cardimage{
+    overflow: hidden;
+    width: 250px;
+    height: 150px;
+    transition: transform 0.5s ease;
+}
+.cardimage:hover {
+    transform: scale(1.1);
+}
+.eventtitle {
+    cursor: pointer;
+}
+.eventtitle h5:hover {  
+    background: rgba(144, 144, 150, 0.747);
+}
+.cardcontent {
+    
+}

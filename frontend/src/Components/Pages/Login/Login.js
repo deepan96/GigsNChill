@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./Login.module.css";
-import Card from "../../UI/Card/Card";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 import Button from "../../UI/Button/Button";
 import { Backdrop, Radio, Switch } from "@material-ui/core";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
@@ -13,9 +13,7 @@ const Login = (props) => {
     "1045972817888-a3oc81j71v3e1tjbld5akh4hgup4hv8f.apps.googleusercontent.com";
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [radioValue, setRadioValue] = useState("user");
-    // const [switchOn, setSwitchOn] = useState(false);
-  // const [typeOfUser, setTypeofUser] = useState("user");
+  const [typeOfUser, setTypeofUser] = useState("user");
   const [formIsValid, setFormIsValid] = useState(true);
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
@@ -34,10 +32,6 @@ const Login = (props) => {
   function handleUserPassword(event) {
     setUserPassword(event.target.value);
   }
-  // function radioHandler(event) {
-  //   setRadioValue(event.target.value);
-  //   console.log("from radio",radioValue);
-  // }
   function submitHandler(event) {
     event.preventDefault();
     if (userName === "" && userPassword === "") {
@@ -61,15 +55,9 @@ const Login = (props) => {
     setUserPassword("");
     navigate("/home");
   }
-  // function handleswitchtype() {
-  //   setSwitchOn(!switchOn);
-  //   const person = switchOn === true ? "user" : "host";
-  //   setTypeofUser(person);
-  //   console.log("person=true is user, else owner", person);
-  // }
   return (
     <div style={styles}>
-      <Card className={styles.login}>
+      <CardWrap className={styles.login}>
         <div className="heading">
           <h4>User Login</h4>
         </div>
@@ -82,11 +70,11 @@ const Login = (props) => {
             <div >
               <label>User</label>
             </div>
-          <Radio checked={radioValue === "user"} name="useradio" value="user" color="primary" onChange={()=> setRadioValue("user")} />
+          <Radio checked={typeOfUser === "user"} name="useradio" value="user" color="primary" onChange={()=> setTypeofUser("user")} />
           <div >
               <label>Host</label>
             </div>
-            <Radio checked={radioValue === "host"} name="hostradio" value="host" color="primary" onChange={()=> setRadioValue("host")}/>
+            <Radio checked={typeOfUser === "host"} name="hostradio" value="host" color="primary" onChange={()=> setTypeofUser("host")}/>
           </div>
       
           <div className={styles.control}>
@@ -137,7 +125,7 @@ const Login = (props) => {
             cookiePolicy={"single_host_origin"}
           />
         </div>
-      </Card>
+      </CardWrap>
     </div>
   );
 };

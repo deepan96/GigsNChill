@@ -3,9 +3,7 @@
   margin-top: 5rem;
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: row;
-  background: green;
+  background: rgb(247, 241, 232);
   }
 
   .heading {

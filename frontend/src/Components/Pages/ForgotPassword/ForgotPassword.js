@@ -1,8 +1,7 @@
 import styles from "./ForgotPassword.module.css";
-import Card from "../../UI/Card/Card";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 import Button from "../../UI/Button/Button";
 import { useState } from "react";
-import ResetPassword from "../ResetPassword/ResetPassword";
 import { useNavigate } from "react-router-dom";
 
 function ForgotPassword() {
@@ -19,7 +18,7 @@ function ForgotPassword() {
   }
   return (
     <div style={styles}>
-      <Card className={styles.forgotpwsrd}>
+      <CardWrap className={styles.forgotpwsrd}>
          <form onSubmit={handleUser}>
             <div className={styles.heading}>
               <label>User Email</label>
@@ -36,7 +35,7 @@ function ForgotPassword() {
               <Button type="submit">Submit</Button>
             </div>
           </form>        
-      </Card>
+      </CardWrap>
     </div>
   );
 }

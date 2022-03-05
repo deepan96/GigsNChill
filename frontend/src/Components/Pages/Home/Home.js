@@ -1,14 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import EventHome from '../Events/EventHome';
+import EventPage from '../Events/EventPage';
 import styles from './Home.module.css';
-import Card from '../../UI/Card/Card';
-import logo from '../Vector_White.png';
+import SearchField from './Search/SearchField';
 const Home = (props)=> {
+
+  const [searchQuery, setSearchQuery] = useState(''); // gets search key from searchField
+
   return (
     <div style={styles}>
-    <div className={styles.home}>
-      <p>Here is the home page</p>
-
-    </div>
+      <EventPage/>
+    {/* <div className={styles.home}>
+      <SearchField searchQuery={searchQuery} setSearchQuery={setSearchQuery}/>
+      <EventHome/>
+    </div> */}
     </div>
   );
 };

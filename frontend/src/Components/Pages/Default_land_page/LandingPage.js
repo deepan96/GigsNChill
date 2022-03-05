@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./LandingPage.css";
-import Card from "../../UI/Card/Card"
+import CardWrap from "../../UI/CardWrap/CardWrap"
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
@@ -16,7 +16,7 @@ function LandingPage(props) {
         <div className="land-split left">
           <p></p>
         </div>
-        <Card className="land-split right">
+        <CardWrap className="land-split right">
           <div>            
             
             <Routes>
@@ -32,7 +32,7 @@ function LandingPage(props) {
               <NavLink to="/signup">SignUp</NavLink>
             </p> */}
           </div>
-        </Card>
+        </CardWrap>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import React from "react";
 
-import styles from "./Card.module.css";
+import styles from "./CardWrap.module.css";
 
-const Card = (props) => {
+const CardWrap = (props) => {
   return (
       <div style={props.styles} className={`${styles.card} ${props.className}`}>
         {props.children}
@@ -10,4 +10,4 @@ const Card = (props) => {
   );
 };
 
-export default Card;
+export default CardWrap;

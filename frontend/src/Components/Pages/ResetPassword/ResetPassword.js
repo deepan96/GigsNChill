@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import passwordStrength from "../../PasswordChecker";
 import Button from "../../UI/Button/Button";
-import Card from "../../UI/Card/Card";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 
 function ResetPassword(props) {
   const [userPassword, setUserPassword] = useState("");
@@ -35,7 +35,7 @@ function ResetPassword(props) {
   }
   return (
     <div style={styles}>
-      <Card className={styles.resetpassword}>
+      <CardWrap className={styles.resetpassword}>
         <div className={styles.heading}>
           <h4>Reset Password</h4>
         </div>
@@ -67,7 +67,7 @@ function ResetPassword(props) {
             </Button>
           </div>
         </form>
-      </Card>
+      </CardWrap>
     </div>
   );
 }

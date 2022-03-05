@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import styles from "./SignUp.module.css";
 import passwordStrength from "../../PasswordChecker";
-import Card from "../../UI/Card/Card";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 import Button from "../../UI/Button/Button";
 import { Radio, Switch } from "@material-ui/core";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -17,7 +17,6 @@ const SignUp = (props) => {
     const [userPassword, setUserPassword] = useState('');
     const [userConfirmPassword, setUserConfirmPassword] = useState('');
     const [switchOn, setSwitchOn] = useState(false);
-    const [radioValue, setRadioValue] = useState("user");
     const [typeOfUser, setTypeofUser] = useState("user");
     const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
     const [errorFound, setErrorFound] = useState(false);
@@ -52,13 +51,21 @@ const SignUp = (props) => {
     function submitHandler(event) {
         event.preventDefault();
         let flag = false;
+        if (userEmail === '' && userPassword === '' && userConfirmPassword === '') {
+          setErrorFound(true);
+          setErrorMessage("Empty fields");
+          return;
+        }
+        if(!passwordStrength(userPassword)) {
+          setErrorFound(true);
+          setErrorMessage("Password min. length of 7, incl special, alpha-numeric.");
+          return;
+        }
         if(userEmail.includes("@") && passwordStrength(userPassword) && (userPassword.trim().length === userConfirmPassword.trim().length)) {
           console.log("login success")
           flag = true;
         }
-        else {
-          window.alert("check password criteria");
-        }
+        
         // props.onSuccess(true);
         if(flag) {
           setIsLoggedIn(true);
@@ -74,7 +81,7 @@ const SignUp = (props) => {
     }
   return (
     <div style={styles}>
-      <Card className={styles.signup}>
+      <CardWrap className={styles.signup}>
         <div className="heading" >
           <h4>Sign-Up here</h4>
         </div>
@@ -87,11 +94,11 @@ const SignUp = (props) => {
             <div >
               <label>User</label>
             </div>
-          <Radio checked={radioValue === "user"} name="useradio" value="user" color="primary" onChange={()=> setRadioValue("user")} />
+          <Radio checked={typeOfUser === "user"} name="useradio" value="user" color="primary" onChange={()=> setTypeofUser("user")} />
           <div >
               <label>Host</label>
             </div>
-            <Radio checked={radioValue === "host"} name="hostradio" value="host" color="primary" onChange={()=> setRadioValue("host")}/>
+            <Radio checked={typeOfUser === "host"} name="hostradio" value="host" color="primary" onChange={()=> setTypeofUser("host")}/>
           </div>
           <div className={styles.control}>
             <label htmlFor="firstname">First Name</label>
@@ -160,7 +167,7 @@ const SignUp = (props) => {
             <p>Already a user? <NavLink to="/">Login</NavLink></p>
           </div>
         </form>
-      </Card>
+      </CardWrap>
       </div>
   );
 };
