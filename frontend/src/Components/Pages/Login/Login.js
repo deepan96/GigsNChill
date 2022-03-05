@@ -8,6 +8,9 @@ import { LoginStateContext } from "../../Context";
 import GoogleLogin from "react-google-login";
 import { Alert } from "@mui/material";
 
+// Intregrations
+import axios from "axios"
+
 const Login = (props) => {
   const clientNumber =
     "1045972817888-a3oc81j71v3e1tjbld5akh4hgup4hv8f.apps.googleusercontent.com";
@@ -27,6 +30,7 @@ const Login = (props) => {
     console.log("Login Success:", res.profileObj);
   };
   
+  
 
   function handleUserName(event) {
     setUserName(event.target.value);
@@ -38,15 +42,20 @@ const Login = (props) => {
   //   setRadioValue(event.target.value);
   //   console.log("from radio",radioValue);
   // }
+
+  // Handles Submit Button
   function submitHandler(event) {
     event.preventDefault();
+
+    // Username and Password are empty
     if (userName === "" && userPassword === "") {
-      console.log("Im here");
-      //setting error
-      setErrorFound(true);
-      setErrorMessage("Enter both fields");
-      return;
-    }
+        //setting error
+        setErrorFound(true);
+        setErrorMessage("Enter both fields");
+        return;
+      }
+    
+    // Check Username and Password meet requirements 
     let flag = false;
     if (userName.includes("@") && userPassword.trim().length > 6) {
       console.log("login success");
@@ -55,11 +64,32 @@ const Login = (props) => {
       setErrorFound(true);
       setErrorMessage("Incorrect fields");
     }
-    setFormIsValid(!flag);
-    setIsLoggedIn(flag);
-    setUserName("");
-    setUserPassword("");
-    navigate("/home");
+
+    // Create Axios API rrequest
+    var axios = require('axios');
+    var FormData = require('form-data');
+    var data = new FormData();
+    data.append('Email', userName);
+    data.append('Password', userPassword);
+    data.append('Authorization',  'Token xxxxxxxxxxxxxxxxxxx'); // Not implemented yet in the backend
+
+    var config = {
+      method: 'post',
+      url: 'http://127.0.0.1:8000/login/',
+      data : data
+    };
+
+    axios(config)
+    .then(response => {
+        console.log(response);
+        setFormIsValid(!flag);
+        setIsLoggedIn(flag);
+        setUserName("");
+        setUserPassword("");
+        navigate("/home");
+      })
+    .catch((err) => alert("Account does not exist"))
+        
   }
   // function handleswitchtype() {
   //   setSwitchOn(!switchOn);
