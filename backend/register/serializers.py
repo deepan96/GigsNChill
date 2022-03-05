@@ -8,17 +8,21 @@ from django.db import models
 from django.utils import timezone
 
 class RegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for User Registration.
+    """
     Email = serializers.CharField(required=True)
     FirstName = serializers.CharField(required=True)
     LastName = serializers.CharField(required=True)
-    Mobile = serializers.CharField(required=True)
+    Mobile = serializers.CharField(required=False)
     Password1 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     Password2 = serializers.CharField(write_only=True, required=True)
-
+    Type = serializers.CharField(required=True)
     class Meta:
         model = USER
         #fields = '__all__'
-        fields = ('Email', 'FirstName', 'LastName', 'Mobile', 'Password1', 'Password2')
+        fields = ('Email', 'FirstName', 'LastName', 'Mobile', 'Password1', 'Password2', 'Type')
+
 
 class PasswordRecoverySerializer(serializers.Serializer):
 
@@ -61,3 +65,13 @@ class UpdatePasswordSerializer(serializers.Serializer):
         model = USER
         #fields = '__all__'
         fields = ('Email', 'OldPassword', 'Password1', 'Password2')
+
+class ProfileSerializer(serializers.Serializer):
+    """
+    Serializer for profile view endpoint.
+    """
+    Email = serializers.CharField(required=True)
+    class Meta:
+        model = USER
+        fields = ('Email',)
+
