@@ -119,11 +119,7 @@ class UpdatePasswordView(APIView):
     queryset = USER.objects.all()
     serializer_class = UpdatePasswordSerializer
     def put(self, request):
-<<<<<<< HEAD
-        if request.data['Type'] ==  'User':
-=======
         if request.data['Type'].lower() == 'User'.lower():
->>>>>>> f2b982044a163209b506db403f0ab2d009e4ff99
             db_table = USER
         else:
             db_table = HOST
@@ -186,10 +182,6 @@ class ProfileView(generics.ListAPIView):
         This view should return a list of all the purchases for
         the user as determined by the username portion of the URL.
         """
-        f = open("readme.txt", "w+")
-        f.write(str(args))
-        f.close()
-<<<<<<< HEAD
         try:
             if type == 'User':
                 db_table = USER
@@ -205,23 +197,6 @@ class ProfileView(generics.ListAPIView):
 
     '''def get(self, request):
         try:
-=======
-        try:
-            if type == 'User':
-                db_table = USER
-            else:
-                db_table = HOST
-            f = open("readme.txt", "w+")
-            f.write(str(args))
-            f.close()
-            #return {'data': db_table.objects.all()}
-            return Response({'data': model_to_dict(db_table.objects.get(Email=email))}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)}, status=status.HTTP_200_OK)
-
-    '''def get(self, request):
-        try:
->>>>>>> f2b982044a163209b506db403f0ab2d009e4ff99
             item = USER.objects.get(Email=request.data['Email'])
             return Response({"status": "success", "data": item}, status=status.HTTP_200_OK)
         except Exception as e:
