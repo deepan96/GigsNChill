@@ -1,5 +1,6 @@
+from pyexpat import model
 from .models import USER, HOST
-from .serializers import RegisterSerializer, PasswordRecoverySerializer, UpdatePasswordSerializer, ProfileSerializer
+from .serializers import RegisterSerializer, PasswordRecoverySerializer, UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer
 from rest_framework import generics, permissions, status
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -7,6 +8,11 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 import json, sys
+from rest_framework.renderers import JSONRenderer
+
+#Mail
+from django.conf import settings
+from django.core.mail import send_mail
 
 class RegisterView(APIView):
     #permission_classes = (permissions.AllowAny,)
@@ -80,27 +86,14 @@ class RegisterView(APIView):
         return USER.objects.get(Email__exact=username)'''
 
 class RecoverPasswordView(APIView):
-
-    #permission_classes = (permissions.AllowAny,)
-    """
-    An endpoint for changing password.
-    """
+    """ An endpoint for recovering the password. Given a username, send an email with an update password link"""
+    
     model = USER
     queryset = USER.objects.all()
     serializer_class = PasswordRecoverySerializer
 
-    '''def get_object(self, request, **kwargs):
-        with open("readme.txt", "w") as f:
-            f.write(str(request.data))
-            f.close()
-        accounts = USER.objects.get(Email=request.data['Email'])
-        return accounts'''
-    def put(self, request):
-        #self.lookup_field = 'pk'
-        if request.data['Type'] == 'User':
-            db_table = USER
-        else:
-            db_table = HOST
+    def post(self, request):
+        db_table = USER
         serializer_class = PasswordRecoverySerializer(data=request.data)
         if serializer_class.is_valid():
             try:
@@ -109,12 +102,41 @@ class RecoverPasswordView(APIView):
                 return Response({'status': 'error',
                                      "message": "User account associated with the Email doesnot exist"},
                                 status=status.HTTP_400_BAD_REQUEST)
-            if request.data['Password1'] != request.data['Password2']:
+
+        # Send Mail    
+        subject = 'GigsNChill password reset'
+        message = f'Hi {self.object}, reset your password at the following link: http://localhost:3000/resetpassword'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [self.object]
+        send_mail(subject, message, email_from, recipient_list )
+
+        response = {
+            'status': 'success',
+            'code': status.HTTP_200_OK,
+            'message': 'Password reset email sent',
+            'data': []
+        }
+        return Response(response, status=status.HTTP_200_OK)
+
+class ResetPasswordView(APIView):
+    """ Replaces the password, follows after a recover password step """
+
+    model = USER
+    queryset = USER.objects.all()
+    serializer_class = ResetPasswordSerializer
+    def put(self, request):
+        db_table = USER
+        serializer_class = ResetPasswordSerializer(data=request.data)
+        if serializer_class.is_valid():
+            try:
+                self.object = db_table.objects.get(Email=request.data['Email'])
+            except:
                 return Response({'status': 'error',
-                                 "message": "Password fields didn't match."},
+                                 "message": "User account associated with the Email doesnot exist"},
                                 status=status.HTTP_400_BAD_REQUEST)
+    
             # make_password also hashes the password that the user will get
-            self.object.Password = make_password(request.data['Password1'])
+            self.object.Password = make_password(request.data['Password'])
             self.object.save()
             response = {
                 'status': 'success',
@@ -127,14 +149,11 @@ class RecoverPasswordView(APIView):
         return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdatePasswordView(APIView):
-    """
-    An endpoint for changing password.
-    """
+    """ An endpoint for updating the password """
     model = USER
     queryset = USER.objects.all()
     serializer_class = UpdatePasswordSerializer
     def put(self, request):
-        #self.lookup_field = 'pk'
         if request.data['Type'] ==  'User':
             db_table = USER
         else:
@@ -167,17 +186,59 @@ class UpdatePasswordView(APIView):
 
         return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileView(APIView):
-    def get(self, request):
-        if request.data['Type'] ==  'User':
-            db_table = USER
-        else:
-            db_table = HOST
+class ProfileView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    renderer_classes = (JSONRenderer,)
+    '''def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
         try:
-            item = db_table.objects.get(Email=request.data['Email'])
+            if 'Type' in self.kwargs:
+                type, username = request.data['Type'], request.data['Email']
+                if type ==  'User':
+                    db_table = USER
+                else:
+                    db_table = HOST
+            else:
+                db_table = USER
+            f = open("readme.txt", "w+")
+            f.write(model_to_dict(db_table.objects.get(Email=self.kwargs['Email'])))
+            f.close()
+            #return {'data': db_table.objects.all()}
+            return Response({'data': model_to_dict(db_table.objects.get(Email=self.kwargs['Email']))}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}, status=status.HTTP_200_OK)
+            #return {"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}
+    '''
+    def get(self, request, email, type="User"):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        f = open("readme.txt", "w+")
+        f.write(str(args))
+        f.close()
+        try:
+            if type == 'User':
+                db_table = USER
+            else:
+                db_table = HOST
+            f = open("readme.txt", "w+")
+            f.write(str(args))
+            f.close()
+            #return {'data': db_table.objects.all()}
+            return Response({'data': model_to_dict(db_table.objects.get(Email=email))}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)}, status=status.HTTP_200_OK)
+
+    '''def get(self, request):
+        try:
+            item = USER.objects.get(Email=request.data['Email'])
             return Response({"status": "success", "data": item}, status=status.HTTP_200_OK)
-        except Profile.DoesNotExist:
-            return Response({"status": "error", "data": "username does not exist"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": "username does not exist" + str(request.data)}, status=status.HTTP_200_OK)'''
 
     '''def get(self, request):
         serializer_class = ProfileSerializer(data=request.data)
@@ -196,3 +257,4 @@ class ProfileView(APIView):
             return Response(response, status=status.HTTP_200_OK)
         return Response({'status': 'error'},
                                 status=status.HTTP_400_BAD_REQUEST)'''
+

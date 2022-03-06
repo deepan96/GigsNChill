@@ -8,7 +8,9 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
   const [searchValue, setSearchValue] = useState("");
   function searchHandler(event) {
     event.preventDefault();
+    setSearchQuery(searchValue);
     console.log(searchValue);
+    return;
   }
   return (
     <div style ={styles}>
@@ -17,6 +19,7 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
       <Paper
         className={styles.searching}
         component="form"
+        onSubmit={searchHandler}
         >
        {/* sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 600 }} */}
         <InputBase
@@ -29,10 +32,11 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
         <IconButton
           sx={{ p: "10px" }}
           aria-label="search"
-          onClick={() => setSearchValue("")}
-          disabled={searchValue === ""}
+          onClick={() => setSearchQuery("")}
+          disabled={searchQuery === ""}
         >
-          {searchValue && <CloseIcon />}
+          
+          {searchQuery && <CloseIcon />}
         </IconButton>
         <IconButton
           sx={{ p: "10px" }}

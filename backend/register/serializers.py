@@ -25,33 +25,19 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 
 class PasswordRecoverySerializer(serializers.Serializer):
-
-    """
-    Serializer for password reset endpoint.
-    """
+    """ Serializer for password reset endpoint """
     Email = serializers.CharField(required=True)
-    Password1 = serializers.CharField(required=True)
-    Password2 = serializers.CharField(required=True)
     class Meta:
         model = USER
-        #fields = '__all__'
-        fields = ('Email', 'Password1', 'Password2')
-    '''def reteieve(self, data):
-        username = data.get('Email')
-        return USER.objects.get(Email__exact=username)'''
-    '''def validate(self, attrs):
-        if attrs['Password1'] != attrs['Password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        fields = ('Email')
 
-        return attrs
-
-    def update(self, validated_data):
-        #user = USER.objects.update(Password=make_password(validated_data['Password1']))
-        user = USER.object.set_password(serializer.data.get(validated_data['Password1']))
-        #user = USER.objects.update(Password=validated_data['Password1'])
-        user.save()
-
-        return user'''
+class ResetPasswordSerializer(serializers.Serializer):
+    """ Serializer for reset password change endpoint """
+    Email = serializers.CharField(required=True)
+    Password = serializers.CharField(required=True)
+    class Meta:
+        model = USER
+        fields = ('Email', 'Password')
 
 class UpdatePasswordSerializer(serializers.Serializer):
     """
@@ -71,7 +57,8 @@ class ProfileSerializer(serializers.Serializer):
     Serializer for profile view endpoint.
     """
     Email = serializers.CharField(required=True)
+    Type = serializers.CharField(required=False)
     class Meta:
         model = USER
-        fields = ('Email',)
+        fields = ('Email', 'Type',)
 

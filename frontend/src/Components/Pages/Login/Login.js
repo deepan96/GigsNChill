@@ -17,7 +17,7 @@ const Login = (props) => {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
   // const [radioValue, setRadioValue] = useState("user");
-  const [typeOfUser, setTypeofUser] = useState("user");
+  const [typeOfUser, setTypeofUser] = useState("User");
   const [formIsValid, setFormIsValid] = useState(true);
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
@@ -59,11 +59,12 @@ const Login = (props) => {
     // Check Username and Password meet requirements 
     let flag = false;
     if (userName.includes("@") && userPassword.trim().length > 6) {
-      console.log("login success");
+      
       flag = true;
     } else {
       setErrorFound(true);
       setErrorMessage("Incorrect fields");
+      return;
     }
 
     // Create Axios API rrequest
@@ -87,7 +88,7 @@ const Login = (props) => {
         if(response.data.status === 'error') {
           console.log("Entered error");
           setErrorFound(true);
-          setErrorMessage("Email doesn't exist")
+          setErrorMessage("Email doesn't exist");
           // setErrorMessage(response.data.message);
           return ;
         }
@@ -101,7 +102,9 @@ const Login = (props) => {
         }
         
       })
-    .catch((err) => alert("Account does not exist"))
+    .catch((err) => {
+      alert("Account does not exist")
+                console.log(err)})
         
   }
   // function handleswitchtype() {
@@ -125,11 +128,11 @@ const Login = (props) => {
             <div >
               <label>User</label>
             </div>
-          <Radio checked={typeOfUser === "user"} name="useradio" value="user" color="primary" onChange={()=> setTypeofUser("user")} />
+          <Radio checked={typeOfUser === "User"} name="useradio" value="User" color="primary" onChange={()=> setTypeofUser("User")} />
           <div >
               <label>Host</label>
             </div>
-            <Radio checked={typeOfUser === "host"} name="hostradio" value="host" color="primary" onChange={()=> setTypeofUser("host")}/>
+            <Radio checked={typeOfUser === "Host"} name="hostradio" value="Host" color="primary" onChange={()=> setTypeofUser("Host")}/>
           </div>
       
           <div className={styles.control}>

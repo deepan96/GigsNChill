@@ -22,11 +22,15 @@
     transform: scale(1.1);
 }
 .eventtitle {
-    cursor: pointer;
+    /* cursor: pointer; */
 }
-.eventtitle h5:hover {  
-    background: rgba(144, 144, 150, 0.747);
+.eventlink {
+    text-decoration: none;
+    color: black;
 }
 .cardcontent {
-    
+    overflow: hidden;
+    max-width: 15rem;
+    /* display: flex; */
+    /* flex-wrap: wrap; */
 }

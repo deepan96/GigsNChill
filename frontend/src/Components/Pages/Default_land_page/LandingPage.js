@@ -6,6 +6,7 @@ import Login from "../Login/Login";
 import SignUp from "../SignUp/SignUp";
 import ForgotPassword from "../ForgotPassword/ForgotPassword";
 import ResetPassword from "../ResetPassword/ResetPassword";
+import EventPage from "../Events/EventPage";
 
 function LandingPage(props) {
   const navigate = useNavigate();

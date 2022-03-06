@@ -18,7 +18,7 @@ const SignUp = (props) => {
     const [userPassword, setUserPassword] = useState('');
     const [userConfirmPassword, setUserConfirmPassword] = useState('');
     // const [switchOn, setSwitchOn] = useState(false);
-    const [typeOfUser, setTypeofUser] = useState("user");
+    const [typeOfUser, setTypeofUser] = useState("User");
     const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
     const [errorFound, setErrorFound] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -126,11 +126,11 @@ const SignUp = (props) => {
             <div >
               <label>User</label>
             </div>
-          <Radio checked={typeOfUser === "user"} name="useradio" value="user" color="primary" onChange={()=> setTypeofUser("user")} />
+          <Radio checked={typeOfUser === "User"} name="useradio" value="User" color="primary" onChange={()=> setTypeofUser("User")} />
           <div >
               <label>Host</label>
             </div>
-            <Radio checked={typeOfUser === "host"} name="hostradio" value="host" color="primary" onChange={()=> setTypeofUser("host")}/>
+            <Radio checked={typeOfUser === "Host"} name="hostradio" value="Host" color="primary" onChange={()=> setTypeofUser("Host")}/>
           </div>
           <div className={styles.control}>
             <label htmlFor="firstname">First Name</label>

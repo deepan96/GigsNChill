@@ -3,6 +3,7 @@ import { LoginStateContext } from "../../Context";
 import { useEffect, useState } from "react";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import styles from "./Navigation.module.css";
+import { Link } from "react-router-dom";
 
 const Navigation = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
@@ -39,7 +40,7 @@ const Navigation = (props) => {
           <>
             <ul>
               <li>
-                <a href="/">Home</a>
+                <Link to='/home'>Home</Link>
               </li>
               <li>
                 <a href="/">Chat</a>
