@@ -4,8 +4,6 @@
     DOCS: https://www.django-rest-framework.org/api-guide/viewsets/#modelviewset
 
 '''
-#TODO: Understand ViewsSets better
-
 from django.shortcuts import render
 from rest_framework import viewsets, generics, permissions, status
 from .serializers import LoginClsSerializer
