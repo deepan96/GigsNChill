@@ -42,7 +42,7 @@ function ResetPassword(props) {
       return;
     }
 
-    // Initialize API request .... Using the update password endpoint
+    // Initialize API request .... Using the reset password endpoint
     var axios = require('axios');
     var FormData = require('form-data');
     var data = new FormData();
