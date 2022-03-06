@@ -25,7 +25,7 @@ class LoginClsView(APIView):
         serializer_class = LoginClsSerializer(data=request.data)
         try:
             if serializer_class.is_valid():
-                if request.data['Type'] == 'User':
+                if request.data['Type'].lower() == 'User'.lower():
                     db_table = USER
                 else:
                     db_table = HOST

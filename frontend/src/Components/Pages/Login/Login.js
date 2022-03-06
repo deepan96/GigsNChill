@@ -101,7 +101,9 @@ const Login = (props) => {
         }
         
       })
-    .catch((err) => alert("Account does not exist"))
+    .catch((err) => {
+      alert("Account does not exist")
+                console.log(err)})
         
   }
   // function handleswitchtype() {

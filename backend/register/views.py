@@ -1,5 +1,6 @@
+from pyexpat import model
 from .models import USER, HOST
-from .serializers import RegisterSerializer, PasswordRecoverySerializer, UpdatePasswordSerializer, ProfileSerializer
+from .serializers import RegisterSerializer, PasswordRecoverySerializer, UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer
 from rest_framework import generics, permissions, status
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -7,6 +8,10 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 import json, sys
+
+#Mail
+from django.conf import settings
+from django.core.mail import send_mail
 
 class RegisterView(APIView):
     #permission_classes = (permissions.AllowAny,)
@@ -80,27 +85,14 @@ class RegisterView(APIView):
         return USER.objects.get(Email__exact=username)'''
 
 class RecoverPasswordView(APIView):
-
-    #permission_classes = (permissions.AllowAny,)
-    """
-    An endpoint for changing password.
-    """
+    """ An endpoint for recovering the password. Given a username, send an email with an update password link"""
+    
     model = USER
     queryset = USER.objects.all()
     serializer_class = PasswordRecoverySerializer
 
-    '''def get_object(self, request, **kwargs):
-        with open("readme.txt", "w") as f:
-            f.write(str(request.data))
-            f.close()
-        accounts = USER.objects.get(Email=request.data['Email'])
-        return accounts'''
-    def put(self, request):
-        #self.lookup_field = 'pk'
-        if request.data['Type'] == 'User':
-            db_table = USER
-        else:
-            db_table = HOST
+    def post(self, request):
+        db_table = USER
         serializer_class = PasswordRecoverySerializer(data=request.data)
         if serializer_class.is_valid():
             try:
@@ -109,12 +101,41 @@ class RecoverPasswordView(APIView):
                 return Response({'status': 'error',
                                      "message": "User account associated with the Email doesnot exist"},
                                 status=status.HTTP_400_BAD_REQUEST)
-            if request.data['Password1'] != request.data['Password2']:
+
+        # Send Mail    
+        subject = 'GigsNChill password reset'
+        message = f'Hi {self.object}, reset your password at the following link: http://localhost:3000/resetpassword'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [self.object]
+        send_mail(subject, message, email_from, recipient_list )
+
+        response = {
+            'status': 'success',
+            'code': status.HTTP_200_OK,
+            'message': 'Password reset email sent',
+            'data': []
+        }
+        return Response(response, status=status.HTTP_200_OK)
+
+class ResetPasswordView(APIView):
+    """ Replaces the password, follows after a recover password step """
+
+    model = USER
+    queryset = USER.objects.all()
+    serializer_class = ResetPasswordSerializer
+    def put(self, request):
+        db_table = USER
+        serializer_class = ResetPasswordSerializer(data=request.data)
+        if serializer_class.is_valid():
+            try:
+                self.object = db_table.objects.get(Email=request.data['Email'])
+            except:
                 return Response({'status': 'error',
-                                 "message": "Password fields didn't match."},
+                                 "message": "User account associated with the Email doesnot exist"},
                                 status=status.HTTP_400_BAD_REQUEST)
+    
             # make_password also hashes the password that the user will get
-            self.object.Password = make_password(request.data['Password1'])
+            self.object.Password = make_password(request.data['Password'])
             self.object.save()
             response = {
                 'status': 'success',
@@ -127,14 +148,11 @@ class RecoverPasswordView(APIView):
         return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class UpdatePasswordView(APIView):
-    """
-    An endpoint for changing password.
-    """
+    """ An endpoint for updating the password """
     model = USER
     queryset = USER.objects.all()
     serializer_class = UpdatePasswordSerializer
     def put(self, request):
-        #self.lookup_field = 'pk'
         if request.data['Type'] ==  'User':
             db_table = USER
         else:
