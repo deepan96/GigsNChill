@@ -15,23 +15,13 @@ from django.conf import settings
 from django.core.mail import send_mail
 
 class RegisterView(APIView):
-    #permission_classes = (permissions.AllowAny,)
     serializer_class = RegisterSerializer
     model = USER
-    #def create(self, request):
-    #    pass
-    '''def create(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({"status": "success", "data": serializer.data}, status=status.HTTP_200_OK)
-        else:
-            return Response({"status": "error", "data": serializer.errors}, status=status.HTTP_200_OK)'''
 
     def post(self, request):
         serializer_class = RegisterSerializer(data=request.data)
         if serializer_class.is_valid():
-            if request.data['Type'] ==  'User':
+            if request.data['Type'].lower() == 'User'.lower():
                 db_table = USER
             else:
                 db_table = HOST
@@ -59,31 +49,6 @@ class RegisterView(APIView):
                                     status=status.HTTP_200_OK)
         else:
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
-
-'''class LoginClsView(APIView):
-    serializer_class = LoginClsSerializer
-    queryset = USER.objects.all()
-    def get(self, data):
-        username = data.get('Email')
-        password = data.get('Password')
-        try:
-            user = USER.objects.get(Email__exact=username)
-        except:
-            msg = "Account does not exist"
-            raise serializers.ValidationError(msg, code='authorization')
-        if username and password:
-            if not check_password(password, user.Password):
-                msg = ('Unable to log in with provided credentials.'+ str(user.Password) + str(password))
-                raise serializers.ValidationError(msg, code='authorization')
-        else:
-            msg = ('Must include "username" and "password".')
-            raise serializers.ValidationError(msg, code='authorization')
-
-        data['Email'] = user
-        return data
-    def create(self, data):
-        username = data.get('Email')
-        return USER.objects.get(Email__exact=username)'''
 
 class RecoverPasswordView(APIView):
     """ An endpoint for recovering the password. Given a username, send an email with an update password link"""
@@ -154,7 +119,7 @@ class UpdatePasswordView(APIView):
     queryset = USER.objects.all()
     serializer_class = UpdatePasswordSerializer
     def put(self, request):
-        if request.data['Type'] ==  'User':
+        if request.data['Type'].lower() == 'User'.lower():
             db_table = USER
         else:
             db_table = HOST

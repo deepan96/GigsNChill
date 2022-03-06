@@ -59,7 +59,6 @@ const Login = (props) => {
     // Check Username and Password meet requirements 
     let flag = false;
     if (userName.includes("@") && userPassword.trim().length > 6) {
-      console.log("login success");
       flag = true;
     } else {
       setErrorFound(true);
@@ -102,7 +101,7 @@ const Login = (props) => {
         
       })
     .catch((err) => {
-      alert("Account does not exist")
+      alert("Invalid Login Credentials")
                 console.log(err)})
         
   }
