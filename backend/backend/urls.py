@@ -25,16 +25,17 @@ from event import views as view_event
 router.register(r'login', views.LoginClsView, 'login')
 router.register(r'register', view_register.RegisterView.as_view(), 'register')"""
 
-
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.LoginClsView.as_view(), name='login'), # put router urls at ~/api
+    path('login/', views.LoginClsView.as_view(), name='login'),  # put router urls at ~/api
     path('register/', view_register.RegisterView.as_view(), name="register"),
     path('recoverpassword/', view_register.RecoverPasswordView.as_view(), name="recoverpassword"),
     path('resetpassword/', view_register.ResetPasswordView.as_view(), name="resetpassword"),
     path('updatepassword/', view_register.UpdatePasswordView.as_view(), name="updatepassword"),
-    re_path('viewprofile/(?P<Email>\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/)', view_register.ProfileView.as_view(), name="viewprofile"),
+    re_path('viewprofile/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
+            view_register.ProfileView.as_view(), name="viewprofile"),
+    #re_path('viewprofile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="viewprofile"),
     path('addnewevent/', view_event.AddNewEventView.as_view(), name="addnewevent"),
     path('searchevent/', view_event.SearchEvents.as_view(), name="searchevent"),
-    #path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
+    # path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
 ]

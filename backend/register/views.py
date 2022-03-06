@@ -177,21 +177,20 @@ class ProfileView(generics.ListAPIView):
             return Response({"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}, status=status.HTTP_200_OK)
             #return {"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}
     '''
-    def get(self, request, email, type="User"):
+    def get(self, request, *args, **kwargs):
         """
         This view should return a list of all the purchases for
         the user as determined by the username portion of the URL.
         """
         try:
-            if type == 'User':
-                db_table = USER
+            if "Type" in self.kwargs:
+                if self.kwargs['Type'].lower() == 'user':
+                    db_table = USER
+                else:
+                    db_table = HOST
             else:
-                db_table = HOST
-            f = open("readme.txt", "w+")
-            f.write(str(args))
-            f.close()
-            #return {'data': db_table.objects.all()}
-            return Response({'data': model_to_dict(db_table.objects.get(Email=email))}, status=status.HTTP_200_OK)
+                db_table = USER
+            return Response({"status": "success", 'data': model_to_dict(db_table.objects.get(Email=self.kwargs['Email']))}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)}, status=status.HTTP_200_OK)
 
