@@ -1,6 +1,28 @@
 .container {
-    width: 60%;
+    width: fit-content;
   max-width: 40rem;
   margin: 7rem auto;
-  padding: 2rem;
+  padding: 1rem;
+}
+.cardimage{
+    overflow: hidden;
+    width: 500px;
+    height: 250px;
+    background-size: cover;
+    transition: transform 0.5s ease;
+}
+.cardimage:hover {
+    transform: scale(1.1);
+}
+.eventtitle {
+    /* cursor: pointer; */
+    font-weight: bold;
+
+}
+
+.eventdate {
+    position: relative;
+    display: flex;
+    float: right;
+    padding-right: 3.5rem;
 }

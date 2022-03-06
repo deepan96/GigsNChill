@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import styles from "./Login.module.css";
-import Card from "../../UI/Card/Card";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 import Button from "../../UI/Button/Button";
 import { Backdrop, Radio, Switch } from "@material-ui/core";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
@@ -9,16 +9,15 @@ import GoogleLogin from "react-google-login";
 import { Alert } from "@mui/material";
 
 // Intregrations
-import axios from "axios"
+import axios from "axios";
 
 const Login = (props) => {
   const clientNumber =
     "1045972817888-a3oc81j71v3e1tjbld5akh4hgup4hv8f.apps.googleusercontent.com";
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [radioValue, setRadioValue] = useState("user");
-    // const [switchOn, setSwitchOn] = useState(false);
-  // const [typeOfUser, setTypeofUser] = useState("user");
+  // const [radioValue, setRadioValue] = useState("user");
+  const [typeOfUser, setTypeofUser] = useState("user");
   const [formIsValid, setFormIsValid] = useState(true);
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
@@ -28,6 +27,8 @@ const Login = (props) => {
   // google auth
   const onLoginSuccess = (res) => {
     console.log("Login Success:", res.profileObj);
+    setIsLoggedIn(true);
+    navigate("/home");
   };
   
   
@@ -71,6 +72,7 @@ const Login = (props) => {
     var data = new FormData();
     data.append('Email', userName);
     data.append('Password', userPassword);
+    data.append('Type', typeOfUser); // type of user
     data.append('Authorization',  'Token xxxxxxxxxxxxxxxxxxx'); // Not implemented yet in the backend
 
     var config = {
@@ -82,11 +84,22 @@ const Login = (props) => {
     axios(config)
     .then(response => {
         console.log(response);
+        if(response.data.status === 'error') {
+          console.log("Entered error");
+          setErrorFound(true);
+          setErrorMessage("Email doesn't exist")
+          // setErrorMessage(response.data.message);
+          return ;
+        }
+        else {
+          console.log(response);
         setFormIsValid(!flag);
-        setIsLoggedIn(flag);
+        setIsLoggedIn(true);
         setUserName("");
         setUserPassword("");
         navigate("/home");
+        }
+        
       })
     .catch((err) => alert("Account does not exist"))
         
@@ -99,7 +112,7 @@ const Login = (props) => {
   // }
   return (
     <div style={styles}>
-      <Card className={styles.login}>
+      <CardWrap className={styles.login}>
         <div className="heading">
           <h4>User Login</h4>
         </div>
@@ -112,11 +125,11 @@ const Login = (props) => {
             <div >
               <label>User</label>
             </div>
-          <Radio checked={radioValue === "user"} name="useradio" value="user" color="primary" onChange={()=> setRadioValue("user")} />
+          <Radio checked={typeOfUser === "user"} name="useradio" value="user" color="primary" onChange={()=> setTypeofUser("user")} />
           <div >
               <label>Host</label>
             </div>
-            <Radio checked={radioValue === "host"} name="hostradio" value="host" color="primary" onChange={()=> setRadioValue("host")}/>
+            <Radio checked={typeOfUser === "host"} name="hostradio" value="host" color="primary" onChange={()=> setTypeofUser("host")}/>
           </div>
       
           <div className={styles.control}>
@@ -167,7 +180,7 @@ const Login = (props) => {
             cookiePolicy={"single_host_origin"}
           />
         </div>
-      </Card>
+      </CardWrap>
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { Radio, Switch } from "@material-ui/core";
 import { NavLink, useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
 import { Alert } from "@mui/material";
+import axios from "axios";
 
 const SignUp = (props) => {
   
@@ -16,7 +17,7 @@ const SignUp = (props) => {
     const [userPhoneNumber, setUserPhoneNumber] = useState('');
     const [userPassword, setUserPassword] = useState('');
     const [userConfirmPassword, setUserConfirmPassword] = useState('');
-    const [switchOn, setSwitchOn] = useState(false);
+    // const [switchOn, setSwitchOn] = useState(false);
     const [typeOfUser, setTypeofUser] = useState("user");
     const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
     const [errorFound, setErrorFound] = useState(false);
@@ -42,14 +43,27 @@ const SignUp = (props) => {
     function handleUserConfirmPassword(event) {
       setUserConfirmPassword(event.target.value);
   }
-    function handleswitchtype() {
-      setSwitchOn(!switchOn);
-      const person = switchOn===true?'user':'host';
-      setTypeofUser(person);
-      console.log("person=true is user, else owner", person);
-    }
+    
     function submitHandler(event) {
         event.preventDefault();
+        var axios = require('axios');
+    var FormData = require('form-data');
+    var data = new FormData();
+    data.append('Type', typeOfUser);
+    data.append('FirstName', userFirstName);
+    data.append('LastName', userLastName);
+    data.append('Email', userEmail);
+    data.append('Mobile', userPhoneNumber);
+    data.append('Password1', userPassword);
+    data.append('Password2', userConfirmPassword);
+    // data.append('Type', typeOfUser); // type of user
+    data.append('Authorization',  'Token xxxxxxxxxxxxxxxxxxx'); // Not implemented yet in the backend
+
+    var config = {
+      method: 'post',
+      url: 'http://127.0.0.1:8000/register/',
+      data : data
+    };
         let flag = false;
         if (userEmail === '' && userPassword === '' && userConfirmPassword === '') {
           setErrorFound(true);
@@ -62,16 +76,34 @@ const SignUp = (props) => {
           return;
         }
         if(userEmail.includes("@") && passwordStrength(userPassword) && (userPassword.trim().length === userConfirmPassword.trim().length)) {
+          axios(config)
+          .then(response => {
+            
+            if(response.data.status === 'error') {
+              console.log("Entered error");
+              setErrorFound(true);
+              setErrorMessage(response.data.message);
+              return ;
+            }
+            else {
+              console.log(response);
+            setFormIsValid(!flag);
+            setIsLoggedIn(true);
+            navigate("/home");
+            }
+            
+      })
+        .catch((err) => alert("Account does not exist"))
           console.log("login success")
           flag = true;
         }
         
         // props.onSuccess(true);
-        if(flag) {
-          setIsLoggedIn(true);
-          navigate('/home');
-        }
-        setFormIsValid(!flag);
+        // if(flag) {
+        //   setIsLoggedIn(true);
+        //   navigate('/home');
+        // }
+        // setFormIsValid(!flag);
         setUserFirstName('');
         setUserLastName('');
         setUserEmail('');
@@ -161,7 +193,7 @@ const SignUp = (props) => {
             />
           </div>
           <div className={styles.actions}>
-            {!formIsValid && <NavLink to="/home"></NavLink>}
+            {!isLoggedIn && <NavLink to="/home"></NavLink>}
             <Button type="submit"className="button">Register</Button>
             {/*  disabled={!formIsValid}  <p onClick={changetoLogin}>Already a user? <span style={{color:'red'}}>Sign-In.</span></p> */}
             <p>Already a user? <NavLink to="/">Login</NavLink></p>

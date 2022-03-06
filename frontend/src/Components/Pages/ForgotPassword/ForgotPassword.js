@@ -1,12 +1,14 @@
 import styles from "./ForgotPassword.module.css";
 import CardWrap from "../../UI/CardWrap/CardWrap";
 import Button from "../../UI/Button/Button";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LoginStateContext } from "../../Context";
 
 function ForgotPassword() {
   const [userEmail, setUserEmail] = useState("");
   const [acknowledgement, setAcknowledgement] = useState(false);
+  const {isLoggedIn, setIsLoggedIn} = useContext(LoginStateContext);
   let navigate = useNavigate();
   function changeUserEmail(event) {
     setUserEmail(event.target.value);
@@ -14,7 +16,9 @@ function ForgotPassword() {
   function handleUser(event) {
     event.preventDefault();
     // check user Email in DB
-    navigate('/resetpassword');
+    setIsLoggedIn(true);
+    navigate('/home');
+    // navigate('/resetpassword');
   }
   return (
     <div style={styles}>
