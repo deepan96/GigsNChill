@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
 import json, sys
+from rest_framework.renderers import JSONRenderer
 
 #Mail
 from django.conf import settings
@@ -185,17 +186,59 @@ class UpdatePasswordView(APIView):
 
         return Response(serializer_class.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileView(APIView):
-    def get(self, request):
-        if request.data['Type'] ==  'User':
-            db_table = USER
-        else:
-            db_table = HOST
+class ProfileView(generics.ListAPIView):
+    serializer_class = ProfileSerializer
+    renderer_classes = (JSONRenderer,)
+    '''def get_queryset(self):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
         try:
-            item = db_table.objects.get(Email=request.data['Email'])
+            if 'Type' in self.kwargs:
+                type, username = request.data['Type'], request.data['Email']
+                if type ==  'User':
+                    db_table = USER
+                else:
+                    db_table = HOST
+            else:
+                db_table = USER
+            f = open("readme.txt", "w+")
+            f.write(model_to_dict(db_table.objects.get(Email=self.kwargs['Email'])))
+            f.close()
+            #return {'data': db_table.objects.all()}
+            return Response({'data': model_to_dict(db_table.objects.get(Email=self.kwargs['Email']))}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}, status=status.HTTP_200_OK)
+            #return {"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}
+    '''
+    def get(self, request, email, type="User"):
+        """
+        This view should return a list of all the purchases for
+        the user as determined by the username portion of the URL.
+        """
+        f = open("readme.txt", "w+")
+        f.write(str(args))
+        f.close()
+        try:
+            if type == 'User':
+                db_table = USER
+            else:
+                db_table = HOST
+            f = open("readme.txt", "w+")
+            f.write(str(args))
+            f.close()
+            #return {'data': db_table.objects.all()}
+            return Response({'data': model_to_dict(db_table.objects.get(Email=email))}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)}, status=status.HTTP_200_OK)
+
+    '''def get(self, request):
+        try:
+            item = USER.objects.get(Email=request.data['Email'])
             return Response({"status": "success", "data": item}, status=status.HTTP_200_OK)
-        except Profile.DoesNotExist:
-            return Response({"status": "error", "data": "username does not exist"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": "username does not exist" + str(request.data)}, status=status.HTTP_200_OK)'''
 
     '''def get(self, request):
         serializer_class = ProfileSerializer(data=request.data)
@@ -214,3 +257,4 @@ class ProfileView(APIView):
             return Response(response, status=status.HTTP_200_OK)
         return Response({'status': 'error'},
                                 status=status.HTTP_400_BAD_REQUEST)'''
+

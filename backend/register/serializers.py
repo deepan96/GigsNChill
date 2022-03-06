@@ -57,7 +57,8 @@ class ProfileSerializer(serializers.Serializer):
     Serializer for profile view endpoint.
     """
     Email = serializers.CharField(required=True)
+    Type = serializers.CharField(required=False)
     class Meta:
         model = USER
-        fields = ('Email',)
+        fields = ('Email', 'Type',)
 

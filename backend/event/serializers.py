@@ -30,3 +30,8 @@ class AddNewEventSerializer(serializers.Serializer):
     ZipCode = serializers.CharField(required=True)
     class Meta:
          model = Event
+
+
+class SearchEventsSerializer(serializers.Serializer):
+    class Meta:
+         model = Event

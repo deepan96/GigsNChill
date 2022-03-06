@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from login import views
 from rest_framework import routers
 from register import views as view_register
@@ -33,7 +33,8 @@ urlpatterns = [
     path('recoverpassword/', view_register.RecoverPasswordView.as_view(), name="recoverpassword"),
     path('resetpassword/', view_register.ResetPasswordView.as_view(), name="resetpassword"),
     path('updatepassword/', view_register.UpdatePasswordView.as_view(), name="updatepassword"),
-    path(r'profile/(?P<Email>\w+)/', view_register.ProfileView.as_view(), name="profile"),
+    re_path('viewprofile/(?P<Email>\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/)', view_register.ProfileView.as_view(), name="viewprofile"),
     path('addnewevent/', view_event.AddNewEventView.as_view(), name="addnewevent"),
+    path('searchevent/', view_event.SearchEvents.as_view(), name="searchevent"),
     #path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
 ]
