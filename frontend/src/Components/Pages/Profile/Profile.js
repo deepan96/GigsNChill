@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { Card, CardActions, CardContent, CardMedia, IconButton } from '@material-ui/core';
 //import "./Profile.css";
-import MainHeader from "../../UI/MainHeader";
-import Event from "../Events/EventTile";
+import MainHeader from '../../UI/Header/MainHeader';
+import EventTile from "../Events/EventTile";
 import styles from "./Profile.css";
 import { NavLink } from "react-router-dom";
 import Calendar from "react-calendar";
 import 'react-calendar/dist/Calendar.css';
 import ProIcon from '@mui/icons-material/AccountCircle';
-
+import events from "../Events/EventData";
 function Profile(props) {
     const[date,setDate] = useState(new Date());
     const loop = [1,2,3,4,5,6,7,8,9,10];
     return (
         <div>
-            <MainHeader />
             <div className="page">
                 <header>
                 <IconButton aria-label="profile icon">
@@ -58,8 +57,8 @@ function Profile(props) {
                         </h2>
                         <div className="events">
                         <div style={styles}>
-                            <div className={styles.container}>
-                                {loop.map((i)=><Event/>)}
+                            <div>
+                                {events.map((i)=><EventTile event={i}/>)}
                             </div>
                         </div>
                         </div>

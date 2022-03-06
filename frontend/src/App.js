@@ -1,11 +1,12 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import {Routes, Route} from 'react-router-dom';
-import { LoginStateContext } from './Components/Context';
+import { LoginStateContext, UserEmailStateConext } from './Components/Context';
 import { RouteStack,LoginRouteStack } from './Components/Auth/RouteStack';
 import MainHeader from './Components/UI/Header/MainHeader';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userEmail, setUserEmail] = useState(false);
   return (
     <div>
       <LoginStateContext.Provider value = {{isLoggedIn, setIsLoggedIn}}>

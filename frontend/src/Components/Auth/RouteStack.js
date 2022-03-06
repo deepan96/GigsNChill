@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "../Pages/Home/Home";
 import LandingPage from "../Pages/Default_land_page/LandingPage";
 import EventPage from "../Pages/Events/EventPage";
+import Profile from "../Pages/Profile/Profile";
 
 export function RouteStack() {
   return (
@@ -21,6 +22,7 @@ export function LoginRouteStack() {
         <Route path="/*" element={<LandingPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/home/eventpage/:id" element={<EventPage />} />
+        <Route path="/profile" element={<Profile/>}/>
       </Routes>
     </div>
   );
