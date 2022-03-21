@@ -1,0 +1,7 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    /* flex-direction: wrap; */
+    margin-top: 7rem;
+    margin-left: 15rem;
+}

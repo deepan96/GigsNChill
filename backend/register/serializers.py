@@ -1,45 +1,64 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from .models import USER
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-
+from django.contrib.auth.hashers import make_password, check_password
+from datetime import date
+from django.db import models
+from django.utils import timezone
 
 class RegisterSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
-
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
-    password2 = serializers.CharField(write_only=True, required=True)
-
+    """
+    Serializer for User Registration.
+    """
+    Email = serializers.CharField(required=True)
+    FirstName = serializers.CharField(required=True)
+    LastName = serializers.CharField(required=True)
+    Mobile = serializers.CharField(required=False)
+    Password1 = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    Password2 = serializers.CharField(write_only=True, required=True)
+    Type = serializers.CharField(required=True)
     class Meta:
-        model = User
+        model = USER
         #fields = '__all__'
-        fields = ('username', 'email', 'first_name', 'last_name', 'password', 'password2')
-        extra_kwargs = {
-            'first_name': {'required': True},
-            'last_name': {'required': True},
-            'mobile': {'required': True},
-        }
+        fields = ('Email', 'FirstName', 'LastName', 'Mobile', 'Password1', 'Password2', 'Type')
 
-    def validate(self, attrs):
-        if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
 
-        return attrs
+class PasswordRecoverySerializer(serializers.Serializer):
+    """ Serializer for password reset endpoint """
+    Email = serializers.CharField(required=True)
+    class Meta:
+        model = USER
+        fields = ('Email')
 
-    def create(self, validated_data):
-        user = User.objects.create(
-            username = validated_data['username'],
-            email=validated_data['email'],
-            first_name=validated_data['first_name'],
-            last_name=validated_data['last_name'],
-            #mobile=validated_data['mobile']
-        )
+class ResetPasswordSerializer(serializers.Serializer):
+    """ Serializer for reset password change endpoint """
+    Email = serializers.CharField(required=True)
+    Password = serializers.CharField(required=True)
+    class Meta:
+        model = USER
+        fields = ('Email', 'Password')
 
-        
-        user.set_password(validated_data['password'])
-        user.save()
+class UpdatePasswordSerializer(serializers.Serializer):
+    """
+    Serializer for password change endpoint.
+    """
+    Email = serializers.CharField(required=True)
+    OldPassword = serializers.CharField(required=True)
+    Password1 = serializers.CharField(required=True)
+    Password2 = serializers.CharField(required=True)
+    class Meta:
+        model = USER
+        #fields = '__all__'
+        fields = ('Email', 'OldPassword', 'Password1', 'Password2')
 
-        return user
+class ProfileSerializer(serializers.Serializer):
+    """
+    Serializer for profile view endpoint.
+    """
+    Email = serializers.CharField(required=True)
+    Type = serializers.CharField(required=False)
+    class Meta:
+        model = USER
+        fields = ('Email', 'Type',)
+
