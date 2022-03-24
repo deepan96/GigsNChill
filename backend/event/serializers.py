@@ -5,8 +5,8 @@
 '''
 
 from rest_framework import serializers
-from register.models import HOST
-from .models import Event
+from register.models import HOST, USER
+from .models import Event, Bookings
 
 
 class AddNewEventSerializer(serializers.Serializer):
@@ -35,3 +35,10 @@ class AddNewEventSerializer(serializers.Serializer):
 class SearchEventsSerializer(serializers.Serializer):
     class Meta:
          model = Event
+
+class BookEventSerializer(serializers.Serializer):
+    UserId = serializers.CharField(required=True)
+    NoOfSeats = serializers.IntegerField(required=True)
+    EventId = serializers.CharField(required=True)
+    class Meta:
+        model = Bookings

@@ -1,6 +1,6 @@
 from django.db import models
 from localflavor.us.forms import USStateSelect, USZipCodeField
-from register.models import HOST
+from register.models import HOST, USER
 
 # Create your models here.
 class Location(models.Model):
@@ -32,5 +32,11 @@ class Event(models.Model):
     def __str__(self) -> str:
         return self.EventId
 
-
+class Bookings(models.Model):
+    BookingId = models.AutoField(primary_key=True)
+    UserId = models.ForeignKey(USER, on_delete=models.CASCADE)
+    NoOfSeats = models.IntegerField(default=1)
+    EventId = models.ForeignKey(Event, on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return self.BookingId
 
