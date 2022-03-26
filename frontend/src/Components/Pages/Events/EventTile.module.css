@@ -3,14 +3,17 @@
     flex-direction: column; */
     margin-top: 3rem;
     margin-left: 4rem;
+    max-width: 250px;
+    min-height: 380px;
+    max-height: 380px;
     overflow: hidden;
     transition: 0.35;
     animation: ease-in;
 }
 
 .eventcard:hover {
-    transform: scale(1.1);
-    box-shadow: 0px 0px 15px 0px;
+    /* transform: scale(0.9); */
+    box-shadow: 0px 0px 8px 0px;
 }
 .cardimage{
     overflow: hidden;

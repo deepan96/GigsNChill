@@ -3,25 +3,29 @@ import { LoginStateContext } from "../../Context";
 import { useEffect, useState } from "react";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import styles from "./Navigation.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navigation = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   const [show, setshow] = useState(false);
-
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = (event) => {
-    
-    props.onLogout(); // from mainheader
+  function handleProfile() {
+    navigate("profile");
     setAnchorEl(null);
   }
+  const handleLogout = (event) => {
+    props.onLogout(); // from mainheader
+    setAnchorEl(null);
+  };
   useEffect(() => {
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) {
@@ -40,13 +44,13 @@ const Navigation = (props) => {
           <>
             <ul>
               <li>
-                <Link to='/home'>Home</Link>
+                <Link to="/home">Home</Link>
               </li>
               <li>
                 <a href="/">Chat</a>
               </li>
               <li>
-                <a href="/">Host a Event ?</a>
+                <Link to="/hostevent">Host a Event ?</Link>
               </li>
 
               <li>
@@ -82,10 +86,8 @@ const Navigation = (props) => {
           "aria-labelledby": "basic-avatar",
         }}
       >
-        <MenuItem onClick={handleClose}>
-          <Link to={`profile`}>Profile</Link>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My Likes</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>

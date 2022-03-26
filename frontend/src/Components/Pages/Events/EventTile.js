@@ -38,7 +38,7 @@ function EventTile(props) {
           console.log('fav');
           setFav(!fav);
         }}>
-          <FavoriteIcon color={fav ? "primary" : ""}/>
+          <FavoriteIcon sx={{color:'red'}} color={fav ? "primary": ""}/>
           
         </IconButton>
         <IconButton aria-label="share">

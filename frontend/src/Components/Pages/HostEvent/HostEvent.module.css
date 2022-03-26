@@ -1,0 +1,69 @@
+.container {
+  /* width: fit-content; */
+  max-width: 40rem;
+  margin: 7rem auto;
+  padding: 1rem;
+  background-color: #e7eeed;
+}
+.heading {
+  text-align: center;
+  color: rgb(218, 126, 50);
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+.control {
+  margin: 1rem 0;
+  display: flex;
+  /* align-items: stretch; */
+  flex-direction: column;
+}
+
+.control label,
+.control input {
+  display: block;
+}
+
+.control label {
+  font-weight: bold;
+  flex: 1;
+  color: #464646;
+  margin-bottom: 0.5rem;
+}
+
+.control input {
+  flex: 3;
+  font: inherit;
+  padding: 0.35rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.control input:focus {
+  outline: none;
+  border-color: #a3a2a3;
+  /* background: #e6f7ff; */
+}
+
+.timediv {
+/* width: 100%; */
+
+display: flex;
+flex-direction: row;
+}
+.lefttime {
+    min-width: 100px;
+}
+.righttime {
+    padding-left: 40%;
+}
+.addevent {
+    display: flex;
+    justify-content: right;
+}
+.addbutton {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: white;
+    font-weight: bold;
+    background-color: rgb(247, 176, 46);
+    padding: 10px 20px 10px 20px;
+    border-radius: 5px;
+}

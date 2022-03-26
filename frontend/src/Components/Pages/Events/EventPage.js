@@ -36,7 +36,8 @@ export default function EventPage(props) {
   }
 
   return (
-    <div>
+    <div style={styles}>
+      <div className={styles.fullpage}>
       <Card className={styles.container}>
         <div>
           <CardMedia
@@ -93,6 +94,7 @@ export default function EventPage(props) {
           </button>
         </div>
       </Card>
+      </div>
     </div>
   );
 }
