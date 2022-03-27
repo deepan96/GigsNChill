@@ -46,7 +46,8 @@ class AddNewEventView(APIView):
                                          HostId=HOST.objects.get(Email=request.data['HostEmail']),
                                          Address=request.data['Address'],
                                          ZipCode=request.data['ZipCode'],
-                                         LocationId=LocationId, )
+                                         LocationId=LocationId,
+                                         ImageUrl=request.data['ImageUrl'],)
                 e.save()
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
             except Exception as e:
@@ -94,9 +95,26 @@ class BookEventView(APIView):
         serializer_class = BookEventSerializer(data=request.data)
         if serializer_class.is_valid():
             try:
+                self.object = Event.objects.get(EventId=request.data['EventId'])
+                SeatsAvailable = int(self.object.SeatsAvailable) - int(request.data["NoOfSeats"])
+                if self.object.SeatsAvailable == 0:
+                    return JsonResponse(
+                    {"status": "error",
+                     "message": "Couldn't book the event as seats are full for the requested Event"},
+                    status=status.HTTP_200_OK)
+                if SeatsAvailable < 0:
+                    return JsonResponse(
+                    {"status": "error",
+                     "message": "Couldn't book the event because " \
+                                "the requested number of seats not available or Seats are full"},
+                    status=status.HTTP_200_OK)
+
                 book = Bookings.objects.create(UserId = USER.objects.get(Email=request.data['UserId']),
                                                NoOfSeats =request.data["NoOfSeats"],
                                                EventId=Event.objects.get(EventId=request.data['EventId']))
+                self.object = Event.objects.get(EventId=request.data['EventId'])
+                self.object.SeatsAvailable = SeatsAvailable
+                self.object.save()
                 book.save()
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
             except Exception as e:

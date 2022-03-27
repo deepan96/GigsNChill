@@ -47,12 +47,14 @@ INSTALLED_APPS = [
     'corsheaders', 
     'rest_framework',
     'localflavor',
+    'whitenoise',
 ]
 
 # Whitelist default react development port
 CORS_ORIGIN_WHITELIST = [ 'http://localhost:3000' ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,6 +66,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'backend.urls'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 TEMPLATES = [
     {

@@ -1,6 +1,7 @@
 from pyexpat import model
 from .models import USER, HOST
-from .serializers import RegisterSerializer, PasswordRecoverySerializer, UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer
+from .serializers import RegisterSerializer, PasswordRecoverySerializer, \
+    UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer
 from rest_framework import generics, permissions, status
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -85,7 +86,6 @@ class RecoverPasswordView(APIView):
 
 class ResetPasswordView(APIView):
     """ Replaces the password, follows after a recover password step """
-
     model = USER
     queryset = USER.objects.all()
     serializer_class = ResetPasswordSerializer
@@ -177,20 +177,17 @@ class ProfileView(generics.ListAPIView):
             return Response({"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}, status=status.HTTP_200_OK)
             #return {"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}
     '''
-    def get(self, request, *args, **kwargs):
+    def get(self, request, Email, Type="user"):
         """
         This view should return a list of all the purchases for
         the user as determined by the username portion of the URL.
         """
         try:
-            if "Type" in self.kwargs:
-                if self.kwargs['Type'].lower() == 'user':
-                    db_table = USER
-                else:
-                    db_table = HOST
-            else:
+            if Type.lower() == 'user':
                 db_table = USER
-            return Response({"status": "success", 'data': model_to_dict(db_table.objects.get(Email=self.kwargs['Email']))}, status=status.HTTP_200_OK)
+            else:
+                db_table = HOST
+            return Response({"status": "success", 'data': model_to_dict(db_table.objects.get(Email=Email))}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)}, status=status.HTTP_200_OK)
 
