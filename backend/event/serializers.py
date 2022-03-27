@@ -28,6 +28,7 @@ class AddNewEventSerializer(serializers.Serializer):
     City = serializers.CharField(required=True)
     State = serializers.CharField(required=True)
     ZipCode = serializers.CharField(required=True)
+    ImageUrl = serializers.URLField(max_length=500, min_length=0, allow_blank=True)
     class Meta:
          model = Event
 
