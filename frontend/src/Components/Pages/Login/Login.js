@@ -29,9 +29,13 @@ const Login = (props) => {
   useEffect( () => {
     const data = JSON.parse(localStorage.getItem('user'));
     console.log(data);
-    // if(data.isLoggedIn) {
-    //   navigate('/home');
-    // }
+    if (data && data.isLoggedIn) {
+    setIsLoggedIn(true);
+      navigate('/home');
+    }
+    else {
+      navigate('/');
+    }
   }, []);
 
 
@@ -107,7 +111,7 @@ const Login = (props) => {
           // console.log(response);
         setFormIsValid(!flag);
         setIsLoggedIn(true);
-        const mdata = {email: userName, type:typeOfUser, isLoggedIn : isLoggedIn}
+        const mdata = {email: userName, type:typeOfUser, isLoggedIn : true}
         localStorage.setItem('user', JSON.stringify(mdata));
         setUserName("");
         setUserPassword("");

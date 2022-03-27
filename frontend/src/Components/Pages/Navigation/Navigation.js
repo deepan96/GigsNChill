@@ -8,6 +8,8 @@ import { Link, useNavigate } from "react-router-dom";
 const Navigation = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   const [show, setshow] = useState(false);
+  const [typeOfUser, setTypeofUser] = useState("User");
+  const [host, setHost] = useState(false);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -27,6 +29,14 @@ const Navigation = (props) => {
     setAnchorEl(null);
   };
   useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("user"));
+    // if (data) {
+    //   console.log(data);
+    //   setTypeofUser(data.type);
+    // }
+    // if (typeOfUser === "Host") {
+    //   setHost(true);
+    // }
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) {
         setshow(true);
@@ -49,9 +59,11 @@ const Navigation = (props) => {
               <li>
                 <a href="/">Chat</a>
               </li>
-              <li>
-                <Link to="/hostevent">Host a Event ?</Link>
-              </li>
+              {
+                <li>
+                  <Link to="/hostevent">Host a Event ?</Link>
+                </li>
+              }
 
               <li>
                 <Avatar

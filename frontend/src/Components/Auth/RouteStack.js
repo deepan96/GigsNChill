@@ -20,7 +20,7 @@ export function LoginRouteStack() {
   return (
     <div>
       <Routes>
-        <Route path="/*" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/home/eventpage/:id" element={<EventPage />} />
         <Route path="/profile" element={<Profile/>}/>

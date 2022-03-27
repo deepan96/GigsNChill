@@ -10,7 +10,10 @@ import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import { Calendar, utils } from "react-modern-calendar-datepicker";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
-
+import axios from "axios";
+import { format, parseISO, set } from "date-fns";
+import moment from "moment";
+import { Alert } from "@mui/material";
 function HostEvent(props) {
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
@@ -26,17 +29,132 @@ function HostEvent(props) {
   const [eventHName, setEventHName] = useState("");
   const [eventHMail, setEventHMail] = useState("");
   const [eventAddress, setEventAddress] = useState("");
-  const [evnetZipc, setEventZipc] = useState("");
+  const [street, setStreet] = useState("");
+  const [city, setCity] = useState("");
+  const [eventState, setEventState] = useState("");
+  const [eventZipc, setEventZipc] = useState("");
+
+  const [errorFound, setErrorFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("Error in the Fields.");
+const [errorSeverity, setErrorSeverity] = useState('error');
 
   function submitHandler(event) {
-    event.preventdefault();
-  }
-  function handleEvent() {
+    event.preventDefault();
+    if (
+      !eventName ||
+      !eventDesc ||
+      !eventGenre ||
+      !eventType ||
+      !eventDate ||
+      !eventStartTime ||
+      !eventEndTime ||
+      !eventPerformer ||
+      !eventCapacity ||
+      !eventPrice ||
+      !eventHMail ||
+      !street ||
+      !city ||
+      !eventState ||
+      !eventZipc
+    ) {
+        setErrorFound(true);
+        setErrorMessage("Enter all fields.");
+        return ;
+    }
+    
+    else {
+      var axios = require("axios");
+    var FormData = require("form-data");
+    // handling date formatting
+    console.log(eventDate);
+    const d = moment(eventDate, "yyyy-MM-DD").format("yyyy-MM-DD");
+    setEventDate(d);
 
+    const t = moment(eventStartTime, "HH:mm:ss").format("HH:mm:ss");
+    setEventStartTime(t);
+    const et = moment(eventEndTime, "HH:mm:ss").format("HH:mm:ss");
+    setEventEndTime(et);
+
+    var data = new FormData();
+    data.append("EventName", eventName.toString());
+    data.append("EventDescription", eventDesc.toString());
+    data.append("EventGenre", eventGenre.toString());
+    data.append("EventType", eventType.toString());
+    data.append("EventDate", eventDate.toString());
+    data.append("EventStartTime", eventStartTime.toString());
+    data.append("EventEndTime", eventEndTime.toString());
+    data.append("Performer", eventPerformer.toString());
+    data.append("MaxNoOfSeats", eventCapacity.toString());
+    data.append("Price", eventPrice.toString());
+    data.append("HostEmail", eventHMail.toString());
+    data.append("Address", street.toString());
+    data.append("City", city.toString());
+    data.append("State", eventState.toString());
+    data.append("ZipCode", eventZipc.toString());
+
+    var config = {
+      method: "post",
+      url: "http://127.0.0.1:8000/addnewevent/",
+      data: data,
+    };
+
+    axios(config)
+      .then((res) => {
+        if (res.data.status === "error") {
+          setErrorFound(true);
+          setErrorMessage("Event must be hosted by registered Host only.");
+          return;
+        }
+        else {
+            console.log(res);
+            setEventName('');
+            setEventDesc('');
+            setEventDate('');
+            setEventType('');
+            setEventGenre('');
+            setEventStartTime('');
+            setEventEndTime('');
+            setStreet('');
+            setCity('');
+            setEventState('');
+            setEventZipc('');
+            setEventCapacity('');
+            setEventHName('');
+            setEventPerformer('');
+            setEventHMail('');
+            setEventCapacity('');
+            setEventPrice('');
+            setErrorFound(true);
+            setErrorSeverity('success')
+            setErrorMessage("Event Successfully Hosted :))");
+        }
+        // console.log(
+        //   eventName,
+        //   eventDesc,
+        //   eventGenre,
+        //   eventType,
+        //   eventDate,
+        //   eventStartTime,
+        //   eventEndTime,
+        //   eventPerformer,
+        //   eventCapacity,
+        //   eventPrice,
+        //   eventHMail,
+        //   street,
+        //   city,
+        //   eventState,
+        //   eventZipc
+        // );
+      })
+      .catch((err) => alert("Enter Proper Event details"));
+    }
+    
   }
+
   return (
     <div style={styles}>
       <CardWrap className={styles.container}>
+        {errorFound && <Alert severity={errorSeverity}>{errorMessage}</Alert>}
         <div className={styles.heading}>
           <h4>Excited to see the Event</h4>
         </div>
@@ -53,13 +171,7 @@ function HostEvent(props) {
           </div>
           <div className={styles.control}>
             <label htmlFor="eventdesc">Description</label>
-            {/* <input
-              id="eventdesc"
-              type="text"
-              placeholder="Description"
-              value={eventDesc}
-              onChange={(e) => setEventDesc(e.target.value)}
-            /> */}
+
             <TextareaAutosize
               aria-label="empty textarea"
               placeholder="Description"
@@ -92,7 +204,11 @@ function HostEvent(props) {
             <label htmlFor="eventdate">Pick Date</label>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
-                // label="Basic example"
+                label="Event On"
+                cancelText="Please select a date"
+                clearable={true}
+                disablePast={true}
+                showTodayButton={true}
                 value={eventDate}
                 onChange={(e) => setEventDate(e)}
                 renderInput={(params) => <TextField {...params} />}
@@ -172,13 +288,29 @@ function HostEvent(props) {
           </div>
           <div className={styles.control}>
             <label htmlFor="address">Address</label>
-            <input
-              id="address"
-              type="text"
-              placeholder="street 123block city"
-              value={eventAddress}
-              onChange={(e) => setEventAddress(e.target.value)}
-            />
+            <div className={styles.addressdiv}>
+              <input
+                id="street"
+                type="text"
+                placeholder="Street"
+                value={street}
+                onChange={(e) => setStreet(e.target.value)}
+              />
+              <input
+                id="City"
+                type="text"
+                placeholder="City"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+              />
+              <input
+                id="state"
+                type="text"
+                placeholder="State"
+                value={eventState}
+                onChange={(e) => setEventState(e.target.value)}
+              />
+            </div>
           </div>
           <div className={styles.control}>
             <label htmlFor="zipcode">ZipCode</label>
@@ -186,7 +318,7 @@ function HostEvent(props) {
               id="zipcode"
               type="text"
               placeholder="123456"
-              value={evnetZipc}
+              value={eventZipc}
               onChange={(e) => setEventZipc(e.target.value)}
             />
           </div>
@@ -197,7 +329,13 @@ function HostEvent(props) {
             </Button>
           </div>
           <div className={styles.addevent}>
-              <button className = {styles.addbutton} type='submit' onClick={handleEvent}>Add Event</button>
+            <button
+              className={styles.addbutton}
+              type="button"
+              onClick={submitHandler}
+            >
+              Add Event
+            </button>
           </div>
         </form>
       </CardWrap>

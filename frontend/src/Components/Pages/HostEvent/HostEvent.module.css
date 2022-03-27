@@ -55,6 +55,10 @@ flex-direction: row;
 .righttime {
     padding-left: 40%;
 }
+.addressdiv {
+    display: flex;
+    flex-direction: row;
+}
 .addevent {
     display: flex;
     justify-content: right;
