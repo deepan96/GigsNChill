@@ -32,6 +32,8 @@ urlpatterns = [
     path('recoverpassword/', view_register.RecoverPasswordView.as_view(), name="recoverpassword"),
     path('resetpassword/', view_register.ResetPasswordView.as_view(), name="resetpassword"),
     path('updatepassword/', view_register.UpdatePasswordView.as_view(), name="updatepassword"),
+    re_path('viewprofile/(?P<Type>[\w-]+)/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
+            view_register.ProfileView.as_view(), name="viewprofile"),
     re_path('viewprofile/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
             view_register.ProfileView.as_view(), name="viewprofile"),
     #re_path('viewprofile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="viewprofile"),
