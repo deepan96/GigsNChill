@@ -16,9 +16,9 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
     <div style ={styles}>
     <div className={styles.searchcontainer}>
       <div className={styles.searchdiv}>
-      <Paper
+      <div
         className={styles.searching}
-        component="form"
+        // component="form"
         onSubmit={searchHandler}
         >
        {/* sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 600 }} */}
@@ -45,7 +45,7 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
         >
           <SearchIcon />
         </IconButton>
-      </Paper>
+      </div>
       </div>
     </div>
     </div>

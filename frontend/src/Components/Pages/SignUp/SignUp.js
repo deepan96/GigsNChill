@@ -89,6 +89,8 @@ const SignUp = (props) => {
               console.log(response);
             setFormIsValid(!flag);
             setIsLoggedIn(true);
+            const mdata = {email: userEmail, type:typeOfUser, isLoggedIn : isLoggedIn}
+            localStorage.setItem('user', JSON.stringify(mdata));
             navigate("/home");
             }
             

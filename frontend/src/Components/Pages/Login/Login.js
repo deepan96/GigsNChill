@@ -24,6 +24,22 @@ const Login = (props) => {
   //error messages
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  // need to check login for saved.
+  useEffect( () => {
+    const data = JSON.parse(localStorage.getItem('user'));
+    console.log(data);
+    if (data && data.isLoggedIn) {
+    setIsLoggedIn(true);
+      navigate('/home');
+    }
+    else {
+      navigate('/');
+    }
+  }, []);
+
+
+  
   // google auth
   const onLoginSuccess = (res) => {
     console.log("Login Success:", res.profileObj);
@@ -83,7 +99,7 @@ const Login = (props) => {
 
     axios(config)
     .then(response => {
-        console.log(response);
+        // console.log(response);
         if(response.data.status === 'error') {
           console.log("Entered error");
           setErrorFound(true);
@@ -92,9 +108,11 @@ const Login = (props) => {
           return ;
         }
         else {
-          console.log(response);
+          // console.log(response);
         setFormIsValid(!flag);
         setIsLoggedIn(true);
+        const mdata = {email: userName, type:typeOfUser, isLoggedIn : true}
+        localStorage.setItem('user', JSON.stringify(mdata));
         setUserName("");
         setUserPassword("");
         navigate("/home");
