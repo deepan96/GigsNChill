@@ -1,6 +1,7 @@
 .container {
     display: flex;
     flex-wrap: wrap;
+    /* flex-direction: wrap; */
     margin-top: 7rem;
     margin-left: 15rem;
 }
@@ -106,6 +107,11 @@ abbr[title] {
 .hist-body{
     width: 60%;
     padding: 0 5.0rem;
+}
+.events{
+    display: flex;
+    justify-content: center;
+    flex-direction: column wrap;
 }
 
 article h2{

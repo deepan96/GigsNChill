@@ -15,6 +15,7 @@ const MainHeader = (props) => {
   function logoutHandler() {
 
     setIsLoggedIn(false);
+    localStorage.clear();
     navigate('/');
   }
   return (

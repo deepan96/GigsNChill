@@ -4,6 +4,7 @@ import Home from "../Pages/Home/Home";
 import LandingPage from "../Pages/Default_land_page/LandingPage";
 import EventPage from "../Pages/Events/EventPage";
 import Profile from "../Pages/Profile/Profile";
+import HostEvent from "../Pages/HostEvent/HostEvent";
 
 export function RouteStack() {
   return (
@@ -19,10 +20,11 @@ export function LoginRouteStack() {
   return (
     <div>
       <Routes>
-        <Route path="/*" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/home/eventpage/:id" element={<EventPage />} />
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/hostevent" element={<HostEvent/>}/>
       </Routes>
     </div>
   );

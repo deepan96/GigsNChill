@@ -3,26 +3,40 @@ import { LoginStateContext } from "../../Context";
 import { useEffect, useState } from "react";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import styles from "./Navigation.module.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navigation = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   const [show, setshow] = useState(false);
-
+  const [typeOfUser, setTypeofUser] = useState("User");
+  const [host, setHost] = useState(false);
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogout = (event) => {
-    
-    props.onLogout(); // from mainheader
+  function handleProfile() {
+    navigate("profile");
     setAnchorEl(null);
   }
+  const handleLogout = (event) => {
+    props.onLogout(); // from mainheader
+    setAnchorEl(null);
+  };
   useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("user"));
+    // if (data) {
+    //   console.log(data);
+    //   setTypeofUser(data.type);
+    // }
+    // if (typeOfUser === "Host") {
+    //   setHost(true);
+    // }
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) {
         setshow(true);
@@ -40,14 +54,16 @@ const Navigation = (props) => {
           <>
             <ul>
               <li>
-                <Link to='/home'>Home</Link>
+                <Link to="/home">Home</Link>
               </li>
               <li>
                 <a href="/">Chat</a>
               </li>
-              <li>
-                <a href="/">Host a Event ?</a>
-              </li>
+              {
+                <li>
+                  <Link to="/hostevent">Host a Event ?</Link>
+                </li>
+              }
 
               <li>
                 <Avatar
@@ -82,10 +98,8 @@ const Navigation = (props) => {
           "aria-labelledby": "basic-avatar",
         }}
       >
-        <MenuItem onClick={handleClose}>
-          <Link to={`profile`}>Profile</Link>
-        </MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My Likes</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>
