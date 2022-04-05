@@ -7,13 +7,15 @@ import DatePicker from "@mui/lab/DatePicker";
 import TextField from "@mui/material/TextField";
 import TimePicker from "@mui/lab/TimePicker";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import { Calendar, utils } from "react-modern-calendar-datepicker";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
 import axios from "axios";
 import { format, parseISO, set } from "date-fns";
 import moment from "moment";
 import { Alert } from "@mui/material";
+import { storage } from "../../firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+
 function HostEvent(props) {
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
@@ -36,7 +38,46 @@ function HostEvent(props) {
 
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("Error in the Fields.");
-const [errorSeverity, setErrorSeverity] = useState('error');
+  const [errorSeverity, setErrorSeverity] = useState("error");
+
+  // image URL
+  const allInputs = { imgUrl: "" };
+  const [imageAsFile, setImageAsFile] = useState("");
+  const [imageAsUrl, setImageAsUrl] = useState("");
+  const [imageProgress, setImageProgress] = useState(0);
+
+  const handleImageAsFile = (e) => {
+    console.log(e.target.files[0])
+    const image = e.target.files[0];
+    setImageAsFile(image);
+  };
+  const uploadFiles = (file) => {
+    console.log(file);
+    if (!file) return;
+    const storageRef = ref(storage, `/files/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const prog = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+        setImageProgress(prog);
+      },
+      (err) => console.log(err),
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((url) =>
+        // console.log(url)
+          setImageAsUrl(url)
+        );
+      }
+    );
+  };
+
+  async function handleImage() {
+    await uploadFiles(imageAsFile);
+  }
 
   function submitHandler(event) {
     event.preventDefault();
@@ -57,98 +98,99 @@ const [errorSeverity, setErrorSeverity] = useState('error');
       !eventState ||
       !eventZipc
     ) {
-        setErrorFound(true);
-        setErrorMessage("Enter all fields.");
-        return ;
-    }
-    
-    else {
+      setErrorFound(true);
+      setErrorMessage("Enter all fields.");
+      return;
+    } else {
       var axios = require("axios");
-    var FormData = require("form-data");
-    // handling date formatting
-    console.log(eventDate);
-    const d = moment(eventDate, "yyyy-MM-DD").format("yyyy-MM-DD");
-    setEventDate(d);
+      var FormData = require("form-data");
+      // handling date formatting
+      console.log(eventDate);
+      const d = moment(eventDate, "yyyy-MM-DD").format("yyyy-MM-DD");
+      setEventDate(d);
 
-    const t = moment(eventStartTime, "HH:mm:ss").format("HH:mm:ss");
-    setEventStartTime(t);
-    const et = moment(eventEndTime, "HH:mm:ss").format("HH:mm:ss");
-    setEventEndTime(et);
+      const t = moment(eventStartTime, "HH:mm:ss").format("HH:mm:ss");
+      setEventStartTime(t);
+      const et = moment(eventEndTime, "HH:mm:ss").format("HH:mm:ss");
+      setEventEndTime(et);
 
-    var data = new FormData();
-    data.append("EventName", eventName.toString());
-    data.append("EventDescription", eventDesc.toString());
-    data.append("EventGenre", eventGenre.toString());
-    data.append("EventType", eventType.toString());
-    data.append("EventDate", eventDate.toString());
-    data.append("EventStartTime", eventStartTime.toString());
-    data.append("EventEndTime", eventEndTime.toString());
-    data.append("Performer", eventPerformer.toString());
-    data.append("MaxNoOfSeats", eventCapacity.toString());
-    data.append("Price", eventPrice.toString());
-    data.append("HostEmail", eventHMail.toString());
-    data.append("Address", street.toString());
-    data.append("City", city.toString());
-    data.append("State", eventState.toString());
-    data.append("ZipCode", eventZipc.toString());
+      //handling image
+      // uploadFiles(imageAsFile);
 
-    var config = {
-      method: "post",
-      url: "http://127.0.0.1:8000/addnewevent/",
-      data: data,
-    };
+      var data = new FormData();
+      data.append("EventName", eventName.toString());
+      data.append("EventDescription", eventDesc.toString());
+      data.append("EventGenre", eventGenre.toString());
+      data.append("EventType", eventType.toString());
+      data.append("EventDate", eventDate.toString());
+      data.append("EventStartTime", eventStartTime.toString());
+      data.append("EventEndTime", eventEndTime.toString());
+      data.append("Performer", eventPerformer.toString());
+      data.append("MaxNoOfSeats", eventCapacity.toString());
+      data.append("Price", eventPrice.toString());
+      data.append("HostEmail", eventHMail.toString());
+      data.append("Address", street.toString());
+      data.append("City", city.toString());
+      data.append("State", eventState.toString());
+      data.append("ZipCode", eventZipc.toString());
+      data.append("ImageUrl", imageAsUrl);
+      var config = {
+        method: "post",
+        url: "http://127.0.0.1:8000/addnewevent/",
+        data: data,
+      };
 
-    axios(config)
-      .then((res) => {
-        if (res.data.status === "error") {
-          setErrorFound(true);
-          setErrorMessage("Event must be hosted by registered Host only.");
-          return;
-        }
-        else {
-            console.log(res);
-            setEventName('');
-            setEventDesc('');
-            setEventDate('');
-            setEventType('');
-            setEventGenre('');
-            setEventStartTime('');
-            setEventEndTime('');
-            setStreet('');
-            setCity('');
-            setEventState('');
-            setEventZipc('');
-            setEventCapacity('');
-            setEventHName('');
-            setEventPerformer('');
-            setEventHMail('');
-            setEventCapacity('');
-            setEventPrice('');
+      axios(config)
+        .then((res) => {
+          if (res.data.status === "error") {
             setErrorFound(true);
-            setErrorSeverity('success')
+            setErrorMessage("Event must be hosted by registered Host only.");
+            return;
+          } else {
+            console.log(res);
+            setEventName("");
+            setEventDesc("");
+            setEventDate("");
+            setEventType("");
+            setEventGenre("");
+            setEventStartTime("");
+            setEventEndTime("");
+            setStreet("");
+            setCity("");
+            setEventState("");
+            setEventZipc("");
+            setEventCapacity("");
+            setEventHName("");
+            setEventPerformer("");
+            setEventHMail("");
+            setEventCapacity("");
+            setEventPrice("");
+            setImageAsFile("");
+            setImageAsUrl("");
+            setErrorFound(true);
+            setErrorSeverity("success");
             setErrorMessage("Event Successfully Hosted :))");
-        }
-        // console.log(
-        //   eventName,
-        //   eventDesc,
-        //   eventGenre,
-        //   eventType,
-        //   eventDate,
-        //   eventStartTime,
-        //   eventEndTime,
-        //   eventPerformer,
-        //   eventCapacity,
-        //   eventPrice,
-        //   eventHMail,
-        //   street,
-        //   city,
-        //   eventState,
-        //   eventZipc
-        // );
-      })
-      .catch((err) => alert("Enter Proper Event details"));
+          }
+          // console.log(
+          //   eventName,
+          //   eventDesc,
+          //   eventGenre,
+          //   eventType,
+          //   eventDate,
+          //   eventStartTime,
+          //   eventEndTime,
+          //   eventPerformer,
+          //   eventCapacity,
+          //   eventPrice,
+          //   eventHMail,
+          //   street,
+          //   city,
+          //   eventState,
+          //   eventZipc
+          // );
+        })
+        .catch((err) => alert("Enter Proper Event details"));
     }
-    
   }
 
   return (
@@ -323,8 +365,14 @@ const [errorSeverity, setErrorSeverity] = useState('error');
             />
           </div>
           <div className={styles.control}>
-            <input accept="*/" multiple type="file" />
-            <Button variant="contained" component="span" sx={{ width: 90 }}>
+            <input onChange={handleImageAsFile} type="file" />
+            <Button
+              type="button"
+              variant="contained"
+              component="span"
+              sx={{ width: 90 }}
+              onClick={handleImage}
+            >
               Upload
             </Button>
           </div>

@@ -13,6 +13,7 @@ import bgimage from "../Promote-Your-local-event.jpg";
 import { useParams } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
+import { Alert } from "@mui/material";
 
 export default function EventPage(props) {
   const { id } = useParams();
@@ -22,6 +23,9 @@ export default function EventPage(props) {
   const [fav, setFav] = useState(false); // setting bookmark
   const [noftickets, setNoftickets] = useState(1);
 
+  const [errorFound, setErrorFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [errorSeverity, setErrorSeverity] = useState('error');
   var axios = require("axios");
   var config = {
     method: "get",
@@ -47,35 +51,33 @@ export default function EventPage(props) {
   }, []);
 
   async function countPlus() {
-    await setNoftickets(prev=>prev-1);
+    await setNoftickets((prev) => prev - 1);
     countCheck();
     // const tickets = 1;
     // tickets = (await tickets) > 0 ? tickets: 1;
     // setNoftickets(tickets);
     // console.log(tickets);
-     
   }
   async function countMinus() {
-    await setNoftickets(prev=>prev-1);
+    await setNoftickets((prev) => prev - 1);
     countCheck();
-      // const tickets = 1;
-      // tickets = (await tickets) > 6 ? 6 : tickets;
-      // setNoftickets(tickets);
-      // console.log(tickets);
-}
-async function countCheck() {
-   
-  const tickets = noftickets;
-  setNoftickets((await tickets) > 0 ? (tickets > 6? 6: tickets) : 1);
-  
-  console.log(tickets);
-}
-  function handleRegistration() {
+    // const tickets = 1;
+    // tickets = (await tickets) > 6 ? 6 : tickets;
+    // setNoftickets(tickets);
+    // console.log(tickets);
+  }
+  async function countCheck() {
+    const tickets = noftickets;
+    setNoftickets((await tickets) > 0 ? (tickets > 6 ? 6 : tickets) : 1);
+
+    console.log(tickets);
+  }
+  async function handleRegistration() {
     console.log("Making registration");
     var FormData = require("form-data");
     var data = new FormData();
     data.append("UserId", "hvalivet@iu");
-    data.append("NoOfSeats", 1);
+    data.append("NoOfSeats", noftickets);
     data.append("EventId", id);
     var config = {
       method: "post",
@@ -87,7 +89,13 @@ async function countCheck() {
         if (res.data.status === "error") {
           console.log(res);
           console.log("error");
+          setErrorFound(true);
+          setErrorMessage(res.data.message);
+          console.log(errorMessage)
         } else {
+          setErrorSeverity('success');
+          setErrorFound(true);
+          setErrorMessage("Successfully booked! :]");
           console.log("sucess");
         }
       })
@@ -155,16 +163,17 @@ async function countCheck() {
             <div></div>
           </CardContent>
           <div className={styles.countbutton}>
+            {errorFound && <Alert severity={errorSeverity}>{errorMessage}</Alert>}
             <div className={styles.eventseats}>
               <p>No. of Tickets left : {event.SeatsAvailable}</p>
             </div>
             <br></br>
             <div className={styles.countplus}>
-              <IconButton onClick={()=>setNoftickets(prev=>prev+1)}>
+              <IconButton onClick={() => setNoftickets((prev) => prev + 1)}>
                 <AddIcon />
               </IconButton>
-              <div style={{margin:'1em'}}>{noftickets}</div>
-              <IconButton onClick={()=>setNoftickets(prev=>prev-1)}>
+              <div style={{ margin: "1em" }}>{noftickets}</div>
+              <IconButton onClick={() => setNoftickets((prev) => prev - 1)}>
                 <RemoveIcon />
               </IconButton>
             </div>

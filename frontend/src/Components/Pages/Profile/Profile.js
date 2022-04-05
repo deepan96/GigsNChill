@@ -56,11 +56,11 @@ function Profile(props) {
             <h2>Event History</h2>
             <div className="events">
               <div style={styles}>
-                <div>
+                {/* <div>
                   {events.map((i) => (
                     <EventTile event={i} />
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
           </article>
