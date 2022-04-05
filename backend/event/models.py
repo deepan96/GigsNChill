@@ -28,7 +28,7 @@ class Event(models.Model):
     Address = models.CharField(max_length=100, default="")
     ZipCode = models.CharField(max_length=5,  default="47401")
     LocationId = models.ForeignKey(Location, on_delete=models.CASCADE)
-
+    ImageUrl = models.URLField(max_length=500, default="")
     def __str__(self) -> str:
         return self.EventId
 

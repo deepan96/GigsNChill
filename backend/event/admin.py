@@ -4,7 +4,7 @@ from .models import Event, Location, Bookings
 class EventAdmin(admin.ModelAdmin):  # allows for a custom definition in the admin field
     list_display = ('EventId', 'EventName', 'EventGenre', 'EventType', 'EventDate', 'EventStartTime',
                     'EventEndTime', 'Performer', 'MaxNoOfSeats', 'SeatsAvailable',
-                    'Price', 'HostId', 'LocationId')
+                    'Price', 'HostId', 'LocationId', 'ImageUrl')
 
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('LocationId', 'City', 'State',)
