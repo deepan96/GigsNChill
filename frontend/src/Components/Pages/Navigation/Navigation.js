@@ -21,7 +21,7 @@ const Navigation = (props) => {
     setAnchorEl(null);
   };
   function handleProfile() {
-    navigate("profile");
+    navigate("/profile");
     setAnchorEl(null);
   }
   const handleLogout = (event) => {
