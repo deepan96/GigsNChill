@@ -12,6 +12,9 @@ class LocationAdmin(admin.ModelAdmin):
 class BookingAdmin(admin.ModelAdmin):
     list_display = ('BookingId', 'UserId', 'NoOfSeats', 'EventId')
 
+class BookmarkAdmin(admin.ModelAdmin):
+    list_display = ("BookmarkId", "UserId", "EventId", "BookmarkStatus")
+
 admin.site.register(Event, EventAdmin)
 admin.site.register(Location, LocationAdmin)
 admin.site.register(Bookings, BookingAdmin)

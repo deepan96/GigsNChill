@@ -40,5 +40,6 @@ urlpatterns = [
     path('addnewevent/', view_event.AddNewEventView.as_view(), name="addnewevent"),
     path('searchevent/', view_event.SearchEvents.as_view(), name="searchevent"),
     path('bookevent/', view_event.BookEventView.as_view(), name="bookevent"),
+    path('bookmarkevent/', view_event.BookmarkEventView.as_view(), name="bookmarks"),
     # path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
 ]

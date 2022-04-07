@@ -6,7 +6,7 @@
 
 from rest_framework import serializers
 from register.models import HOST, USER
-from .models import Event, Bookings
+from .models import Event, Bookings, Bookmarks
 
 
 class AddNewEventSerializer(serializers.Serializer):
@@ -29,17 +29,39 @@ class AddNewEventSerializer(serializers.Serializer):
     State = serializers.CharField(required=True)
     ZipCode = serializers.CharField(required=True)
     ImageUrl = serializers.URLField(max_length=500, min_length=0, allow_blank=True)
+
     class Meta:
-         model = Event
+        model = Event
 
 
 class SearchEventsSerializer(serializers.Serializer):
+    """
+    Serializer for searching future events.
+    """
+
     class Meta:
-         model = Event
+        model = Event
+
 
 class BookEventSerializer(serializers.Serializer):
+    """
+    Serializer for booking available events.
+    """
     UserId = serializers.CharField(required=True)
     NoOfSeats = serializers.IntegerField(required=True)
     EventId = serializers.CharField(required=True)
+
     class Meta:
         model = Bookings
+
+
+class BookmarksSerializer(serializers.Serializer):
+    """
+    Serializer for bookmarking the favourite events.
+    """
+    UserId = serializers.CharField(required=True)
+    EventId = serializers.CharField(required=True)
+    BookmarkStatus = serializers.BooleanField(required=True)
+
+    class Meta:
+        model = Bookmarks

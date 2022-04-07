@@ -1,5 +1,6 @@
 from pyexpat import model
 from .models import USER, HOST
+from event.models import Event, Bookings
 from .serializers import RegisterSerializer, PasswordRecoverySerializer, \
     UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer
 from rest_framework import generics, permissions, status
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.views import APIView
 from django.forms.models import model_to_dict
+from datetime import date
 import json, sys
 from rest_framework.renderers import JSONRenderer
 
@@ -154,6 +156,7 @@ class UpdatePasswordView(APIView):
 class ProfileView(generics.ListAPIView):
     serializer_class = ProfileSerializer
     renderer_classes = (JSONRenderer,)
+    model = [USER, HOST, Event]
     '''def get_queryset(self):
         """
         This view should return a list of all the purchases for
@@ -179,40 +182,42 @@ class ProfileView(generics.ListAPIView):
     '''
     def get(self, request, Email, Type="user"):
         """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
+        This view should return a list of all the Booked/Hosted Events for
+        the user as determined by the Email and Type portion of the URL.
         """
         try:
             if Type.lower() == 'user':
                 db_table = USER
+                # get all the events registered(booked) by a user
+                data = model_to_dict(db_table.objects.get(Email=Email))
+                data["Future Events"], data["Past Events"] = [], []
+                User_Events = [model_to_dict(book) for book in
+                                         Bookings.objects.filter(UserId=Email)]
+                for book in User_Events:
+                    # Get the Event details from the Event db based on the booking by Specified User
+                    regeistered_event = model_to_dict(Event.objects.get(EventId=book['EventId']))
+                    # Verify the date of the event and update in the Future/Past Event in the data to be sent as response
+                    if regeistered_event['EventDate'] < date.today():
+                        book.update(regeistered_event)
+                        data["Past Events"].append(book)
+                    else:
+                        book.update(regeistered_event)
+                        data["Future Events"].append(book)
+                del data["Password"]
             else:
                 db_table = HOST
-            return Response({"status": "success", 'data': model_to_dict(db_table.objects.get(Email=Email))}, status=status.HTTP_200_OK)
+                data = model_to_dict(db_table.objects.get(Email=Email))
+                del data["Password"]
+                data["Future Events"] = [model_to_dict(eve)
+                                         for eve in Event.objects.filter(HostId=Email,
+                                                                         EventDate__gte=date.today())],
+                data["Past Events"] = [model_to_dict(eve)
+                                       for eve in Event.objects.filter(HostId=Email,
+                                                                       EventDate__lt=date.today())]
+
+            return Response({"status": "success", 'data': data},
+                            status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)}, status=status.HTTP_200_OK)
 
-    '''def get(self, request):
-        try:
-            item = USER.objects.get(Email=request.data['Email'])
-            return Response({"status": "success", "data": item}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"status": "error", "data": "username does not exist" + str(request.data)}, status=status.HTTP_200_OK)'''
-
-    '''def get(self, request):
-        serializer_class = ProfileSerializer(data=request.data)
-        if serializer_class.is_valid():
-            try:
-                self.object = USER.objects.get(Email=request.data['Email'])
-            except:
-                return Response({'status': 'error',
-                                 "message": "User account associated with the Email doesnot exist"},
-                                status=status.HTTP_400_BAD_REQUEST)
-            response = {
-                    'status': 'success',
-                    'code': status.HTTP_200_OK,
-                    'data': [self.object],
-                }
-            return Response(response, status=status.HTTP_200_OK)
-        return Response({'status': 'error'},
-                                status=status.HTTP_400_BAD_REQUEST)'''
 
