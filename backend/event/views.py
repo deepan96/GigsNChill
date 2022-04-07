@@ -3,7 +3,7 @@ from .models import Event, Location, Bookings, Bookmarks
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponse
 from .serializers import AddNewEventSerializer, SearchEventsSerializer, \
-    BookEventSerializer, BookmarksSerializer
+    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from register.models import HOST, USER
@@ -135,10 +135,6 @@ class BookmarkEventView(APIView):
     serializer_class = BookmarksSerializer
     model = Bookmarks
 
-    def __init__(self, **kwargs):
-        super().__init__(kwargs)
-        self.previous_bookmark = None
-
     def post(self, request):
         f = open("readme.txt", "w+")
         f.write(str(request.data))
@@ -176,3 +172,27 @@ class BookmarkEventView(APIView):
                     status=status.HTTP_200_OK)
         else:
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
+
+class InviteFriendsView(APIView):
+    """
+    This view should verify the user is already registered or not.
+    """
+    serializer_class = InviteFriendsSerializer
+    model = USER
+
+    def get(self, request, Email, Type="user"):
+        if Type.lower() == 'User'.lower():
+            db_table = USER
+        else:
+            db_table = HOST
+        try:
+            self.object = db_table.objects.get(Email=Email)
+            return JsonResponse({'status': 'Success',
+                                 'data': 'Chat',
+                                 "message": "User Account Exists"},
+                                status=status.HTTP_200_OK)
+        except:
+            return JsonResponse({'status': 'Error',
+                                 'data': 'Email',
+                                 "message": "User account associated with the Email doesnot exist"},
+                                status=status.HTTP_400_BAD_REQUEST)

@@ -65,3 +65,10 @@ class BookmarksSerializer(serializers.Serializer):
 
     class Meta:
         model = Bookmarks
+
+class InviteFriendsSerializer(serializers.Serializer):
+    Email = serializers.CharField(required=True)
+    Type = serializers.CharField(required=False)
+    class Meta:
+        model = [USER, HOST]
+        fields = ('Email', 'Type',)

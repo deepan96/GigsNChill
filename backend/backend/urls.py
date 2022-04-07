@@ -41,5 +41,10 @@ urlpatterns = [
     path('searchevent/', view_event.SearchEvents.as_view(), name="searchevent"),
     path('bookevent/', view_event.BookEventView.as_view(), name="bookevent"),
     path('bookmarkevent/', view_event.BookmarkEventView.as_view(), name="bookmarks"),
+    re_path('invitefriends/(?P<Type>[\w-]+)/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
+            view_event.InviteFriendsView.as_view(), name="invitefriends"),
+    re_path('invitefriends/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
+            view_event.InviteFriendsView.as_view(), name="invitefriends"),
+    #path('invitefriends/', view_event.InviteFriendsView.as_view(), name="invitefriends"),
     # path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
 ]
