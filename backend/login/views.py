@@ -39,6 +39,7 @@ class LoginClsView(APIView):
                                         status=status.HTTP_400_BAD_REQUEST)
                 else:
                     return JsonResponse({'status': 'Success',
+                                        'user_fname': self.object.FirstName,
                                         "message": "Logged In Successfully"},
                                         status=status.HTTP_200_OK)
             else:

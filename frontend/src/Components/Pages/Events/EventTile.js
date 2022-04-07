@@ -35,7 +35,7 @@ function EventTile(props) {
         <div>
           <CardMedia
             className={styles.cardimage}
-            image={bgimage}
+            image={props.event.ImageUrl}
             alt="event image"
           />
         </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Avatar, Menu, MenuItem } from "@material-ui/core";
 import styles from "./Navigation.module.css";
 import { Link, useNavigate } from "react-router-dom";
+import userphoto from "../../../user_photo.png";
 
 const Navigation = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
@@ -30,13 +31,14 @@ const Navigation = (props) => {
   };
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("user"));
-    // if (data) {
-    //   console.log(data);
-    //   setTypeofUser(data.type);
-    // }
-    // if (typeOfUser === "Host") {
-    //   setHost(true);
-    // }
+    if (data) {
+      console.log(data);
+      setTypeofUser(data.type);
+    }
+    if (data && data.type === "Host") {
+      setHost(true);
+      console.log("host",host);
+    }
     window.addEventListener("scroll", () => {
       if (window.scrollY > 100) {
         setshow(true);
@@ -57,9 +59,9 @@ const Navigation = (props) => {
                 <Link to="/home">Home</Link>
               </li>
               <li>
-                <a href="/">Chat</a>
+              <Link to="/chat">Chat</Link>
               </li>
-              {
+              {host &&
                 <li>
                   <Link to="/hostevent">Host a Event ?</Link>
                 </li>
@@ -78,7 +80,8 @@ const Navigation = (props) => {
                 >
                   <img
                     className={styles.dp}
-                    src="https://www.cnet.com/a/img/CSTqzAl5wJ57HHyASLD-a0vS2O0=/940x528/2021/04/05/9e065d90-51f2-46c5-bd3a-416fd4983c1a/elantra-1080p.jpg"
+                    // src="https://www.cnet.com/a/img/CSTqzAl5wJ57HHyASLD-a0vS2O0=/940x528/2021/04/05/9e065d90-51f2-46c5-bd3a-416fd4983c1a/elantra-1080p.jpg"
+                    src={userphoto}
                     alt="car"
                   />
                 </Avatar>

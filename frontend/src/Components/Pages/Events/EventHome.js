@@ -7,12 +7,13 @@ import axios from "axios";
 export default function EventHome(props) {
   const [searchValue, setSearchValue] = useState("");
   const [eventData, setEventData] = useState([]);
+  const [eventDataFilter, setEventDataFilter] = useState([]);
 
   var axios = require("axios");
   var FormData = require("form-data");
   var data = new FormData();
 
-  // getting events data
+  // getting events data-only once
   useEffect(() => {
     var config = {
       method: "get",
@@ -22,12 +23,18 @@ export default function EventHome(props) {
     axios(config).then((res) => {
       console.log(res.data.data);
       setEventData(res.data.data);
+      setEventDataFilter(res.data.data);
     });
   }, []);
 
   useEffect(() => {
     setSearchValue(props.searchQuery);
+    console.log(props.searchQuery);
+    console.log(eventData);
     const fil = (events) => {
+      if (searchValue === '') {
+        return events;
+      }
       return events.filter((e) => {
         if (e.EventGenre.toLowerCase().includes(searchValue.toLowerCase())) {
           return e;
@@ -36,16 +43,21 @@ export default function EventHome(props) {
         }
       });
     };
-    setEventData(fil(eventData));
+    if(searchValue !== '') {
+    setEventDataFilter(fil(eventData));
+    }
+    else {
+      setEventDataFilter(eventData);
+    }
   }, [searchValue, props.searchQuery]);
   return (
     <div style={styles}>
       <div className={styles.container}>
         {searchValue === ""
-          ? eventData.map((event) => (
+          ? eventDataFilter.map((event) => (
               <EventTile key={event.EventId} event={event} />
             ))
-          : eventData.map((event) => (
+          : eventDataFilter.map((event) => (
               <EventTile key={event.EventId} event={event} />
             ))}
       </div>
