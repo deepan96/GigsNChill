@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import USER
+from .models import USER, HOST
+from event.models import Event
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 from django.contrib.auth.hashers import make_password, check_password
@@ -59,6 +60,6 @@ class ProfileSerializer(serializers.Serializer):
     Email = serializers.CharField(required=True)
     Type = serializers.CharField(required=False)
     class Meta:
-        model = USER
+        model = [USER, HOST, Event]
         fields = ('Email', 'Type',)
 
