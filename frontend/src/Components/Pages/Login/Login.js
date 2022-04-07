@@ -111,7 +111,7 @@ const Login = (props) => {
           // console.log(response);
         setFormIsValid(!flag);
         setIsLoggedIn(true);
-        const mdata = {email: userName, type:typeOfUser, isLoggedIn : true}
+        const mdata = {fname: response.data.user_fname ,email: userName, type:typeOfUser, isLoggedIn : true}
         localStorage.setItem('user', JSON.stringify(mdata));
         setUserName("");
         setUserPassword("");

@@ -5,6 +5,7 @@ import LandingPage from "../Pages/Default_land_page/LandingPage";
 import EventPage from "../Pages/Events/EventPage";
 import Profile from "../Pages/Profile/Profile";
 import HostEvent from "../Pages/HostEvent/HostEvent";
+import Chat from "../Pages/Chat/Chat";
 
 export function RouteStack() {
   return (
@@ -25,6 +26,7 @@ export function LoginRouteStack() {
         <Route path="/home/eventpage/:id" element={<EventPage />} />
         <Route path="/profile" element={<Profile/>}/>
         <Route path="/hostevent" element={<HostEvent/>}/>
+        <Route path="/chat" element={<Chat/>}/>
       </Routes>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CardWrap from "../../UI/CardWrap/CardWrap";
 import styles from "./HostEvent.module.css";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -45,6 +45,8 @@ function HostEvent(props) {
   const [imageAsFile, setImageAsFile] = useState("");
   const [imageAsUrl, setImageAsUrl] = useState("");
   const [imageProgress, setImageProgress] = useState(0);
+
+  useEffect(()=>{},[eventDate])
 
   const handleImageAsFile = (e) => {
     console.log(e.target.files[0])
@@ -107,7 +109,7 @@ function HostEvent(props) {
       // handling date formatting
       console.log(eventDate);
       const d = moment(eventDate, "yyyy-MM-DD").format("yyyy-MM-DD");
-      setEventDate(d);
+      setEventDate(_=>d);
 
       const t = moment(eventStartTime, "HH:mm:ss").format("HH:mm:ss");
       setEventStartTime(t);
@@ -122,7 +124,7 @@ function HostEvent(props) {
       data.append("EventDescription", eventDesc.toString());
       data.append("EventGenre", eventGenre.toString());
       data.append("EventType", eventType.toString());
-      data.append("EventDate", eventDate.toString());
+      data.append("EventDate", d.toString());
       data.append("EventStartTime", eventStartTime.toString());
       data.append("EventEndTime", eventEndTime.toString());
       data.append("Performer", eventPerformer.toString());
@@ -143,6 +145,7 @@ function HostEvent(props) {
       axios(config)
         .then((res) => {
           if (res.data.status === "error") {
+            console.log(data)
             setErrorFound(true);
             setErrorMessage("Event must be hosted by registered Host only.");
             return;
@@ -171,23 +174,24 @@ function HostEvent(props) {
             setErrorSeverity("success");
             setErrorMessage("Event Successfully Hosted :))");
           }
-          // console.log(
-          //   eventName,
-          //   eventDesc,
-          //   eventGenre,
-          //   eventType,
-          //   eventDate,
-          //   eventStartTime,
-          //   eventEndTime,
-          //   eventPerformer,
-          //   eventCapacity,
-          //   eventPrice,
-          //   eventHMail,
-          //   street,
-          //   city,
-          //   eventState,
-          //   eventZipc
-          // );
+          console.log(
+            eventName,
+            eventDesc,
+            eventGenre,
+            eventType,
+            eventDate,
+            eventStartTime,
+            eventEndTime,
+            eventPerformer,
+            eventCapacity,
+            eventPrice,
+            eventHMail,
+            street,
+            city,
+            eventState,
+            eventZipc,
+             imageAsUrl
+          );
         })
         .catch((err) => alert("Enter Proper Event details"));
     }

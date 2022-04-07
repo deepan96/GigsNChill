@@ -25,7 +25,9 @@ export default function EventPage(props) {
 
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [errorSeverity, setErrorSeverity] = useState('error');
+  const [errorSeverity, setErrorSeverity] = useState("error");
+  const [successVar, setSuccessvar] = useState(false);
+
   var axios = require("axios");
   var config = {
     method: "get",
@@ -48,7 +50,10 @@ export default function EventPage(props) {
       setEvent(eventId);
       setLoading(false);
     });
-  }, []);
+    setNoftickets(1);
+    // setErrorFound(false);
+    // setErrorMessage("");
+  }, [successVar]);
 
   async function countPlus() {
     await setNoftickets((prev) => prev - 1);
@@ -91,13 +96,16 @@ export default function EventPage(props) {
           console.log("error");
           setErrorFound(true);
           setErrorMessage(res.data.message);
-          console.log(errorMessage)
+          console.log(errorMessage);
         } else {
-          setErrorSeverity('success');
+          setErrorSeverity("success");
           setErrorFound(true);
           setErrorMessage("Successfully booked! :]");
           console.log("sucess");
+          setSuccessvar(prev=> !prev);
+          
         }
+        setTimeout(()=>{setErrorFound(false);setErrorMessage("")},3000);
       })
       .catch((err) => {
         alert("Invalid Booking");
@@ -115,7 +123,7 @@ export default function EventPage(props) {
           <div>
             <CardMedia
               className={styles.cardimage}
-              image={bgimage}
+              image={event.ImageUrl}
               alt="event image"
             />
           </div>
@@ -163,18 +171,22 @@ export default function EventPage(props) {
             <div></div>
           </CardContent>
           <div className={styles.countbutton}>
-            {errorFound && <Alert severity={errorSeverity}>{errorMessage}</Alert>}
+            {errorFound && (
+              <Alert severity={errorSeverity}cl>{errorMessage}</Alert>
+            )}
             <div className={styles.eventseats}>
               <p>No. of Tickets left : {event.SeatsAvailable}</p>
             </div>
             <br></br>
             <div className={styles.countplus}>
-              <IconButton onClick={() => setNoftickets((prev) => prev + 1)}>
-                <AddIcon />
-              </IconButton>
-              <div style={{ margin: "1em" }}>{noftickets}</div>
               <IconButton onClick={() => setNoftickets((prev) => prev - 1)}>
                 <RemoveIcon />
+              </IconButton>
+
+              <div style={{ margin: "1em" }}>{noftickets}</div>
+
+              <IconButton onClick={() => setNoftickets((prev) => prev + 1)}>
+                <AddIcon />
               </IconButton>
             </div>
           </div>

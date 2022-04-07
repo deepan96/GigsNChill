@@ -1,0 +1,9 @@
+.container {
+    width: 100%;
+
+    margin-top: 5rem;
+}
+
+.ce-chat-engine {
+    width: 100vw !important;
+}
