@@ -12,7 +12,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
-
+import pymysql
+pymysql.install_as_MySQLdb()
 import corsheaders
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cryptography',
     'login',
     'register',
     'event',
@@ -48,6 +50,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'localflavor',
     'whitenoise',
+    'django_mysql',
+    #'django-cryptography',
 ]
 
 # Whitelist default react development port
@@ -89,13 +93,23 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+'''
+
+DATABASES = {'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'gigsnchill',
+        'USER': 'gigsnchill',
+        'PASSWORD': 'ABCDabcd1234',
+        'HOST': 'gigsnchil.cmtaafoyezaj.us-east-2.rds.amazonaws.com',
+        'PORT': '3306'}}
 
 
 # Password validation

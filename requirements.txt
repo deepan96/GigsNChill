@@ -1,5 +1,12 @@
-django
-djangorestframework
+django==4.0.3
+djangorestframework~=3.13.1
 django-cors-headers
 django-localflavor
 whitenoise
+django_mysql
+
+PyMySQL
+setuptools
+mysqlclient
+cryptography
+django-cryptography
