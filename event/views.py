@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from .models import Event, Location, Bookings, Bookmarks
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponse
@@ -136,23 +137,20 @@ class BookmarkEventView(APIView):
     model = Bookmarks
 
     def post(self, request):
-        f = open("readme.txt", "w+")
-        f.write(str(request.data))
-        f.close()
         serializer_class = BookmarksSerializer(data=request.data)
         if serializer_class.is_valid():
             try:
                 # Get the bookmark status from request and assign the respective boolean value
                 if 'BookmarkStatus' in request.data and request.data['BookmarkStatus'].lower() == "true":
-                    bookamrk_status = True
+                    bookmark_status = True
                 else:
-                    bookamrk_status = False
+                    bookmark_status = False
 
                 try:
                     # verify whether the event is already bookmarked if yes, update the status.
                     self.previous_bookmark = Bookmarks.objects.get(UserId=request.data['UserId'],
                                                                    EventId=request.data['EventId'])
-                    self.previous_bookmark.BookmarkStatus = bookamrk_status
+                    self.previous_bookmark.BookmarkStatus = bookmark_status
                     self.previous_bookmark.save()
                     return JsonResponse({"status": "success", "data": serializer_class.data,
                                          'message': 'Bookmark updated successfully'},
@@ -161,7 +159,7 @@ class BookmarkEventView(APIView):
                     # If there is no bookmark for the particular event, create new bookmark and save it to the database
                     new_bookmark = Bookmarks.objects.create(UserId=USER.objects.get(Email=request.data['UserId']),
                                                             EventId=Event.objects.get(EventId=request.data['EventId']),
-                                                            BookmarkStatus=bookamrk_status, )
+                                                            BookmarkStatus=bookmark_status, )
                     new_bookmark.save()
                     return JsonResponse({"status": "success", "data": serializer_class.data,
                                          'message': 'Bookmark added successfully'},
@@ -172,6 +170,19 @@ class BookmarkEventView(APIView):
                     status=status.HTTP_200_OK)
         else:
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
+
+    def get(self, request, Email=None):
+        try:
+            bookmarks = [model_to_dict(book) for book in Bookmarks.objects.filter(UserId=Email,
+                                                                                  BookmarkStatus=True)]
+            for bookmark in bookmarks:
+                bookmarked_event = model_to_dict(Event.objects.get(EventId=bookmark['EventId']))
+                bookmark.update(bookmarked_event)
+            return Response({"status": "success", 'data': bookmarks},
+                            status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": []},
+                            status=status.HTTP_200_OK)
 
 class InviteFriendsView(APIView):
     """
