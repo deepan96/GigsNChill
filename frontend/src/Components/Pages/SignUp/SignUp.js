@@ -90,13 +90,13 @@ const SignUp = (props) => {
               console.log(response);
             setFormIsValid(!flag);
             setIsLoggedIn(true);
-            const mdata = {fname: userFirstName, email: userEmail, type:typeOfUser, isLoggedIn : isLoggedIn}
+            const mdata = {fname: userFirstName, email: userEmail, type:typeOfUser, isLoggedIn : true}
             localStorage.setItem('user', JSON.stringify(mdata));
             
             // creating users for Chat
             createUser({'username': userFirstName, 'secret':'ABCabc123@'});
-
-            navigate("/home");
+            
+            navigate("/");
             }
             
       })

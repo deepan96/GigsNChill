@@ -21,10 +21,22 @@ const Navigation = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   function handleProfile() {
     navigate("/profile");
     setAnchorEl(null);
   }
+
+  function handleLikes() {
+    navigate("/bookmark");
+    setAnchorEl(null);
+  }
+
+  function handleEvents(){
+    navigate("/myevents");
+    setAnchorEl(null);
+  }
+
   const handleLogout = (event) => {
     props.onLogout(); // from mainheader
     setAnchorEl(null);
@@ -56,7 +68,7 @@ const Navigation = (props) => {
           <>
             <ul>
               <li>
-                <Link to="/home">Home</Link>
+                <Link to="/">Home</Link>
               </li>
               <li>
               <Link to="/chat">Chat</Link>
@@ -102,7 +114,8 @@ const Navigation = (props) => {
         }}
       >
         <MenuItem onClick={handleProfile}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My Likes</MenuItem>
+        {!host && <MenuItem onClick={handleLikes}>My Likes</MenuItem>}
+        {host && <MenuItem onClick={handleEvents}>My Events</MenuItem>}
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
     </div>

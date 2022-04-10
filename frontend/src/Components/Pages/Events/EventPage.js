@@ -28,6 +28,8 @@ export default function EventPage(props) {
   const [errorSeverity, setErrorSeverity] = useState("error");
   const [successVar, setSuccessvar] = useState(false);
 
+  const user_info = JSON.parse(localStorage.getItem('user'));
+
   var axios = require("axios");
   var config = {
     method: "get",
@@ -81,7 +83,7 @@ export default function EventPage(props) {
     console.log("Making registration");
     var FormData = require("form-data");
     var data = new FormData();
-    data.append("UserId", "hvalivet@iu");
+    data.append("UserId", user_info.email);
     data.append("NoOfSeats", noftickets);
     data.append("EventId", id);
     var config = {

@@ -190,7 +190,7 @@ class ProfileView(generics.ListAPIView):
                 db_table = USER
                 # get all the events registered(booked) by a user
                 data = model_to_dict(db_table.objects.get(Email=Email))
-                data["Future Events"], data["Past Events"] = [], []
+                data["FutureEvents"], data["PastEvents"] = [], []
                 User_Events = [model_to_dict(book) for book in
                                          Bookings.objects.filter(UserId=Email)]
                 for book in User_Events:
@@ -199,19 +199,19 @@ class ProfileView(generics.ListAPIView):
                     # Verify the date of the event and update in the Future/Past Event in the data to be sent as response
                     if regeistered_event['EventDate'] < date.today():
                         book.update(regeistered_event)
-                        data["Past Events"].append(book)
+                        data["PastEvents"].append(book)
                     else:
                         book.update(regeistered_event)
-                        data["Future Events"].append(book)
+                        data["FutureEvents"].append(book)
                 del data["Password"]
             else:
                 db_table = HOST
                 data = model_to_dict(db_table.objects.get(Email=Email))
                 del data["Password"]
-                data["Future Events"] = [model_to_dict(eve)
+                data["FutureEvents"] = [model_to_dict(eve)
                                          for eve in Event.objects.filter(HostId=Email,
                                                                          EventDate__gte=date.today())],
-                data["Past Events"] = [model_to_dict(eve)
+                data["PastEvents"] = [model_to_dict(eve)
                                        for eve in Event.objects.filter(HostId=Email,
                                                                        EventDate__lt=date.today())]
 

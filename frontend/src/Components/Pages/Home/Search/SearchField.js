@@ -27,10 +27,9 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
         // component="form"
         onSubmit={searchHandler}
         >
-       {/* sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 600 }} */}
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Search"
+          placeholder="Search by"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           autoFocus

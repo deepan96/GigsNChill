@@ -22,13 +22,40 @@ function EventTile(props) {
   const eventDate = props.event.EventDate;
   const [fav, setFav] = useState(true); // setting bookmark
 
+  // connection
+  var axios = require("axios");
+  var FormData = require("form-data");
+  const user_info = JSON.parse(localStorage.getItem("user"));
+
   function eventHandler() {
     console.log("Event clicked");
   }
   function handleFav() {
     setFav(!fav);
     console.log("like", fav);
+
+    // making a bookmark
+    var data = new FormData();
+    data.append("UserId", user_info.email);
+    data.append("EventId", props.event.EventId);
+    data.append("BookmarkStatus", fav);
+    var config = {
+      method: "post",
+      url: "http://127.0.0.1:8000/bookmarkevent/",
+      data: data,
+    };
+
+    axios(config)
+      .then((res) => {
+        console.log(res.data.data);
+        alert("BookMark Success!");
+      })
+      .catch((err) => {
+        alert("Invalid BookMark Request");
+        console.log(err);
+      });
   }
+
   return (
     <div style={styles}>
       <Card className={styles.eventcard}>

@@ -5,7 +5,6 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import TextField from "@mui/material/TextField";
-import TimePicker from "@mui/lab/TimePicker";
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
@@ -15,11 +14,19 @@ import moment from "moment";
 import { Alert } from "@mui/material";
 import { storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { useNavigate } from "react-router-dom";
+import Select from "@mui/material/Select";
+import { InputLabel } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { tags, categories } from "../../Assets/FilterData";
 
 function HostEvent(props) {
+  const navigate = useNavigate();
+
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
-  const [eventGenre, setEventGenre] = useState();
+  const [eventGenre, setEventGenre] = useState("");
   const [eventType, setEventType] = useState("");
   const [eventDate, setEventDate] = useState("");
   const [eventStartTime, setEventStartTime] = useState("");
@@ -46,10 +53,30 @@ function HostEvent(props) {
   const [imageAsUrl, setImageAsUrl] = useState("");
   const [imageProgress, setImageProgress] = useState(0);
 
-  useEffect(()=>{},[eventDate])
+  const [types, setTypes] = useState([]);
+
+  // useEffect(() => {
+  //   types = [];
+  //   console.log(eventGenre)
+  //   console.log(eventGenre in tags)
+  //   console.log(tags, tags['Music'])
+  //   console.log(categories)
+  //   if (eventGenre) {
+  //     types=tags[eventGenre];
+  //   }
+  // }, [eventGenre]);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("user"));
+
+    // if not HOST redirect to Home
+    if (data.type !== "Host") {
+      navigate("/");
+    }
+  }, []);
 
   const handleImageAsFile = (e) => {
-    console.log(e.target.files[0])
+    console.log(e.target.files[0]);
     const image = e.target.files[0];
     setImageAsFile(image);
   };
@@ -70,7 +97,7 @@ function HostEvent(props) {
       (err) => console.log(err),
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((url) =>
-        // console.log(url)
+          // console.log(url)
           setImageAsUrl(url)
         );
       }
@@ -79,6 +106,12 @@ function HostEvent(props) {
 
   async function handleImage() {
     await uploadFiles(imageAsFile);
+  }
+
+  function handleSelectCategory(e) {
+    setEventGenre(e.target.value);
+    console.log(e.target.value);
+    setTypes(tags[e.target.value] || []);
   }
 
   function submitHandler(event) {
@@ -109,7 +142,7 @@ function HostEvent(props) {
       // handling date formatting
       console.log(eventDate);
       const d = moment(eventDate, "yyyy-MM-DD").format("yyyy-MM-DD");
-      setEventDate(_=>d);
+      setEventDate((_) => d);
 
       const t = moment(eventStartTime, "HH:mm:ss").format("HH:mm:ss");
       setEventStartTime(t);
@@ -145,7 +178,7 @@ function HostEvent(props) {
       axios(config)
         .then((res) => {
           if (res.data.status === "error") {
-            console.log(data)
+            console.log(data);
             setErrorFound(true);
             setErrorMessage("Event must be hosted by registered Host only.");
             return;
@@ -190,7 +223,7 @@ function HostEvent(props) {
             city,
             eventState,
             eventZipc,
-             imageAsUrl
+            imageAsUrl
           );
         })
         .catch((err) => alert("Enter Proper Event details"));
@@ -226,7 +259,7 @@ function HostEvent(props) {
               onChange={(e) => setEventDesc(e.target.value)}
             />
           </div>
-          <div className={styles.control}>
+          {/* <div className={styles.control}>
             <label htmlFor="eventgenre">Genre</label>
             <input
               id="eventgenre"
@@ -235,8 +268,44 @@ function HostEvent(props) {
               value={eventGenre}
               onChange={(e) => setEventGenre(e.target.value)}
             />
+          </div> */}
+
+          <div className={styles.categorydiv}>
+            <div className={styles.control}>
+              <InputLabel htmlFor="eventgenre">Category</InputLabel>
+              <Select
+                required
+                sx={{ width: "250px", background: "white" }}
+                value={eventGenre}
+                onChange={handleSelectCategory}
+                input={<OutlinedInput label="Category" id="eventgenre" />}
+              >
+                {categories.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </div>
+            <div className={styles.control}>
+              <InputLabel htmlFor="eventtype">Type</InputLabel>
+              <Select
+                sx={{ width: "250px", background: "white" }}
+                value={eventType}
+                onChange={(e) => setEventType(e.target.value)}
+                input={<OutlinedInput label="Type" id="eventtype" />}
+              >
+                {types &&
+                  types.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </div>
           </div>
-          <div className={styles.control}>
+
+          {/* <div className={styles.control}>
             <label htmlFor="eventtype">Type</label>
             <input
               id="eventtype"
@@ -245,7 +314,7 @@ function HostEvent(props) {
               value={eventType}
               onChange={(e) => setEventType(e.target.value)}
             />
-          </div>
+          </div> */}
           <div className={styles.control}>
             <label htmlFor="eventdate">Pick Date</label>
             <LocalizationProvider dateAdapter={AdapterDateFns}>

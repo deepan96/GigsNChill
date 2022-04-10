@@ -10,6 +10,13 @@
   color: rgb(218, 126, 50);
   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
+
+.categorydiv {
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
+}
+
 .control {
   margin: 1rem 0;
   display: flex;

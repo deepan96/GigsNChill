@@ -31,7 +31,7 @@ const Login = (props) => {
     console.log(data);
     if (data && data.isLoggedIn) {
     setIsLoggedIn(true);
-      navigate('/home');
+      navigate('/');
     }
     else {
       navigate('/');
@@ -44,7 +44,7 @@ const Login = (props) => {
   const onLoginSuccess = (res) => {
     console.log("Login Success:", res.profileObj);
     setIsLoggedIn(true);
-    navigate("/home");
+    navigate("/");
   };
   
   
@@ -113,9 +113,10 @@ const Login = (props) => {
         setIsLoggedIn(true);
         const mdata = {fname: response.data.user_fname ,email: userName, type:typeOfUser, isLoggedIn : true}
         localStorage.setItem('user', JSON.stringify(mdata));
+        
         setUserName("");
         setUserPassword("");
-        navigate("/home");
+        navigate("/");
         }
         
       })
