@@ -35,14 +35,16 @@ function Profile(props) {
         user_info.email
       }/`,
     };
-
+    var fe = [];
     axios(config).then((res) => {
       console.log(res.data.data);
-      const ud = res.data.data;
+      const uad = res.data.data;
+      fe = res.data.data.FutureEvents;
       setUserData(res.data.data);
-      setFEvents(ud.FutureEvents);
-      setPEvents(ud.PastEvents);
-      console.log(res.data.data);
+      setFEvents(fe);
+      setPEvents(res.data.data.PastEvents);
+      // console.log(fEvents);
+      // console.log(fe);
     });
   }, []);
 
@@ -72,6 +74,7 @@ function Profile(props) {
               {fEvents &&
                 fEvents.map((ud) => (
                   <Card className={styles.eventcard}>
+                    {console.log(ud)}
                     <div>
                       <CardMedia
                         className={styles.cardimage}
