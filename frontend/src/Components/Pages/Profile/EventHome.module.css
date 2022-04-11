@@ -1,9 +1,0 @@
-.container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    width: 500px;
-    /* flex-direction: wrap; */
-    margin-top: 3rem;
-    margin-left: 5rem;
-}

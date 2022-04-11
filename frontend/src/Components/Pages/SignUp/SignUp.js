@@ -8,6 +8,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
 import { Alert } from "@mui/material";
 import axios from "axios";
+import { createUser } from "../Chat/ChatUserCreate";
 
 const SignUp = (props) => {
   
@@ -89,9 +90,13 @@ const SignUp = (props) => {
               console.log(response);
             setFormIsValid(!flag);
             setIsLoggedIn(true);
-            const mdata = {email: userEmail, type:typeOfUser, isLoggedIn : isLoggedIn}
+            const mdata = {fname: userFirstName, email: userEmail, type:typeOfUser, isLoggedIn : true}
             localStorage.setItem('user', JSON.stringify(mdata));
-            navigate("/home");
+            
+            // creating users for Chat
+            createUser({'username': userFirstName, 'secret':'ABCabc123@'});
+            
+            navigate("/");
             }
             
       })

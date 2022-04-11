@@ -1,11 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./SearchField.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import { IconButton, InputBase, Paper } from "@mui/material";
+import { set } from "date-fns";
 
 const SearchField = ({searchQuery, setSearchQuery}) =>{
   const [searchValue, setSearchValue] = useState("");
+
+  useEffect(()=>{
+    setSearchQuery(searchQuery);
+  },[searchQuery])
+
   function searchHandler(event) {
     event.preventDefault();
     setSearchQuery(searchValue);
@@ -21,10 +27,9 @@ const SearchField = ({searchQuery, setSearchQuery}) =>{
         // component="form"
         onSubmit={searchHandler}
         >
-       {/* sx={{ p: "2px 4px", display: "flex", alignItems: "center", width: 600 }} */}
         <InputBase
           sx={{ ml: 1, flex: 1 }}
-          placeholder="Search"
+          placeholder="Search by"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           autoFocus
