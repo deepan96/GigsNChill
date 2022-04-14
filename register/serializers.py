@@ -36,9 +36,10 @@ class ResetPasswordSerializer(serializers.Serializer):
     """ Serializer for reset password change endpoint """
     Email = serializers.CharField(required=True)
     Password = serializers.CharField(required=True)
+    VerificationCode = serializers.CharField(required=True)
     class Meta:
         model = USER
-        fields = ('Email', 'Password')
+        fields = ('Email', 'Password', 'VerificationCode')
 
 class UpdatePasswordSerializer(serializers.Serializer):
     """
@@ -48,10 +49,11 @@ class UpdatePasswordSerializer(serializers.Serializer):
     OldPassword = serializers.CharField(required=True)
     Password1 = serializers.CharField(required=True)
     Password2 = serializers.CharField(required=True)
+    VerificationCode = serializers.CharField(required=True)
     class Meta:
         model = USER
         #fields = '__all__'
-        fields = ('Email', 'OldPassword', 'Password1', 'Password2')
+        fields = ('Email', 'OldPassword', 'Password1', 'Password2', 'VerificationCode')
 
 class ProfileSerializer(serializers.Serializer):
     """

@@ -20,6 +20,8 @@ class USER(models.Model):
     Password = models.CharField(max_length=50)
     DateModified = models.DateTimeField(auto_now=True)
     DateCreated = models.DateTimeField(auto_now_add=True)
+    VerificationCode = models.CharField(max_length=6, default="000000")
+    CodeCreationTime = models.TimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.Email
@@ -33,6 +35,8 @@ class HOST(models.Model):
     Password = models.CharField(max_length=50)
     DateModified = models.DateTimeField(auto_now=True)
     DateCreated = models.DateTimeField(auto_now_add=True)
+    VerificationCode = models.CharField(max_length=6, default="000000")
+    CodeCreationTime = models.TimeField(auto_now=True)
 
     def __str__(self) -> str:
         return self.Email

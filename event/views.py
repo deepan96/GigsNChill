@@ -11,6 +11,9 @@ from register.models import HOST, USER
 from datetime import date
 import sys
 from django.forms.models import model_to_dict
+# Mail
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 # Create your views here
@@ -184,26 +187,35 @@ class BookmarkEventView(APIView):
             return Response({"status": "error", "data": []},
                             status=status.HTTP_200_OK)
 
+
 class InviteFriendsView(APIView):
     """
     This view should verify the user is already registered or not.
     """
     serializer_class = InviteFriendsSerializer
-    model = USER
+    model = Event
 
-    def get(self, request, Email, Type="user"):
-        if Type.lower() == 'User'.lower():
+    def post(self, request):
+        '''if Type.lower() == 'User'.lower():
             db_table = USER
         else:
-            db_table = HOST
+            db_table = HOST'''
         try:
-            self.object = db_table.objects.get(Email=Email)
+            #self.object = db_table.objects.get(Email=Email)
+            self.event = Event.objects.get(EventId=request.data['EventId'])
+            subject = 'GigsNChill Event Invite'
+            message = f"Hi {request.data['RecipientEmail']}, You have been invited by " + request.data['Email'] + \
+                      "to attend the following event hosted bt Gigs N\' " \
+                      f"Chill. Event ID: " + str(request.data['EventId']) + "Event Name: " + self.event.EventName
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [request.data['RecipientEmail']]
+            send_mail(subject, message, email_from, recipient_list)
             return JsonResponse({'status': 'Success',
                                  'data': 'Chat',
-                                 "message": "User Account Exists"},
+                                 "message": "Mail sent successfully"},
                                 status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
             return JsonResponse({'status': 'Error',
                                  'data': 'Email',
-                                 "message": "User account associated with the Email doesnot exist"},
+                                 "message": str(sys.exc_info()[2]) + str(e), },
                                 status=status.HTTP_400_BAD_REQUEST)

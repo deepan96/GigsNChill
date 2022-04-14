@@ -66,9 +66,15 @@ class BookmarksSerializer(serializers.Serializer):
     class Meta:
         model = Bookmarks
 
+
 class InviteFriendsSerializer(serializers.Serializer):
+    """
+    Serializer for Inviting friends for the favourite events.
+    """
     Email = serializers.CharField(required=True)
-    Type = serializers.CharField(required=False)
+    EventId = serializers.CharField(required=True)
+    RecipientEmail = serializers.CharField(required=True)
+
     class Meta:
-        model = [USER, HOST]
-        fields = ('Email', 'Type',)
+        model = Event
+        fields = ('Email', 'EventId', 'RecipientEmail')
