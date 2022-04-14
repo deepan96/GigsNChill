@@ -65,12 +65,11 @@ function Profile(props) {
               {date.toDateString()}
             </p>
           </div>
-
+          <div className={styles.heading}>
+            <h3>Upcoming Events</h3>
+          </div>
           <div className={styles.userupcoming}>
             <div className={styles.subcontainer}>
-              <div className={styles.heading}>
-                <h3>Upcoming Events</h3>
-              </div>
               {fEvents &&
                 fEvents.map((ud) => (
                   <Card className={styles.eventcard}>
@@ -105,11 +104,11 @@ function Profile(props) {
               )}
             </div>
           </div>
+          <div className={styles.heading}>
+            <h3>Past Events</h3>
+          </div>
           <div className={styles.userupcoming}>
             <div className={styles.subcontainer}>
-              <div className={styles.heading}>
-                <h3>Past Events</h3>
-              </div>
               {pEvents &&
                 pEvents.map((ud) => (
                   <Card className={styles.eventcard}>
