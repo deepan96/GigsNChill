@@ -15,13 +15,12 @@ import Chat from "../Pages/Chat/Chat";
 import Bookmark from "../Pages/Bookmark/Bookmark";
 
 export function RouteStack() {
-  console.log("me")
   return (
     <div>
       <Routes>
         <Route path="/*" element={<LandingPage />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/signup" element={<SignUp/>} />
+        <Route path="login" element={<Login/>} />
+        <Route path="signup" element={<SignUp/>} />
         <Route path="forgotpassword" element={<ForgotPassword/>} />
         <Route path='resetpassword' element={<ResetPassword/>}/>
       </Routes>
