@@ -2,9 +2,12 @@ import styles from "./ResetPassword.module.css";
 import { useState } from "react";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import passwordStrength from "../../PasswordChecker";
-import Button from "../../UI/Button/Button";
-import CardWrap from "../../UI/CardWrap/CardWrap";
 import { Alert } from "@mui/material";
+
+// UI Imports
+import MainHeader from "../../UI/Header/MainHeader";
+import PageButton from "../../UI/PageButton/Pagebutton";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 
 // Intregrations
 import axios from "axios";
@@ -87,6 +90,7 @@ function ResetPassword(props) {
   }
   return (
     <div style={styles}>
+      <MainHeader />
       <CardWrap className={styles.resetpassword}>
         <div className={styles.heading}>
           <h4>Reset Password</h4>
@@ -114,7 +118,7 @@ function ResetPassword(props) {
             />
           </div>
           <div className={styles.control}>
-            <label htmlFor="userconfpassword">Confirm Password</label>
+            <label htmlFor="userconfpassword"></label>
             <input
               id="userconfpassword"
               type="password"
@@ -125,9 +129,9 @@ function ResetPassword(props) {
           </div>
           <div className={styles.actions}>
             {/* {!formIsValid && <NavLink to="/login"></NavLink>} */}
-            <Button type="submit" className="button">
+            <PageButton type="submit" className="btn">
               Submit
-            </Button>
+            </PageButton>
           </div>
         </form>
       </CardWrap>

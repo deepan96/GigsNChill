@@ -1,13 +1,14 @@
 .login {
   width: 60%;
   max-width: 40rem;
-  margin: 2rem auto;
+  margin: 8rem auto;
   padding: 2rem;
 }
 
 .heading {
   text-align: center;
 }
+
 .control {
   margin: 1rem 0;
   display: flex;
@@ -49,7 +50,6 @@
   display: flex;
   flex-direction: row;
   /* margin-top: 1rem; */
-  margin-left: 0.3rem;
   align-items: center;
 }
 .tagline {
@@ -76,7 +76,8 @@
   display: inline-block;
 }
 .googlediv {
-  
+  margin: 3rem auto;
+  text-align: left;
 }
 .googlediv button {
   font-weight: bold  !important;

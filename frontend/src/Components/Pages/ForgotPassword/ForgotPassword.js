@@ -1,9 +1,12 @@
 import styles from "./ForgotPassword.module.css";
-import CardWrap from "../../UI/CardWrap/CardWrap";
-import Button from "../../UI/Button/Button";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
+
+// UI Imports
+import MainHeader from "../../UI/Header/MainHeader";
+import PageButton from "../../UI/PageButton/Pagebutton";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 
 // Intregrations
 import axios from "axios";
@@ -46,6 +49,7 @@ function ForgotPassword() {
   
   return (
     <div style={styles}>
+      <MainHeader />
       <CardWrap className={styles.forgotpwsrd}>
          <form onSubmit={handleUser}>
             <div className={styles.heading}>
@@ -60,7 +64,7 @@ function ForgotPassword() {
               />
             </div>
             <div className={styles.actions}>
-              <Button type="submit">Submit</Button>
+              <PageButton type="submit" className="btn">Submit</PageButton>
             </div>
           </form>        
       </CardWrap>

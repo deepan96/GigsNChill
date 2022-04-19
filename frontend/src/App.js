@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <LoginStateContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-        <MainHeader />
+        {/* <MainHeader /> */}
         {console.log(isLoggedIn)}
         {!isLoggedIn ? RouteStack() : LoginRouteStack()}
       </LoginStateContext.Provider>

@@ -5,14 +5,25 @@ import LandingPage from "../Pages/Default_land_page/LandingPage";
 import EventPage from "../Pages/Events/EventPage";
 import Profile from "../Pages/Profile/Profile";
 import HostEvent from "../Pages/HostEvent/HostEvent";
+
+import Login from "../Pages/Login/Login";
+import SignUp from "../Pages/SignUp/SignUp";
+import ForgotPassword from "../Pages/ForgotPassword/ForgotPassword";
+import ResetPassword from "../Pages/ResetPassword/ResetPassword";
+
 import Chat from "../Pages/Chat/Chat";
 import Bookmark from "../Pages/Bookmark/Bookmark";
 
 export function RouteStack() {
+  console.log("me")
   return (
     <div>
       <Routes>
         <Route path="/*" element={<LandingPage />} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp/>} />
+        <Route path="forgotpassword" element={<ForgotPassword/>} />
+        <Route path='resetpassword' element={<ResetPassword/>}/>
       </Routes>
     </div>
   );
