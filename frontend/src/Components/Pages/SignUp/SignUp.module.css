@@ -1,16 +1,16 @@
 .signup {
   width: 70%;
   max-width: 40rem;
-  margin: 2rem auto;
+  margin: 8rem auto;
   padding: 2rem;
 }
 .heading {
   text-align: center;
 }
+
 .control {
   margin: 1rem 0;
   display: flex;
-  /* align-items: stretch; */
   flex-direction: column;
 }
 
