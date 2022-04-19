@@ -1,11 +1,10 @@
-import styles from "./ResetPassword.module.css";
 import { useState } from "react";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import passwordStrength from "../../PasswordChecker";
 import { Alert } from "@mui/material";
 
 // UI Imports
-import MainHeader from "../../UI/Header/MainHeader";
+import styles from "./ResetPassword.module.css";
 import PageButton from "../../UI/PageButton/Pagebutton";
 import CardWrap from "../../UI/CardWrap/CardWrap";
 
@@ -90,7 +89,6 @@ function ResetPassword(props) {
   }
   return (
     <div style={styles}>
-      <MainHeader />
       <CardWrap className={styles.resetpassword}>
         <div className={styles.heading}>
           <h4>Reset Password</h4>

@@ -1,16 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "./Login.module.css";
-import CardWrap from "../../UI/CardWrap/CardWrap";
-import PageButton from "../../UI/PageButton/Pagebutton";
 import { Backdrop, Radio, Switch } from "@material-ui/core";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
-import GoogleLogin from "react-google-login";
 import { Alert } from "@mui/material";
-import MainHeader from "../../UI/Header/MainHeader";
+
+// UI Imports
+import styles from "./Login.module.css";
+import CardWrap from "../../UI/CardWrap/CardWrap";
+import PageButton from "../../UI/PageButton/Pagebutton";
 
 // Intregrations
 import axios from "axios";
+import GoogleLogin from "react-google-login";
 
 const Login = (props) => {
   const clientNumber =
@@ -124,7 +125,6 @@ const Login = (props) => {
   // }
   return (
     <div style={styles}>
-      <MainHeader />
       <CardWrap className={styles.login}>
         <div className={styles.heading}>
           <h4>User Login</h4>

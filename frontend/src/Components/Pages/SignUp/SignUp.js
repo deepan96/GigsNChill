@@ -1,9 +1,5 @@
 import React, { useState, useContext } from "react";
-import styles from "./SignUp.module.css";
 import passwordStrength from "../../PasswordChecker";
-import CardWrap from "../../UI/CardWrap/CardWrap";
-import PageButton from "../../UI/PageButton/Pagebutton";
-import MainHeader from "../../UI/Header/MainHeader";
 
 import { Radio, Switch } from "@material-ui/core";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -11,6 +7,12 @@ import { LoginStateContext } from "../../Context";
 import { Alert } from "@mui/material";
 import axios from "axios";
 import { createUser } from "../Chat/ChatUserCreate";
+
+// UI Imports
+import styles from "./SignUp.module.css";
+import CardWrap from "../../UI/CardWrap/CardWrap";
+import PageButton from "../../UI/PageButton/Pagebutton";
+
 
 const SignUp = (props) => {
   
@@ -122,7 +124,6 @@ const SignUp = (props) => {
     }
   return (
     <div style={styles}>
-      <MainHeader />
       <CardWrap className={styles.signup}>
       <div className={styles.heading}>
           <h4>Sign-Up</h4>

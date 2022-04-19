@@ -6,6 +6,7 @@ import MainHeader from "./Components/UI/Header/MainHeader";
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(localStorage.getItem('user') == '' ? false : true);
   const [userEmail, setUserEmail] = useState(false);
+
   return (
     <div>
       <LoginStateContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
