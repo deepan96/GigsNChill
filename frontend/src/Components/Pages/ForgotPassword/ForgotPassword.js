@@ -42,7 +42,7 @@ function ForgotPassword() {
       .then(response => {
           console.log(response);
           alert("Password Reset Link Sent")
-          navigate("/home");        
+          navigate("/");        
       })
     .catch((err) => alert("Account does not exist"))
     }

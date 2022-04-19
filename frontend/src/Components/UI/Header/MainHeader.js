@@ -10,7 +10,7 @@ const MainHeader = (props) => {
 
   function homelogoNavigate() {
     console.log("Navigate to Home");
-    navigate('/home');
+    navigate('/');
   }
 
   function coverlogoNavigate() {

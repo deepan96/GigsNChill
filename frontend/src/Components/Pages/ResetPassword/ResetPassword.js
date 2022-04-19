@@ -74,7 +74,7 @@ function ResetPassword(props) {
           console.log(response);
           setFormIsValid(!flag);
           alert("Password Updated")
-          navigate("/home");
+          navigate("/");
         }
         
   })
