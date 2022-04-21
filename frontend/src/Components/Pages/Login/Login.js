@@ -1,45 +1,43 @@
 import React, { useContext, useEffect, useState } from "react";
-import styles from "./Login.module.css";
-import CardWrap from "../../UI/CardWrap/CardWrap";
-import Button from "../../UI/Button/Button";
 import { Backdrop, Radio, Switch } from "@material-ui/core";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
-import GoogleLogin from "react-google-login";
 import { Alert } from "@mui/material";
+
+// UI Imports
+import styles from "./Login.module.css";
+import CardWrap from "../../UI/CardWrap/CardWrap";
+import PageButton from "../../UI/PageButton/Pagebutton";
 
 // Intregrations
 import axios from "axios";
+import GoogleLogin from "react-google-login";
 
 const Login = (props) => {
   const clientNumber =
     "1045972817888-a3oc81j71v3e1tjbld5akh4hgup4hv8f.apps.googleusercontent.com";
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  // const [radioValue, setRadioValue] = useState("user");
   const [typeOfUser, setTypeofUser] = useState("User");
   const [formIsValid, setFormIsValid] = useState(true);
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
-  //error messages
+
+  // error messages
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
-  // need to check login for saved.
-  useEffect( () => {
+  // If user is already logged in send them to homepage
+  useEffect(() => {
     const data = JSON.parse(localStorage.getItem('user'));
     console.log(data);
     if (data && data.isLoggedIn) {
     setIsLoggedIn(true);
       navigate('/');
     }
-    else {
-      navigate('/');
-    }
-  }, []);
+  });
 
 
-  
   // google auth
   const onLoginSuccess = (res) => {
     console.log("Login Success:", res.profileObj);
@@ -48,17 +46,12 @@ const Login = (props) => {
   };
   
   
-
   function handleUserName(event) {
     setUserName(event.target.value);
   }
   function handleUserPassword(event) {
     setUserPassword(event.target.value);
   }
-  // function radioHandler(event) {
-  //   setRadioValue(event.target.value);
-  //   console.log("from radio",radioValue);
-  // }
 
   // Handles Submit Button
   function submitHandler(event) {
@@ -66,7 +59,6 @@ const Login = (props) => {
 
     // Username and Password are empty
     if (userName === "" && userPassword === "") {
-        //setting error
         setErrorFound(true);
         setErrorMessage("Enter both fields");
         return;
@@ -134,20 +126,17 @@ const Login = (props) => {
   return (
     <div style={styles}>
       <CardWrap className={styles.login}>
-        <div className="heading">
+        <div className={styles.heading}>
           <h4>User Login</h4>
         </div>
         {errorFound && <Alert severity="error">{errorMessage}</Alert>}
         <form onSubmit={submitHandler}>
-        <div className={styles.tagline}>
-          <p>Choose who you're.</p>
-          </div>
           <div className={styles.switchcase}>
             <div >
               <label>User</label>
             </div>
-          <Radio checked={typeOfUser === "User"} name="useradio" value="User" color="primary" onChange={()=> setTypeofUser("User")} />
-          <div >
+            <Radio checked={typeOfUser === "User"} name="useradio" value="User" color="primary" onChange={()=> setTypeofUser("User")} />
+            <div >
               <label>Host</label>
             </div>
             <Radio checked={typeOfUser === "Host"} name="hostradio" value="Host" color="primary" onChange={()=> setTypeofUser("Host")}/>
@@ -161,8 +150,7 @@ const Login = (props) => {
               placeholder="UserName"
               value={userName}
               onChange={handleUserName}
-            />
-            
+            />  
           </div>
 
           <div className={styles.control}>
@@ -176,16 +164,16 @@ const Login = (props) => {
             />
           </div>
           <div className={styles.actions}>
-            <Button type="submit" className="btn" disabled={!formIsValid}>
+            <PageButton type="submit" className="btn" disabled={!formIsValid}>
               Log In
-            </Button>
+            </PageButton>
           </div>
           <p className={styles.forgotpassword}>
-            <NavLink to="/forgotpassword">ForgotPassword?</NavLink>
+            <NavLink to="/forgotpassword">ForgotPassword</NavLink>
           </p>
           <div className={styles.hyperlink}>
             <p>
-              Not a user? <NavLink to="/signup">SignUp</NavLink>
+              <NavLink to="/signup">SignUp</NavLink>
             </p>
           </div>
         </form>

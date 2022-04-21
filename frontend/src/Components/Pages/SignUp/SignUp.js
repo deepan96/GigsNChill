@@ -1,14 +1,18 @@
 import React, { useState, useContext } from "react";
-import styles from "./SignUp.module.css";
 import passwordStrength from "../../PasswordChecker";
-import CardWrap from "../../UI/CardWrap/CardWrap";
-import Button from "../../UI/Button/Button";
+
 import { Radio, Switch } from "@material-ui/core";
 import { NavLink, useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
 import { Alert } from "@mui/material";
 import axios from "axios";
 import { createUser } from "../Chat/ChatUserCreate";
+
+// UI Imports
+import styles from "./SignUp.module.css";
+import CardWrap from "../../UI/CardWrap/CardWrap";
+import PageButton from "../../UI/PageButton/Pagebutton";
+
 
 const SignUp = (props) => {
   
@@ -121,13 +125,13 @@ const SignUp = (props) => {
   return (
     <div style={styles}>
       <CardWrap className={styles.signup}>
-        <div className="heading" >
-          <h4>Sign-Up here</h4>
+      <div className={styles.heading}>
+          <h4>Sign-Up</h4>
         </div>
         {errorFound && <Alert severity="error">{errorMessage}</Alert>}
         <form onSubmit={submitHandler}>
         <div className={styles.tagline}>
-          <p>Choose who you're.</p>
+          <p>Choose who you are:</p>
           </div>
           <div className={styles.switchcase}>
             <div >
@@ -190,7 +194,7 @@ const SignUp = (props) => {
             />
           </div>
           <div className={styles.control}>
-            <label htmlFor="userconfpassword">Confirm Password</label>
+            <label htmlFor="userconfpassword"></label>
             <input
               id="userconfpassword"
               type="password"
@@ -201,9 +205,8 @@ const SignUp = (props) => {
           </div>
           <div className={styles.actions}>
             {!isLoggedIn && <NavLink to="/home"></NavLink>}
-            <Button type="submit"className="button">Register</Button>
-            {/*  disabled={!formIsValid}  <p onClick={changetoLogin}>Already a user? <span style={{color:'red'}}>Sign-In.</span></p> */}
-            <p>Already a user? <NavLink to="/">Login</NavLink></p>
+            <PageButton type="submit" className="btn">Register</PageButton>
+            <p>Already a user? <NavLink to="/login">Login</NavLink></p>
           </div>
         </form>
       </CardWrap>
