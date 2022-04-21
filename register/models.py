@@ -17,7 +17,7 @@ class USER(models.Model):
     FirstName = models.CharField(max_length=50)
     LastName = models.CharField(max_length=50)
     Mobile = models.CharField(max_length=10, blank=True, default='')
-    Password = models.CharField(max_length=50)
+    Password = models.CharField(max_length=150)
     DateModified = models.DateTimeField(auto_now=True)
     DateCreated = models.DateTimeField(auto_now_add=True)
     VerificationCode = models.CharField(max_length=6, default="000000")

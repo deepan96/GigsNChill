@@ -47,7 +47,8 @@ class RegisterView(APIView):
                 user.save()
 
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
-            except:
+            except Exception as E:
+                print(E)
                 return JsonResponse({"status": "error", "data": serializer_class.errors,
                                      "message": "User account associated with the provided Email already exists"},
                                     status=status.HTTP_200_OK)
