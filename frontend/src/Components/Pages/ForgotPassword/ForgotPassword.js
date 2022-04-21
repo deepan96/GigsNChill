@@ -41,7 +41,7 @@ function ForgotPassword() {
       .then(response => {
           console.log(response);
           alert("Password Reset Link Sent")
-          navigate("/");        
+          navigate("/login");        
       })
     .catch((err) => alert("Account does not exist"))
     }
