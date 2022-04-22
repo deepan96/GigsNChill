@@ -8,6 +8,7 @@ import { InputLabel } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { tags, categories } from "../../Assets/FilterData";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function EventHome(props) {
   const [searchValue, setSearchValue] = useState("");
@@ -16,16 +17,25 @@ export default function EventHome(props) {
   const [eventCategory, setEventCategory] = useState("");
   const [eventType, setEventType] = useState("");
   const [types, setTypes] = useState([]);
+  const navigate = useNavigate();
 
   var axios = require("axios");
   var FormData = require("form-data");
   var data = new FormData();
 
+  // useEffect(()=>{
+  //   var d = JSON.parse(localStorage.getItem('user'));
+  //   if (d && d.isLoggedIn) {
+  //     // navigate('')
+  //     console.log("Not logged in")
+  //   }
+  // },[])
+
   // getting events data-only once
   useEffect(() => {
     var config = {
       method: "get",
-      url: "http://127.0.0.1:8000/searchevent/",
+      url: "https://gigsnchill.herokuapp.com/searchevent/",
     };
 
     axios(config).then((res) => {
@@ -66,7 +76,7 @@ export default function EventHome(props) {
     } else {
       setEventDataFilter(groupData);
     }
-  }, [eventCategory , searchValue, props.searchQuery]);
+  }, [eventCategory, searchValue, props.searchQuery]);
 
   // handling category and its values
   function handleSelectCategory(e) {
@@ -116,6 +126,24 @@ export default function EventHome(props) {
                       {name}
                     </MenuItem>
                   ))}
+              </Select>
+            </div>
+            <div className={styles.control}>
+              <InputLabel htmlFor="eventlocation">Location(State)</InputLabel>
+              <Select
+                sx={{ width: "250px", background: "white" }}
+                value={eventCategory}
+                onChange={handleSelectCategory}
+                input={<OutlinedInput label="Category" id="eventlocation" />}
+              >
+                <MenuItem key="none" value="">
+                  None
+                </MenuItem>
+                {categories.map((name) => (
+                  <MenuItem key={name} value={name}>
+                    {name}
+                  </MenuItem>
+                ))}
               </Select>
             </div>
           </div>

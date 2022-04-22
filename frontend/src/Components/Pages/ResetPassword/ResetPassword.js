@@ -52,7 +52,7 @@ function ResetPassword(props) {
 
     var config = {
       method: 'put',
-      url: 'http://127.0.0.1:8000/resetpassword/',
+      url: 'https://gigsnchill.herokuapp.com/resetpassword/',
       data : data
     };
     

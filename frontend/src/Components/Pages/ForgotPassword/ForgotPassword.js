@@ -30,7 +30,7 @@ function ForgotPassword() {
 
     var config = {
       method: 'post',
-      url: 'http://127.0.0.1:8000/recoverpassword/',
+      url: 'https://gigsnchill.herokuapp.com/recoverpassword/',
       data : data
     };
 
