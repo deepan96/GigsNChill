@@ -8,28 +8,34 @@ const MainHeader = (props) => {
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
 
-  function logoNavigate() {
+  function homelogoNavigate() {
     console.log("Navigate to Home");
     navigate('/');
   }
-  function logoutHandler() {
 
+  function coverlogoNavigate() {
+    console.log("Navigate to Cover Page");
+    navigate('/');
+  }
+
+  function logoutHandler() {
     setIsLoggedIn(false);
     localStorage.clear();
     navigate('/');
   }
+
   return (
     <div style={styles}>
       {! isLoggedIn && (
         <header className={styles.mainheader}>
-          <div className={styles.logoclick}>
+          <div className={styles.logoclick} onClick={coverlogoNavigate}>
             </div>
           <Navigation />
         </header>
       )}
       {isLoggedIn && (
         <header className={styles.mainheader}>
-          <div className={styles.logoclick} onClick={logoNavigate}>
+          <div className={styles.logoclick} onClick={homelogoNavigate}>
           <></>
           </div>
           <Navigation onLogout={logoutHandler}/>
