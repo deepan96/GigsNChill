@@ -131,10 +131,33 @@ class BookEventView(APIView):
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
 
 
+class RetrieveBookmarkView(APIView):
+    """
+    This view should retrieve the bookmarked events from the Bookmarks Database
+    when a registered user requests the bookmarks.
+    """
+
+    serializer_class = BookmarksSerializer
+    model = Bookmarks
+
+    def get(self, request, Email=None):
+        try:
+            bookmarks = [model_to_dict(book) for book in Bookmarks.objects.filter(UserId=Email,
+                                                                                  BookmarkStatus=True)]
+            for bookmark in bookmarks:
+                bookmarked_event = model_to_dict(Event.objects.get(EventId=bookmark['EventId']))
+                bookmark.update(bookmarked_event)
+            return Response({"status": "success", 'data': bookmarks},
+                            status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": []},
+                            status=status.HTTP_200_OK)
+
+
 class BookmarkEventView(APIView):
     """
     This view should add the bookmarked events to the Bookmarks Database
-    when a registered user bookmarks a event a event. If the event is already
+    when a registered user bookmarks an event. If the event is already
     bookmarked by the respective user, the bookmark status should get updated
     """
     serializer_class = BookmarksSerializer
@@ -174,19 +197,6 @@ class BookmarkEventView(APIView):
                     status=status.HTTP_200_OK)
         else:
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
-
-    def get(self, request, Email=None):
-        try:
-            bookmarks = [model_to_dict(book) for book in Bookmarks.objects.filter(UserId=Email,
-                                                                                  BookmarkStatus=True)]
-            for bookmark in bookmarks:
-                bookmarked_event = model_to_dict(Event.objects.get(EventId=bookmark['EventId']))
-                bookmark.update(bookmarked_event)
-            return Response({"status": "success", 'data': bookmarks},
-                            status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"status": "error", "data": []},
-                            status=status.HTTP_200_OK)
 
 
 class InviteFriendsView(APIView):

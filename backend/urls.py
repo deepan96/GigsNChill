@@ -46,7 +46,7 @@ urlpatterns = [
     #re_path('invitefriends/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
     #        view_event.InviteFriendsView.as_view(), name="invite-friends"),'''
     re_path('bookmarks/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
-            view_event.BookmarkEventView.as_view(), name="bookmarks"),
+            view_event.RetrieveBookmarkView.as_view(), name="bookmarks"),
     path('invitefriends/', view_event.InviteFriendsView.as_view(), name="invite-friends"),
     # path('invitefriends/', view_event.InviteFriendsView.as_view(), name="invite-friends"),
     # path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
