@@ -78,13 +78,13 @@ class SearchEvents(APIView):
 
     def get(self, request):
         # serializer_class = SearchEventsSerializer(many=True)
-        events = []
-        for event in Event.objects.filter(EventDate__gte=date.today()):
-            events.append(model_to_dict(event))
-        res = JsonResponse({"status": "success",
-                            "data": events},
-                           status=status.HTTP_200_OK)
-        return res
+        events = [model_to_dict(e) for e in Event.objects.filter(EventDate__gte=date.today())]
+        for event in events:
+            print(event['LocationId'])
+            location = model_to_dict(Location.objects.get(LocationId=event['LocationId']))
+            event.update(location)
+        return JsonResponse({"status": "success", "data": events},
+                            status=status.HTTP_200_OK)
 
 
 class BookEventView(APIView):
