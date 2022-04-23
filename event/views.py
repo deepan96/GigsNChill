@@ -11,6 +11,9 @@ from register.models import HOST, USER
 from datetime import date
 import sys
 from django.forms.models import model_to_dict
+# Mail
+from django.conf import settings
+from django.core.mail import send_mail
 
 
 # Create your views here
@@ -26,16 +29,16 @@ class AddNewEventView(APIView):
         def get_location_instance():
             """"Verify if the location details already present in location database.
             If it is not present, add the details to the location database"""
-            try:
-                return Location.objects.get(State=request.data['State'], City=request.data['City'])
-            except:
-                Location.objects.create(State=request.data['State'], City=request.data['City'])
-                return Location.objects.get(State=request.data['State'], City=request.data['City'])
+
+            if not Location.objects.filter(State=request.data['State'], City=request.data['City']).exists():
+                l = Location.objects.create(State=request.data['State'], City=request.data['City'])
+                l.save()
+            return
 
         serializer_class = AddNewEventSerializer(data=request.data)
         if serializer_class.is_valid():
             try:
-                LocationId = get_location_instance()
+                get_location_instance()
                 e = Event.objects.create(EventName=request.data['EventName'],
                                          EventDescription=request.data['EventDescription'],
                                          EventGenre=request.data['EventGenre'],
@@ -50,7 +53,8 @@ class AddNewEventView(APIView):
                                          HostId=HOST.objects.get(Email=request.data['HostEmail']),
                                          Address=request.data['Address'],
                                          ZipCode=request.data['ZipCode'],
-                                         LocationId=LocationId,
+                                         LocationId=Location.objects.get(State=request.data['State'],
+                                                                         City=request.data['City']),
                                          ImageUrl=request.data['ImageUrl'], )
                 e.save()
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
@@ -74,13 +78,13 @@ class SearchEvents(APIView):
 
     def get(self, request):
         # serializer_class = SearchEventsSerializer(many=True)
-        events = []
-        for event in Event.objects.filter(EventDate__gte=date.today()):
-            events.append(model_to_dict(event))
-        res = JsonResponse({"status": "success",
-                            "data": events},
-                           status=status.HTTP_200_OK)
-        return res
+        events = [model_to_dict(e) for e in Event.objects.filter(EventDate__gte=date.today())]
+        for event in events:
+            print(event['LocationId'])
+            location = model_to_dict(Location.objects.get(LocationId=event['LocationId']))
+            event.update(location)
+        return JsonResponse({"status": "success", "data": events},
+                            status=status.HTTP_200_OK)
 
 
 class BookEventView(APIView):
@@ -127,10 +131,33 @@ class BookEventView(APIView):
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
 
 
+class RetrieveBookmarkView(APIView):
+    """
+    This view should retrieve the bookmarked events from the Bookmarks Database
+    when a registered user requests the bookmarks.
+    """
+
+    serializer_class = BookmarksSerializer
+    model = Bookmarks
+
+    def get(self, request, Email=None):
+        try:
+            bookmarks = [model_to_dict(book) for book in Bookmarks.objects.filter(UserId=Email,
+                                                                                  BookmarkStatus=True)]
+            for bookmark in bookmarks:
+                bookmarked_event = model_to_dict(Event.objects.get(EventId=bookmark['EventId']))
+                bookmark.update(bookmarked_event)
+            return Response({"status": "success", 'data': bookmarks},
+                            status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"status": "error", "data": []},
+                            status=status.HTTP_200_OK)
+
+
 class BookmarkEventView(APIView):
     """
     This view should add the bookmarked events to the Bookmarks Database
-    when a registered user bookmarks a event a event. If the event is already
+    when a registered user bookmarks an event. If the event is already
     bookmarked by the respective user, the bookmark status should get updated
     """
     serializer_class = BookmarksSerializer
@@ -171,39 +198,35 @@ class BookmarkEventView(APIView):
         else:
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
 
-    def get(self, request, Email=None):
-        try:
-            bookmarks = [model_to_dict(book) for book in Bookmarks.objects.filter(UserId=Email,
-                                                                                  BookmarkStatus=True)]
-            for bookmark in bookmarks:
-                bookmarked_event = model_to_dict(Event.objects.get(EventId=bookmark['EventId']))
-                bookmark.update(bookmarked_event)
-            return Response({"status": "success", 'data': bookmarks},
-                            status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"status": "error", "data": []},
-                            status=status.HTTP_200_OK)
 
 class InviteFriendsView(APIView):
     """
     This view should verify the user is already registered or not.
     """
     serializer_class = InviteFriendsSerializer
-    model = USER
+    model = Event
 
-    def get(self, request, Email, Type="user"):
-        if Type.lower() == 'User'.lower():
+    def post(self, request):
+        '''if Type.lower() == 'User'.lower():
             db_table = USER
         else:
-            db_table = HOST
+            db_table = HOST'''
         try:
-            self.object = db_table.objects.get(Email=Email)
+            # self.object = db_table.objects.get(Email=Email)
+            self.event = Event.objects.get(EventId=request.data['EventId'])
+            subject = 'GigsNChill Event Invite'
+            message = f"Hi {request.data['RecipientEmail']}, You have been invited by " + request.data['Email'] + \
+                      "to attend the following event hosted bt Gigs N\' " \
+                      f"Chill. Event ID: " + str(request.data['EventId']) + "Event Name: " + self.event.EventName
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = [request.data['RecipientEmail']]
+            send_mail(subject, message, email_from, recipient_list)
             return JsonResponse({'status': 'Success',
                                  'data': 'Chat',
-                                 "message": "User Account Exists"},
+                                 "message": "Mail sent successfully"},
                                 status=status.HTTP_200_OK)
-        except:
+        except Exception as e:
             return JsonResponse({'status': 'Error',
                                  'data': 'Email',
-                                 "message": "User account associated with the Email doesnot exist"},
+                                 "message": str(sys.exc_info()[2]) + str(e), },
                                 status=status.HTTP_400_BAD_REQUEST)

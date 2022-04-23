@@ -109,7 +109,11 @@ DATABASES = {'default': {
         'USER': 'gigsnchill',
         'PASSWORD': 'ABCDabcd1234',
         'HOST': 'gigsnchil.cmtaafoyezaj.us-east-2.rds.amazonaws.com',
-        'PORT': '3306'}}
+        'PORT': '3306', 
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'sql_mode': 'STRICT_TRANS_TABLES'
+        }}}
 
 
 # Password validation
