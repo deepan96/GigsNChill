@@ -1,0 +1,44 @@
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.closebutton {
+  display: flex;
+  float: right;
+  top: 0;
+  margin: -30px -30px !important;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  padding-top: 8px;
+  /* padding-bottom: 8px; */
+}
+.sharebutton {
+  display: flex;
+  float: right;
+  position: relative;
+  margin: -45px -5px !important;
+}
+
+.control {
+  /* margin: 1rem; */
+  display: flex;
+  flex-direction: column;
+}
+
+.control input {
+  flex: 3;
+  font: inherit;
+  padding: 0.35rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.control input:focus {
+  outline: none;
+  border-color: #a3a2a3;
+  /* background: #e6f7ff; */
+}

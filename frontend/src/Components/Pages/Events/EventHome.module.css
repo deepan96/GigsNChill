@@ -8,8 +8,8 @@
 .leftDiv {
   margin-top: 3rem;
   padding-left: 30px;
-  min-width: 20%;
-  max-width: 50%;
+  /* min-width: 20%;
+  max-width: 50%; */
   border: 1px solid gray;
   max-height: 300px;
 }
@@ -29,6 +29,7 @@
 .categorydiv {
   display: flex;
   flex-direction: column;
+  padding-right: 4px;
 }
 
 .control {

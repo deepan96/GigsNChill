@@ -32,7 +32,7 @@ function ForgotPassword() {
 
     var config = {
       method: 'post',
-      url: 'http://127.0.0.1:8000/recoverpassword/',
+      url: 'https://gigsnchill.herokuapp.com/recoverpassword/',
       data : data
     };
 
@@ -41,7 +41,7 @@ function ForgotPassword() {
       .then(response => {
           console.log(response);
           alert("Password Reset Link Sent")
-          navigate("/");        
+          navigate("/login");        
       })
     .catch((err) => alert("Account does not exist"))
     }

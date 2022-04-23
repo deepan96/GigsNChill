@@ -171,7 +171,7 @@ function HostEvent(props) {
       data.append("ImageUrl", imageAsUrl);
       var config = {
         method: "post",
-        url: "http://127.0.0.1:8000/addnewevent/",
+        url: "https://gigsnchill.herokuapp.com/addnewevent/",
         data: data,
       };
 

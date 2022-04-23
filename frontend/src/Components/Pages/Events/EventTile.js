@@ -41,7 +41,7 @@ function EventTile(props) {
     data.append("BookmarkStatus", fav);
     var config = {
       method: "post",
-      url: "http://127.0.0.1:8000/bookmarkevent/",
+      url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
       data: data,
     };
 
@@ -86,17 +86,12 @@ function EventTile(props) {
             sx={{ color: red[500] }}
             onClick={handleFav}
           >
-            {/* onClick=
-            {() => {
-              console.log("fav");
-              setFav(!fav);
-            }} */}
             {!fav && <FavoriteIcon sx={{ color: "red" }} />}
             {fav && <FavoriteIcon />}
           </IconButton>
-          <IconButton aria-label="share">
+          {/* <IconButton aria-label="share">
             <ShareIcon />
-          </IconButton>
+          </IconButton> */}
         </CardActions>
       </Card>
     </div>
