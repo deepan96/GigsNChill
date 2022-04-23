@@ -29,16 +29,16 @@ class AddNewEventView(APIView):
         def get_location_instance():
             """"Verify if the location details already present in location database.
             If it is not present, add the details to the location database"""
-            try:
-                return Location.objects.get(State=request.data['State'], City=request.data['City'])
-            except:
-                Location.objects.create(State=request.data['State'], City=request.data['City'])
-                return Location.objects.get(State=request.data['State'], City=request.data['City'])
+
+            if not Location.objects.filter(State=request.data['State'], City=request.data['City']).exists():
+                l = Location.objects.create(State=request.data['State'], City=request.data['City'])
+                l.save()
+            return
 
         serializer_class = AddNewEventSerializer(data=request.data)
         if serializer_class.is_valid():
             try:
-                LocationId = get_location_instance()
+                get_location_instance()
                 e = Event.objects.create(EventName=request.data['EventName'],
                                          EventDescription=request.data['EventDescription'],
                                          EventGenre=request.data['EventGenre'],
@@ -53,7 +53,8 @@ class AddNewEventView(APIView):
                                          HostId=HOST.objects.get(Email=request.data['HostEmail']),
                                          Address=request.data['Address'],
                                          ZipCode=request.data['ZipCode'],
-                                         LocationId=LocationId,
+                                         LocationId=Location.objects.get(State=request.data['State'],
+                                                                         City=request.data['City']),
                                          ImageUrl=request.data['ImageUrl'], )
                 e.save()
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
@@ -201,7 +202,7 @@ class InviteFriendsView(APIView):
         else:
             db_table = HOST'''
         try:
-            #self.object = db_table.objects.get(Email=Email)
+            # self.object = db_table.objects.get(Email=Email)
             self.event = Event.objects.get(EventId=request.data['EventId'])
             subject = 'GigsNChill Event Invite'
             message = f"Hi {request.data['RecipientEmail']}, You have been invited by " + request.data['Email'] + \

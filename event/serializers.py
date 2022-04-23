@@ -6,7 +6,7 @@
 
 from rest_framework import serializers
 from register.models import HOST, USER
-from .models import Event, Bookings, Bookmarks
+from .models import Event, Bookings, Bookmarks, Location
 
 
 class AddNewEventSerializer(serializers.Serializer):
@@ -40,7 +40,7 @@ class SearchEventsSerializer(serializers.Serializer):
     """
 
     class Meta:
-        model = Event
+        model = [Event, Location]
 
 
 class BookEventSerializer(serializers.Serializer):
