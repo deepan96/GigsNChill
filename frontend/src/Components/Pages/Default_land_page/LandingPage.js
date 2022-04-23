@@ -1,41 +1,37 @@
-import React, { useState } from "react";
+import React from "react";
+import logo from  "../Vector_White.png"
+import videobg from "../vidbg.mp4"
+import Button from "../../UI/Button/Button";
 import "./LandingPage.css";
-import CardWrap from "../../UI/CardWrap/CardWrap"
-import { Route, Routes, useNavigate } from "react-router-dom";
-import Login from "../Login/Login";
-import SignUp from "../SignUp/SignUp";
-import ForgotPassword from "../ForgotPassword/ForgotPassword";
-import ResetPassword from "../ResetPassword/ResetPassword";
-import EventPage from "../Events/EventPage";
+import { Link } from "react-router-dom";
 
 function LandingPage(props) {
-  const navigate = useNavigate();
- 
   return (
-    <div>
-      <div className="land-container">
-        <div className="land-split left">
-          <p></p>
-        </div>
-        <CardWrap className="land-split right">
-          <div>            
-            
-            <Routes>
-            <Route path='*' element={<Login/>}></Route>
-            {/* <Route path='login' element={<Login/>}></Route> */}
-            
-            <Route path="signup" element={<SignUp/>} />
-            <Route path="forgotpassword" element={<ForgotPassword/>} />
-            <Route path='resetpassword' element={<ResetPassword/>}/>
-            </Routes>
-            
-            {/* <p>
-              <NavLink to="/signup">SignUp</NavLink>
-            </p> */}
+      <div className="coverbg">
+
+        {/* If switching to image bg comment out, and switch css in coverbg class */}
+        <video autoplay = "autoplay" muted loop id="myVideo">
+          <source src= {videobg} type="video/mp4"/>
+        </video>
+
+        <div className="main-content">
+          <img src={logo} className="main-content logo" alt="NULL"/>      
+    
+          <div className="main-content buttons">   
+            <Link to="/login">
+              <Button type="submit" className="btn">
+                Log In
+              </Button>
+            </Link>
+
+            <Link to="/signup">
+              <Button type="submit" className="btn">
+                Sign Up
+              </Button>
+            </Link>
           </div>
-        </CardWrap>
+        </div>        
       </div>
-    </div>
   );
 }
 

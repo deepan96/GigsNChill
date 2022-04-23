@@ -1,0 +1,1 @@
+<QueryDict: {'UserId': ['hvalivet@iu'], 'EventId': ['11'], 'BookmarkStatus': ['false']}>

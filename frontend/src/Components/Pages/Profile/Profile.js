@@ -1,85 +1,146 @@
 import React, { useEffect, useState } from "react";
-import { Route, Routes } from 'react-router-dom';
-import { Card, CardActions, CardContent, CardMedia, IconButton } from '@material-ui/core';
-//import "./Profile.css";
-import MainHeader from "../../UI/MainHeader";
-//import Event from "../Events/EventTile";
-import EventHome from './EventHome';
-import EventPage from './EventPage';
-import styles from "./Profile.css";
-import { NavLink } from "react-router-dom";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  IconButton,
+} from "@material-ui/core";
+import styles from "./Profile.module.css";
 import Calendar from "react-calendar";
-import 'react-calendar/dist/Calendar.css';
-import ProIcon from '@mui/icons-material/AccountCircle';
+import "react-calendar/dist/Calendar.css";
+import BigCalendar from "react-big-calendar";
+import CardWrap from "../../UI/CardWrap/CardWrap";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import ShareIcon from "@mui/icons-material/Share";
+import bgimage from "../../Pages/Promote-Your-local-event.jpg";
+import { Link, Navigate } from "react-router-dom";
+import { red } from "@material-ui/core/colors";
 
 function Profile(props) {
-    const userName = "Harsha Valeti";
-    const userEmail = "";
-    const phoneNumber = "";
-    const host = "";
-    const [date, setDate] = useState(new Date());
-    const loop = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    const [searchQuery, setSearchQuery] = useState(''); // gets search key from searchField
+  const user_info = JSON.parse(localStorage.getItem("user"));
+  const [date, setDate] = useState(new Date());
+  const [userData, setUserData] = useState("");
+  const [fEvents, setFEvents] = useState([]);
+  const [pEvents, setPEvents] = useState([]);
 
-    useEffect(() => {
-        // do nothing
-    }, [searchQuery]);
-    return (
-        <div>
-            <MainHeader />
-            <div className="page">
-                <header>
-                    <IconButton aria-label="profile icon">
-                        <ProIcon style={{ fontSize: 250 }} />
-                    </IconButton>
-                    {/* <div className="pic">
-                        <p>+</p>
-                    </div> */}
-                    {/* <img src = {require("")}/> */}
-                    <div className="Info">
-                        <h3>Name: {userName}</h3>
-                        <h3>Email: {userEmail}</h3>
-                        <h3>Phone Number: {phoneNumber}</h3>
+  var axios = require("axios");
+  // var FormData = require("form-data");
+  // var data = new FormData();
+  // data.append()
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: `http://127.0.0.1:8000/viewprofile/${user_info.type.toLowerCase()}/${
+        user_info.email
+      }/`,
+    };
+    var fe = [];
+    axios(config).then((res) => {
+      console.log(res.data.data);
+      const uad = res.data.data;
+      fe = res.data.data.FutureEvents;
+      setUserData(res.data.data);
+      setFEvents(fe);
+      setPEvents(res.data.data.PastEvents);
+      // console.log(fEvents);
+      // console.log(fe);
+    });
+  }, []);
+
+  return (
+    <div style={styles}>
+      <CardWrap>
+        <div className={styles.container}>
+          <div className={styles.userdiv}>
+            <h5>UserName:{userData.Email}</h5>
+            <h5>FirstName:{userData.FirstName}</h5>
+            <h5>UserName:{userData.LastName}</h5>
+          </div>
+
+          <div className={styles.usercalendar}>
+            <p className={styles.datediv}>
+              <Calendar onChange={setDate} value={date} />
+              <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
+              {date.toDateString()}
+            </p>
+          </div>
+          <div className={styles.heading}>
+            <h3>Upcoming Events</h3>
+          </div>
+          <div className={styles.userupcoming}>
+            <div className={styles.subcontainer}>
+              {fEvents &&
+                fEvents.map((ud) => (
+                  <Card className={styles.eventcard}>
+                    {console.log(ud)}
+                    <div>
+                      <CardMedia
+                        className={styles.cardimage}
+                        image={ud.ImageUrl}
+                        alt="event image"
+                      />
                     </div>
-                    {/* <h2>Events</h2> */}
-                    {/* <h2>Friends</h2> */}
-
-                </header>
-                <body className="content">
-                    <article className="cal-body">
-                        {/* <h2>
-                                Calendar
-                            </h2> */}
-                        <div className="cal">
-                            <h2 className="text-center"> Calendar</h2>
-                            <div className="calendar-container">
-                                <Calendar onChange={setDate} value={date} />
-                            </div>
-                            <p className="text-center">
-                                <span className="bold">
-                                    Date:
-                                </span>
-                                {' '}
-                                {date.toDateString()}
-                            </p>
-                        </div>
-                    </article>
-                    <article className="hist-body">
-                        <h2>
-                            Event History
-                        </h2>
-                        <div className="events">
-                            <EventHome searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-                            <Routes>
-                                <Route path='eventpage/:id' element={<EventPage />} />
-                            </Routes>
-                            
-                        </div>
-                    </article>
-                </body>
+                    <CardContent className={styles.cardcontent}>
+                      <div className={styles.eventtitle}>
+                        <h5>
+                          <Link
+                            className={styles.eventlink}
+                            to={`eventpage/${ud.EventId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        </h5>
+                      </div>
+                      <p>{ud.EventDate}</p>
+                      <div>
+                        <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              {!fEvents && (
+                <div>No Events to Display. Reserve for a Event now!</div>
+              )}
             </div>
+          </div>
+          <div className={styles.heading}>
+            <h3>Past Events</h3>
+          </div>
+          <div className={styles.userupcoming}>
+            <div className={styles.subcontainer}>
+              {pEvents &&
+                pEvents.map((ud) => (
+                  <Card className={styles.eventcard}>
+                    <div>
+                      <CardMedia
+                        className={styles.cardimage}
+                        image={ud.ImageUrl}
+                        alt="event image"
+                      />
+                    </div>
+                    <CardContent className={styles.cardcontent}>
+                      <div className={styles.eventtitle}>
+                        <h5>
+                          <Link
+                            className={styles.eventlink}
+                            to={`eventpage/${ud.EventId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        </h5>
+                      </div>
+                      <p>{ud.EventDate}</p>
+                    </CardContent>
+                  </Card>
+                ))}
+              {!fEvents && <div>No Events to Display.</div>}
+            </div>
+          </div>
         </div>
-    );
+      </CardWrap>
+    </div>
+  );
 }
 
 export default Profile;

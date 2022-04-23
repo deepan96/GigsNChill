@@ -22,20 +22,47 @@ function EventTile(props) {
   const eventDate = props.event.EventDate;
   const [fav, setFav] = useState(true); // setting bookmark
 
+  // connection
+  var axios = require("axios");
+  var FormData = require("form-data");
+  const user_info = JSON.parse(localStorage.getItem("user"));
+
   function eventHandler() {
     console.log("Event clicked");
   }
   function handleFav() {
     setFav(!fav);
     console.log("like", fav);
+
+    // making a bookmark
+    var data = new FormData();
+    data.append("UserId", user_info.email);
+    data.append("EventId", props.event.EventId);
+    data.append("BookmarkStatus", fav);
+    var config = {
+      method: "post",
+      url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
+      data: data,
+    };
+
+    axios(config)
+      .then((res) => {
+        console.log(res.data.data);
+        alert("BookMark Success!");
+      })
+      .catch((err) => {
+        alert("Invalid BookMark Request");
+        console.log(err);
+      });
   }
+
   return (
     <div style={styles}>
       <Card className={styles.eventcard}>
         <div>
           <CardMedia
             className={styles.cardimage}
-            image={bgimage}
+            image={props.event.ImageUrl}
             alt="event image"
           />
         </div>
@@ -59,17 +86,12 @@ function EventTile(props) {
             sx={{ color: red[500] }}
             onClick={handleFav}
           >
-            {/* onClick=
-            {() => {
-              console.log("fav");
-              setFav(!fav);
-            }} */}
             {!fav && <FavoriteIcon sx={{ color: "red" }} />}
             {fav && <FavoriteIcon />}
           </IconButton>
-          <IconButton aria-label="share">
+          {/* <IconButton aria-label="share">
             <ShareIcon />
-          </IconButton>
+          </IconButton> */}
         </CardActions>
       </Card>
     </div>

@@ -1,0 +1,40 @@
+.container {
+  width: 100%;
+  margin-top: 5rem;
+}
+
+.ce-wrapper{
+  height: 100vh ;
+  /* calc(100vh - 80px) */
+}
+
+.ce-chat-engine {
+  height: 100vh !important;
+}
+.ce-chat-feed-container{
+  height: calc(100vh - 5rem) !important;
+}
+
+.usersearch {
+  display: flex;
+  flex-direction: row;
+  /* width: 100%; */
+}
+
+.inputfield {
+  width: 100%;
+  vertical-align: middle;
+  margin: 5px 10px 5px 0;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.searchbutton {
+  float: right;
+  padding: 5px 10px;
+  background-color: dodgerblue;
+  border: 1px solid #ddd;
+  color: white;
+  cursor: pointer;
+}

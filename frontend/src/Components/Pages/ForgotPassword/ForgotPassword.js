@@ -1,9 +1,11 @@
-import styles from "./ForgotPassword.module.css";
-import CardWrap from "../../UI/CardWrap/CardWrap";
-import Button from "../../UI/Button/Button";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginStateContext } from "../../Context";
+
+// UI Imports
+import styles from "./ForgotPassword.module.css";
+import PageButton from "../../UI/PageButton/Pagebutton";
+import CardWrap from "../../UI/CardWrap/CardWrap";
 
 // Intregrations
 import axios from "axios";
@@ -30,7 +32,7 @@ function ForgotPassword() {
 
     var config = {
       method: 'post',
-      url: 'http://127.0.0.1:8000/recoverpassword/',
+      url: 'https://gigsnchill.herokuapp.com/recoverpassword/',
       data : data
     };
 
@@ -39,7 +41,7 @@ function ForgotPassword() {
       .then(response => {
           console.log(response);
           alert("Password Reset Link Sent")
-          navigate("/home");        
+          navigate("/login");        
       })
     .catch((err) => alert("Account does not exist"))
     }
@@ -60,7 +62,7 @@ function ForgotPassword() {
               />
             </div>
             <div className={styles.actions}>
-              <Button type="submit">Submit</Button>
+              <PageButton type="submit" className="btn">Submit</PageButton>
             </div>
           </form>        
       </CardWrap>
