@@ -1,9 +1,38 @@
 .container {
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
-  margin-left: 10rem;
+  margin-top: 7rem;
+  margin-left: 30rem;
+  gap: 10px;
+  /* border: 1px solid black; */
+}
+
+.eventcard {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   border-radius: 10px;
+}
+.imagediv {
+  width: 626px;
+  height: 100px;
+}
+.cardimage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.cardimage:hover {
+  transform: scale(1.1);
+}
+.eventlink {
+  text-decoration: none;
+  color: black;
+}
+.cardcontent {
+  overflow: hidden;
+  /* max-width: 15rem; */
 }
