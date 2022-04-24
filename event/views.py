@@ -1,3 +1,5 @@
+import traceback
+
 from django.shortcuts import render
 
 from .models import Event, Location, Bookings, Bookmarks
@@ -96,13 +98,13 @@ class BookEventView(APIView):
     model = Bookings
 
     def post(self, request):
-
         serializer_class = BookEventSerializer(data=request.data)
         if serializer_class.is_valid():
             try:
-                self.event_object = Event.objects.get(EventId=request.data['EventId'])
-                SeatsAvailable = int(self.event_object.SeatsAvailable) - int(request.data["NoOfSeats"])
-                if self.event_object.SeatsAvailable == 0:
+                event_object = Event.objects.get(EventId=request.data['EventId'])
+                user_info = USER.objects.get(Email=request.data['UserId'])
+                SeatsAvailable = int(event_object.SeatsAvailable) - int(request.data["NoOfSeats"])
+                if event_object.SeatsAvailable == 0:
                     return JsonResponse(
                         {"status": "error",
                          "message": "Couldn't book the event as seats are full for the requested Event"},
@@ -117,9 +119,19 @@ class BookEventView(APIView):
                 new_booking = Bookings.objects.create(UserId=USER.objects.get(Email=request.data['UserId']),
                                                       NoOfSeats=request.data["NoOfSeats"],
                                                       EventId=Event.objects.get(EventId=request.data['EventId']))
-                self.event_object.SeatsAvailable = SeatsAvailable
-                self.event_object.save()
+                event_object.SeatsAvailable = SeatsAvailable
+                event_object.save()
                 new_booking.save()
+                subject = f'GigsNChill Booking confirmation to Event {event_object.EventName}'
+                message = f'Hi {user_info.FirstName}, \nYour booking to the event {event_object.EventName} is ' \
+                          f'confirmed\nEvent Details:\nEventName: {event_object.EventName} \n' \
+                          f'Event Date: {event_object.EventDate} \n' \
+                          f'No. of seats: {new_booking.NoOfSeats}\n' \
+                          f'Amount: {int(new_booking.NoOfSeats)*int(event_object.Price)}' \
+                          f'\n\nThanks,\nGigsnChill Team'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [request.data['UserId']]
+                send_mail(subject, message, email_from, recipient_list)
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
             except Exception as e:
                 return JsonResponse(
@@ -144,6 +156,17 @@ class CancelBookingView(APIView):
                 booking_info.BookingStatus = 'cancelled'
                 booking_info.save()
                 event_info.save()
+                user_info = USER.objects.get(Email=booking_info.UserId)
+                subject=f'Booking Cancellation for event {event_info.EventName}'
+                message=f'Hi {user_info.FirstName}, \nYour booking to the event {event_info.EventName} is ' \
+                          f'has been cancelled.\nEvent Details:\nEventName: {event_info.EventName} \n' \
+                          f'Event Date: {event_info.EventDate} \n' \
+                          f'No. of seats: {booking_info.NoOfSeats}\n' \
+                          f'Amount: {int(booking_info.NoOfSeats)*int(event_info.Price)}' \
+                          f'\n\nThanks,\nGigsnChill Team'
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = [user_info.Email]
+                send_mail(subject, message, email_from, recipient_list)
             return JsonResponse({"status": "success", "message": "Booking Cancelled"}, status=status.HTTP_200_OK)
         except:
             return JsonResponse({"status": "error", "message": "Couldn't cancel the Booking"},
@@ -155,16 +178,39 @@ class CancelEventView(APIView):
     def get(self,request, EventId=None):
         try:
             event_info = Event.objects.get(EventId=EventId)
+            attendees = []
             if event_info.EventStatus == "active":
                 for booking in Bookings.objects.filter(EventId=event_info.EventId):
+                    attendees.append(booking.UserId.Email)
                     booking.BookingStatus = 'cancelled'
                     booking.save()
+            subject=f'Event Cancellation {event_info.EventName}'
+            message=f'Hello, \nYour booking to the event {event_info.EventName} is ' \
+                    f'has been cancelled.\nEvent Details:\nEventName: {event_info.EventName} \n' \
+                    f'Event Date: {event_info.EventDate}' \
+                    f'\n\nThanks,\nGigsnChill Team'
+            email_from = settings.EMAIL_HOST_USER
+            recipient_list = attendees
+            send_mail(subject, message, email_from, recipient_list)
             event_info.EventStatus = "cancelled"
             event_info.save()
             return JsonResponse({"status": "success", "message": "Event Cancelled"}, status=status.HTTP_200_OK)
         except:
             return JsonResponse({"status": "error", "message": "Couldn't cancel the Event"},
                                 status=status.HTTP_200_OK)
+
+
+class RetrieveBookingInfoView(APIView):
+    def get(self, request, BookingId=None):
+        try:
+            booking_info = Bookings.objects.get(BookingId=BookingId)
+            info = model_to_dict(booking_info)
+            info.update(model_to_dict(booking_info.EventId))
+            return JsonResponse({"status": "success", "data": info}, status=status.HTTP_200_OK)
+        except:
+            return JsonResponse({"status": "error", "message": "Couldn't retrieve booking details"},
+                                status=status.HTTP_200_OK)
+
 
 class RetrieveBookmarkView(APIView):
     """

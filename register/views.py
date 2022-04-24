@@ -39,13 +39,8 @@ class RegisterView(APIView):
                     LastName=request.data['LastName'],
                     Mobile=request.data['Mobile'],
                     Password=make_password(request.data['Password1']),
-                    # DateCreated = timezone.now(),
-                    # DateModified = timezone.now(),
-                    # mobile=validated_data['mobile']
                 )
-
                 user.save()
-
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
             except:
                 return JsonResponse({"status": "error", "data": serializer_class.errors,
@@ -183,38 +178,15 @@ class UpdatePasswordView(APIView):
 
 
 class ProfileView(generics.ListAPIView):
+    """
+    This view should return a list of all the Booked/Hosted Events for
+    the user as determined by the Email and Type portion of the URL.
+    """
     serializer_class = ProfileSerializer
     renderer_classes = (JSONRenderer,)
     model = [USER, HOST, Event]
-    '''def get_queryset(self):
-        """
-        This view should return a list of all the purchases for
-        the user as determined by the username portion of the URL.
-        """
-        try:
-            if 'Type' in self.kwargs:
-                type, username = request.data['Type'], request.data['Email']
-                if type ==  'User':
-                    db_table = USER
-                else:
-                    db_table = HOST
-            else:
-                db_table = USER
-            f = open("readme.txt", "w+")
-            f.write(model_to_dict(db_table.objects.get(Email=self.kwargs['Email'])))
-            f.close()
-            #return {'data': db_table.objects.all()}
-            return Response({'data': model_to_dict(db_table.objects.get(Email=self.kwargs['Email']))}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}, status=status.HTTP_200_OK)
-            #return {"status": "error", "data": "username does not exist" + str(self.kwargs) + str(e)}
-    '''
 
     def get(self, request, Email, Type="user"):
-        """
-        This view should return a list of all the Booked/Hosted Events for
-        the user as determined by the Email and Type portion of the URL.
-        """
         try:
             if Type.lower() == 'user':
                 db_table = USER
