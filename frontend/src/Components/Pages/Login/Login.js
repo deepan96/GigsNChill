@@ -91,7 +91,6 @@ const Login = (props) => {
     data.append("Email", userName);
     data.append("Password", userPassword);
     data.append("Type", typeOfUser); // type of user
-    data.append("Authorization", "Token xxxxxxxxxxxxxxxxxxx"); // Not implemented yet in the backend
 
     var config = {
       method: "post",
