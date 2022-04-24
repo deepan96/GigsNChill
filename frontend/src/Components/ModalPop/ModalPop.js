@@ -43,6 +43,12 @@ export default function ModalPop(props) {
     .then((res) => {
       console.log(res.data.data);
       alert("Invitation sent Successfully!");
+      
+      // closing modal
+      setTimeout(() => {
+        props.invokefunc();
+      }, 1000);
+      setREmail('');
     })
     .catch((err) => {
       alert("Invalid Invite Request");
