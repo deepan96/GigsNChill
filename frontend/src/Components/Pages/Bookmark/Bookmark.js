@@ -33,15 +33,15 @@ export default function Bookmark() {
     });
   }, [fav]);
 
-  function handleFav() {
+  function handleFav(eveid) {
     setFav(!fav);
     console.log("like", fav);
 
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
-    data.append("EventId", user_info);
-    data.append("BookmarkStatus", fav);
+    data.append("EventId", eveid);
+    data.append("BookmarkStatus", false);
     var config = {
       method: "post",
       url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
@@ -63,41 +63,44 @@ export default function Bookmark() {
     <div style={styles}>
       <div className={styles.container}>
         <div className={styles.bookmark}>
-          {bookmarkData && bookmarkData.map((ud)=>(<Card className={styles.eventcard}>
-            <div>
-              <CardMedia
-                className={styles.cardimage}
-                image={ud.ImageUrl}
-                alt="event image"
-              />
-            </div>
-            <CardContent className={styles.cardcontent}>
-              <div className={styles.eventtitle}>
-                <h5>
-                  <Link
-                    className={styles.eventlink}
-                    to={`eventpage/${ud.EventId}`}
+          {bookmarkData &&
+            bookmarkData.map((ud) => (
+              <Card key={ud.EventId} className={styles.eventcard}>
+                <div>
+                  <CardMedia
+                    className={styles.cardimage}
+                    image={ud.ImageUrl}
+                    alt="event image"
+                  />
+                </div>
+                <CardContent className={styles.cardcontent}>
+                  <div className={styles.eventtitle}>
+                    <h5>
+                      <Link
+                        className={styles.eventlink}
+                        to={`/eventpage/${ud.EventId}`}
+                      >
+                        {ud.EventName}
+                      </Link>
+                    </h5>
+                  </div>
+                  <p>{ud.EventDate}</p>
+                </CardContent>
+                <CardActions disableSpacing>
+                  <IconButton
+                    aria-label="add to favorites"
+                    sx={{ color: red[500] }}
+                    onClick={()=>handleFav(ud.EventId)}
                   >
-                    {ud.EventName}
-                  </Link>
-                </h5>
-              </div>
-              <p>{ud.EventDate}</p>
-            </CardContent>
-            <CardActions disableSpacing>
-              <IconButton
-                aria-label="add to favorites"
-                sx={{ color: red[500] }}
-                onClick={handleFav}
-              >
-                {!fav && <FavoriteIcon sx={{ color: "red" }} />}
-                {fav && <FavoriteIcon />}
-              </IconButton>
-              {/* <IconButton aria-label="share">
+                    {ud.BookmarkStatus && <FavoriteIcon sx={{ color: "red" }} />}
+                    {!ud.BookmarkStatus && <FavoriteIcon />}
+                  </IconButton>
+                  {/* <IconButton aria-label="share">
                 <ShareIcon />
               </IconButton> */}
-            </CardActions>
-          </Card>))}
+                </CardActions>
+              </Card>
+            ))}
         </div>
       </div>
     </div>

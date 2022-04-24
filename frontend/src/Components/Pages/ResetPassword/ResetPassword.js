@@ -14,7 +14,7 @@ import axios from "axios";
 function ResetPassword(props) {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState("");
-  const [userConfirmPassword, setUserConfirmPassword] = useState("");
+  const [userVerificationCode, setUserVerificationCode] = useState("");
   const [formIsValid, setFormIsValid] = useState(false);
 
   // Error Handling
@@ -30,9 +30,9 @@ function ResetPassword(props) {
   function handleUserPassword(event) {
     setUserPassword(event.target.value);
   }
-  function handleUserConfirmPassword(event) {
-    setUserConfirmPassword(event.target.value);
-  }
+  // function handleUserConfirmPassword(event) {
+  //   setUserConfirmPassword(event.target.value);
+  // }
 
   function submitHandler(event) {
     event.preventDefault();
@@ -50,7 +50,7 @@ function ResetPassword(props) {
     var data = new FormData();
     data.append('Email', userEmail);
     data.append('Password', userPassword);
-    data.append('Authorization',  'Token xxxxxxxxxxxxxxxxxxx'); // Not implemented yet in the backend
+    data.append('VerificationCode',  userVerificationCode); // Not implemented yet in the backend
 
     var config = {
       method: 'put',
@@ -59,7 +59,7 @@ function ResetPassword(props) {
     };
     
     let flag = false;
-    if(userEmail.includes("@") && passwordStrength(userPassword) && (userPassword.trim().length === userConfirmPassword.trim().length)) {
+    if(userEmail.includes("@") && passwordStrength(userPassword)) {
       axios(config)
       .then(response => {
         
@@ -85,7 +85,7 @@ function ResetPassword(props) {
     setFormIsValid(flag);
     setUserEmail("")
     setUserPassword("");
-    setUserConfirmPassword("");
+    setUserVerificationCode("");
   }
   return (
     <div style={styles}>
@@ -116,17 +116,16 @@ function ResetPassword(props) {
             />
           </div>
           <div className={styles.control}>
-            <label htmlFor="userconfpassword"></label>
+            <label htmlFor="userconfpassword"> Verifaction Code</label>
             <input
               id="userconfpassword"
               type="password"
-              placeholder="Confirm Password"
-              value={userConfirmPassword}
-              onChange={handleUserConfirmPassword}
+              placeholder="Verifaction Code"
+              value={userVerificationCode}
+              onChange={(e)=>setUserVerificationCode(e.target.value)}
             />
           </div>
           <div className={styles.actions}>
-            {/* {!formIsValid && <NavLink to="/login"></NavLink>} */}
             <PageButton type="submit" className="btn">
               Submit
             </PageButton>
