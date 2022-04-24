@@ -12,6 +12,7 @@ import PageButton from "../../UI/PageButton/Pagebutton";
 // Intregrations
 import axios from "axios";
 import GoogleLogin from "react-google-login";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = (props) => {
   const clientNumber =
@@ -52,11 +53,14 @@ const Login = (props) => {
   function handleUserPassword(event) {
     setUserPassword(event.target.value);
   }
-
+  function handleReCAPTCHA(value) {
+    console.log('Captcha value:', value);
+  }
   // Handles Submit Button
   function submitHandler(event) {
     event.preventDefault();
-
+ 
+    // Check that Recaptcha is valid
     // Username and Password are empty
     if (userName === "" && userPassword === "") {
         setErrorFound(true);
@@ -163,6 +167,10 @@ const Login = (props) => {
               onChange={handleUserPassword}
             />
           </div>
+          <ReCAPTCHA
+            sitekey="6LeXhJcfAAAAADGDzNvDOonRbMO9Q5l9zGCGWLah"
+            onChange={handleReCAPTCHA}
+          />
           <div className={styles.actions}>
             <PageButton type="submit" className="btn" disabled={!formIsValid}>
               Log In
