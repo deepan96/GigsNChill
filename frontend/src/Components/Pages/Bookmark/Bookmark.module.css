@@ -12,6 +12,7 @@
   margin-top: 7rem;
   padding-left: 7rem;
   gap: 20px;
+  scroll-behavior: smooth;
 }
 .cardimage {
   overflow: hidden;

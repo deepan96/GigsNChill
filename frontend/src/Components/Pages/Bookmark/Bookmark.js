@@ -22,7 +22,7 @@ export default function Bookmark() {
   useEffect(() => {
     var config = {
       method: "get",
-      url: `https://gigsnchill.herokuapp.com/bookmarks/${user_info.email}/`,
+      url: `http://127.0.0.1:8000/bookmarks/${user_info.email}/`,
     };
 
     axios(config).then((res) => {
@@ -33,31 +33,31 @@ export default function Bookmark() {
     });
   }, [fav]);
 
-  // function handleFav() {
-  //   setFav(!fav);
-  //   console.log("like", fav);
+  function handleFav() {
+    setFav(!fav);
+    console.log("like", fav);
 
-  //   // making a bookmark
-  //   var data = new FormData();
-  //   data.append("UserId", user_info.email);
-  //   data.append("EventId", .EventId);
-  //   data.append("BookmarkStatus", fav);
-  //   var config = {
-  //     method: "post",
-  //     url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
-  //     data: data,
-  //   };
+    // making a bookmark
+    var data = new FormData();
+    data.append("UserId", user_info.email);
+    data.append("EventId", user_info);
+    data.append("BookmarkStatus", fav);
+    var config = {
+      method: "post",
+      url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
+      data: data,
+    };
 
-  //   axios(config)
-  //     .then((res) => {
-  //       console.log(res.data.data);
-  //       alert("BookMark Success!");
-  //     })
-  //     .catch((err) => {
-  //       alert("Invalid BookMark Request");
-  //       console.log(err);
-  //     });
-  // }
+    axios(config)
+      .then((res) => {
+        console.log(res.data.data);
+        alert("BookMark Success!");
+      })
+      .catch((err) => {
+        alert("Invalid BookMark Request");
+        console.log(err);
+      });
+  }
 
   return (
     <div style={styles}>
@@ -84,7 +84,7 @@ export default function Bookmark() {
               </div>
               <p>{ud.EventDate}</p>
             </CardContent>
-            {/* <CardActions disableSpacing>
+            <CardActions disableSpacing>
               <IconButton
                 aria-label="add to favorites"
                 sx={{ color: red[500] }}
@@ -93,10 +93,10 @@ export default function Bookmark() {
                 {!fav && <FavoriteIcon sx={{ color: "red" }} />}
                 {fav && <FavoriteIcon />}
               </IconButton>
-              <IconButton aria-label="share">
+              {/* <IconButton aria-label="share">
                 <ShareIcon />
-              </IconButton>
-            </CardActions> */}
+              </IconButton> */}
+            </CardActions>
           </Card>))}
         </div>
       </div>
