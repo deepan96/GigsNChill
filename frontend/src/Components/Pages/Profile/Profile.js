@@ -180,17 +180,27 @@ function Profile(props) {
                     <CardContent className={styles.cardcontent}>
                       <div className={styles.eventtitle}>
                         <h5>
-                          <Link
-                            className={styles.eventlink}
-                            to={`/eventpage/${ud.EventId}`}
-                          >
-                            {ud.EventName}
-                          </Link>
+                          {user_info.type === "User" && (
+                            <Link
+                              className={styles.eventlink}
+                              to={`/booking/${ud.BookingId}`}
+                            >
+                              {ud.EventName}
+                            </Link>
+                          )}
+                          {user_info.type === "Host" && (
+                            <Link
+                              className={styles.eventlink}
+                              to={`/eventdetails`}
+                            >
+                              {ud.EventName}
+                            </Link>
+                          )}
                         </h5>
                       </div>
                       <p>{ud.EventDate}</p>
                       <div>
-                        <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
                       </div>
                     </CardContent>
                   </Card>
@@ -217,16 +227,29 @@ function Profile(props) {
                     </div>
                     <CardContent className={styles.cardcontent}>
                       <div className={styles.eventtitle}>
-                        <h5>
-                          <Link
-                            className={styles.eventlink}
-                            to={`/eventpage/${ud.EventId}`}
-                          >
-                            {ud.EventName}
-                          </Link>
+                      <h5>
+                          {user_info.type === "User" && (
+                            <Link
+                              className={styles.eventlink}
+                              to={`/booking/${ud.BookingId}`}
+                            >
+                              {ud.EventName}
+                            </Link>
+                          )}
+                          {user_info.type === "Host" && (
+                            <Link
+                              className={styles.eventlink}
+                              to={`/eventdetails`}
+                            >
+                              {ud.EventName}
+                            </Link>
+                          )}
                         </h5>
                       </div>
                       <p>{ud.EventDate}</p>
+                      <div>
+                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}

@@ -17,6 +17,8 @@ export default function EventHome(props) {
   const [eventCategory, setEventCategory] = useState("");
   const [eventType, setEventType] = useState("");
   const [eventState, setEventState] = useState("");
+  const [eventCost, setEventCost] = useState("");
+
   const [types, setTypes] = useState([]);
   const navigate = useNavigate();
 
@@ -79,18 +81,42 @@ export default function EventHome(props) {
     }
   }, [eventCategory, searchValue, props.searchQuery]);
 
-  // useEffect(()=> {
-  //   var groupData = eventData;
-  //   if (eventState !== "") {
-  //     groupData = eventData.filter((e) => {
-  //       if (e.Eve.toLowerCase().includes(eventCategory.toLowerCase())) {
-  //         return e;
-  //       } else {
-  //         return false;
-  //       }
-  //     });
-  //   }
-  // }, [eventState]);
+  useEffect(() => {
+    var groupData = eventData;
+    if (eventState !== "") {
+      groupData = eventData.filter((e) => {
+        if (e.State.toLowerCase().includes(eventState.toLowerCase())) {
+          return e;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (eventState === "") {
+      setEventDataFilter(eventData);
+    } else {
+      setEventDataFilter(groupData);
+    }
+  }, [eventState]);
+
+  useEffect(() => {
+    var groupData = eventData;
+
+    if (eventCost === "free") {
+      groupData = eventData.filter((e) => {
+        if (e.Price === 0) {
+          return e;
+        } else {
+          return false;
+        }
+      });
+    }
+    if (eventCost !== "free") {
+      setEventDataFilter(eventData);
+    } else {
+      setEventDataFilter(groupData);
+    }
+  }, [eventCost]);
 
   // handling category and its values
   function handleSelectCategory(e) {
@@ -158,6 +184,23 @@ export default function EventHome(props) {
                     {name}
                   </MenuItem>
                 ))}
+              </Select>
+            </div>
+            <div className={styles.control}>
+              <InputLabel htmlFor="eventcost">Cost</InputLabel>
+              <Select
+                sx={{ width: "250px", background: "white" }}
+                value={eventCost}
+                onChange={(e) => setEventCost(e.target.value)}
+                input={<OutlinedInput label="cost" id="eventcost" />}
+              >
+                <MenuItem key="none" value="">
+                  Any
+                </MenuItem>
+
+                <MenuItem key={"zero"} value="free">
+                  Free
+                </MenuItem>
               </Select>
             </div>
           </div>
