@@ -211,7 +211,7 @@ const SignUp = (props) => {
             />
           </div>
           <div className={styles.control}>
-            <label htmlFor="userconfpassword"></label>
+            <label htmlFor="userconfpassword">Confirm Password</label>
             <input
               id="userconfpassword"
               type="password"

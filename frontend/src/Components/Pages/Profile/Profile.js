@@ -45,7 +45,7 @@ function Profile(props) {
     console.log(data)
     var config = {
       method: "put",
-      url: "http://127.0.0.1:8000/updateprofile/",
+      url: "https://gigsnchill.herokuapp.com/updateprofile/",
       data: data,
     };
 
