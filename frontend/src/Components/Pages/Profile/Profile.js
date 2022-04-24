@@ -14,16 +14,32 @@ import CardWrap from "../../UI/CardWrap/CardWrap";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import bgimage from "../../Pages/Promote-Your-local-event.jpg";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate} from "react-router-dom";
 import { red } from "@material-ui/core/colors";
+
+// New
+import EasyEdit from 'react-easy-edit';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faCheck, faMinus } from "@fortawesome/free-solid-svg-icons";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 
 function Profile(props) {
   const user_info = JSON.parse(localStorage.getItem("user"));
   const [date, setDate] = useState(new Date());
   const [userData, setUserData] = useState("");
   const [fEvents, setFEvents] = useState([]);
+  const [cEvents, setCEvents] = useState([]);
   const [pEvents, setPEvents] = useState([]);
 
+
+  const save = (value) => {alert(value)}
+  const cancel = () => {}
+
+  function changeUname(){
+    console.log("edit mode")
+  }
+  
   var axios = require("axios");
   // var FormData = require("form-data");
   // var data = new FormData();
@@ -37,10 +53,25 @@ function Profile(props) {
     };
     var fe = [];
     axios(config).then((res) => {
+      console.log("SUp")
       console.log(res.data.data);
       const uad = res.data.data;
       fe = res.data.data.FutureEvents;
+
+      console.log("hi2")
+      console.log(fe)
+
+      // Set events for calendar data
+      let CalendarEvents = fe.map(
+        obj => {
+            return {
+                "title" : obj.EventName,
+                "date": obj.EventDate,
+            }
+        })
+          
       setUserData(res.data.data);
+      setCEvents(CalendarEvents)
       setFEvents(fe);
       setPEvents(res.data.data.PastEvents);
       // console.log(fEvents);
@@ -49,25 +80,90 @@ function Profile(props) {
   }, []);
 
   return (
-    <div style={styles}>
-      <CardWrap>
-        <div className={styles.container}>
-          <div className={styles.userdiv}>
-            <h5>UserName:   {userData.Email}</h5>
-            <h5>FirstName:   {userData.FirstName}</h5>
-            <h5>UserName:   {userData.LastName}</h5>
+    <div className={styles.splitScreen}>
+      <div className={styles.rightPane}>
+        <CardWrap className={styles.CardView2}>
+          <div className={styles.container}>
+            <div className={styles.userdiv}>
+              <div className={styles.TextBox}>
+                <p className={styles.InputText}>First Name:</p>
+                <EasyEdit
+                  type="text"
+                  placeholder={userData.FirstName}
+                  onSave={save}
+                  onCancel={cancel}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
+                  saveButtonStyle = {styles.savebutton}
+                  cancelButtonStyle = {styles.cancelbutton}
+                />
+              </div>
+              <div className={styles.TextBox}>
+                <p className={styles.InputText}>Last Name:</p>
+                <EasyEdit
+                  type="text"
+                  placeholder={userData.LastName}
+                  onSave={save}
+                  onCancel={cancel}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
+                  saveButtonStyle = {styles.savebutton}
+                  cancelButtonStyle = {styles.cancelbutton}
+                />
+              </div>
+              <div className={styles.TextBox}>
+                <p className={styles.InputText}>Phone Number:</p>
+                <EasyEdit
+                  type="text"
+                  placeholder={userData.Mobile}
+                  onSave={save}
+                  onCancel={cancel}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
+                  saveButtonStyle = {styles.savebutton}
+                  cancelButtonStyle = {styles.cancelbutton}
+                />
+              </div>
+              <div className={styles.TextBox}>
+                <p className={styles.InputText}>Password:</p>
+                <EasyEdit
+                  type="text"
+                  placeholder="********"
+                  onSave={save}
+                  onCancel={cancel}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
+                  saveButtonStyle = {styles.savebutton}
+                  cancelButtonStyle = {styles.cancelbutton}
+                />
+              </div>
+            </div>
+            
+            <div className={styles.usercalendar}>
+              <FullCalendar
+                defaultView="dayGridMonth"
+                header={{
+                  left: "prev, next",
+                  center: "title",
+                  right: "dayGridMonth,timeGridWeek,timeGridDay"
+                }}
+                themeSystem="Simplex"
+                plugins={[dayGridPlugin]}
+                events= {cEvents}
+                handleWindowResize={true}
+                showNonCurrentDates={false}
+                height="auto"
+              />
+            </div>
           </div>
+        </CardWrap>
+      </div>
 
-          <div className={styles.usercalendar}>
-            <p className={styles.datediv}>
-              <Calendar onChange={setDate} value={date} />
-              <span style={{ fontWeight: "bold" }}>Date:</span>{" "}
-              {date.toDateString()}
-            </p>
-          </div>
+      <div className={styles.leftPane}>          
           <div className={styles.heading}>
             <h3>Upcoming Events</h3>
           </div>
+
           <div className={styles.userupcoming}>
             <div className={styles.subcontainer}>
               {fEvents &&
@@ -86,7 +182,7 @@ function Profile(props) {
                         <h5>
                           <Link
                             className={styles.eventlink}
-                            to={`eventpage/${ud.EventId}`}
+                            to={`/eventpage/${ud.EventId}`}
                           >
                             {ud.EventName}
                           </Link>
@@ -124,7 +220,7 @@ function Profile(props) {
                         <h5>
                           <Link
                             className={styles.eventlink}
-                            to={`eventpage/${ud.EventId}`}
+                            to={`/eventpage/${ud.EventId}`}
                           >
                             {ud.EventName}
                           </Link>
@@ -138,8 +234,7 @@ function Profile(props) {
             </div>
           </div>
         </div>
-      </CardWrap>
-    </div>
+      </div>
   );
 }
 
