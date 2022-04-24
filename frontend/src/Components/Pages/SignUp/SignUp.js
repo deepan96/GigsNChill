@@ -13,135 +13,154 @@ import styles from "./SignUp.module.css";
 import CardWrap from "../../UI/CardWrap/CardWrap";
 import PageButton from "../../UI/PageButton/Pagebutton";
 
-
 const SignUp = (props) => {
-  
-    const [userFirstName, setUserFirstName] = useState('');
-    const [userLastName, setUserLastName] = useState('');
-    const [userEmail, setUserEmail] = useState('');
-    const [userPhoneNumber, setUserPhoneNumber] = useState('');
-    const [userPassword, setUserPassword] = useState('');
-    const [userConfirmPassword, setUserConfirmPassword] = useState('');
-    // const [switchOn, setSwitchOn] = useState(false);
-    const [typeOfUser, setTypeofUser] = useState("User");
-    const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
-    const [errorFound, setErrorFound] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    let navigate = useNavigate();
-    const [formIsValid, setFormIsValid] = useState(true);
+  const [userFirstName, setUserFirstName] = useState("");
+  const [userLastName, setUserLastName] = useState("");
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhoneNumber, setUserPhoneNumber] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [userConfirmPassword, setUserConfirmPassword] = useState("");
+  // const [switchOn, setSwitchOn] = useState(false);
+  const [typeOfUser, setTypeofUser] = useState("User");
+  const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
+  const [errorFound, setErrorFound] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  let navigate = useNavigate();
+  const [formIsValid, setFormIsValid] = useState(true);
 
-    function handleUserFirstName(event) {
-      setUserFirstName(event.target.value);
-    }
-    function handleUserLastName(event) {
-      setUserLastName(event.target.value);
-    }
-    function handleUserEmail(event) {
-      setUserEmail(event.target.value);
-    }
-    function handleUserPhone(event) {
-      setUserPhoneNumber(event.target.value);
-    }
-    function handleUserPassword(event) {
-      setUserPassword(event.target.value);
-    }
-    function handleUserConfirmPassword(event) {
-      setUserConfirmPassword(event.target.value);
+  function handleUserFirstName(event) {
+    setUserFirstName(event.target.value);
   }
-    
-    function submitHandler(event) {
-        event.preventDefault();
-        var axios = require('axios');
-    var FormData = require('form-data');
+  function handleUserLastName(event) {
+    setUserLastName(event.target.value);
+  }
+  function handleUserEmail(event) {
+    setUserEmail(event.target.value);
+  }
+  function handleUserPhone(event) {
+    setUserPhoneNumber(event.target.value);
+  }
+  function handleUserPassword(event) {
+    setUserPassword(event.target.value);
+  }
+  function handleUserConfirmPassword(event) {
+    setUserConfirmPassword(event.target.value);
+  }
+
+  function submitHandler(event) {
+    event.preventDefault();
+    var axios = require("axios");
+    var FormData = require("form-data");
     var data = new FormData();
-    data.append('Type', typeOfUser);
-    data.append('FirstName', userFirstName);
-    data.append('LastName', userLastName);
-    data.append('Email', userEmail);
-    data.append('Mobile', userPhoneNumber);
-    data.append('Password1', userPassword);
-    data.append('Password2', userConfirmPassword);
+    data.append("Type", typeOfUser);
+    data.append("FirstName", userFirstName);
+    data.append("LastName", userLastName);
+    data.append("Email", userEmail);
+    data.append("Mobile", userPhoneNumber);
+    data.append("Password1", userPassword);
+    data.append("Password2", userConfirmPassword);
     // data.append('Type', typeOfUser); // type of user
-    data.append('Authorization',  'Token xxxxxxxxxxxxxxxxxxx'); // Not implemented yet in the backend
+    data.append("Authorization", "Token xxxxxxxxxxxxxxxxxxx"); // Not implemented yet in the backend
 
     var config = {
-      method: 'post',
-      url: 'http://127.0.0.1:8000/register/',
-      data : data
+      method: "post",
+      url: "http://127.0.0.1:8000/register/",
+      data: data,
     };
-        let flag = false;
-        if (userEmail === '' && userPassword === '' && userConfirmPassword === '') {
-          setErrorFound(true);
-          setErrorMessage("Empty fields");
-          return;
-        }
-        if(!passwordStrength(userPassword)) {
-          setErrorFound(true);
-          setErrorMessage("Password min. length of 7, incl special, alpha-numeric.");
-          return;
-        }
-        if(userEmail.includes("@") && passwordStrength(userPassword) && (userPassword.trim().length === userConfirmPassword.trim().length)) {
-          axios(config)
-          .then(response => {
-            
-            if(response.data.status === 'error') {
-              console.log("Entered error");
-              setErrorFound(true);
-              setErrorMessage(response.data.message);
-              return ;
-            }
-            else {
-              console.log(response);
+    let flag = false;
+    if (userEmail === "" && userPassword === "" && userConfirmPassword === "") {
+      setErrorFound(true);
+      setErrorMessage("Empty fields");
+      return;
+    }
+    if (!passwordStrength(userPassword)) {
+      setErrorFound(true);
+      setErrorMessage(
+        "Password min. length of 7, incl special, alpha-numeric."
+      );
+      return;
+    }
+    if (
+      userEmail.includes("@") &&
+      passwordStrength(userPassword) &&
+      userPassword.trim().length === userConfirmPassword.trim().length
+    ) {
+      axios(config)
+        .then((response) => {
+          if (response.data.status === "error") {
+            console.log("Entered error");
+            setErrorFound(true);
+            setErrorMessage(response.data.message);
+            return;
+          } else {
+            console.log(response);
             setFormIsValid(!flag);
             setIsLoggedIn(true);
-            const mdata = {fname: userFirstName, email: userEmail, type:typeOfUser, isLoggedIn : true}
-            localStorage.setItem('user', JSON.stringify(mdata));
-            
+            const mdata = {
+              fname: userFirstName,
+              email: userEmail,
+              type: typeOfUser,
+              isLoggedIn: true,
+            };
+            localStorage.setItem("user", JSON.stringify(mdata));
+
+            localStorage.setItem("starttime", JSON.stringify(new Date()));
             // creating users for Chat
-            createUser({'username': userFirstName, 'secret':'ABCabc123@'});
-            
+            createUser({ username: userFirstName, secret: "ABCabc123@" });
+
             navigate("/");
-            }
-            
-      })
-        .catch((err) => alert("Account does not exist"))
-          console.log("login success")
-          flag = true;
-        }
-        
-        // props.onSuccess(true);
-        // if(flag) {
-        //   setIsLoggedIn(true);
-        //   navigate('/home');
-        // }
-        // setFormIsValid(!flag);
-        setUserFirstName('');
-        setUserLastName('');
-        setUserEmail('');
-        setUserPhoneNumber('');
-        setUserPassword('');
-        setUserConfirmPassword('');
+          }
+        })
+        .catch((err) => alert("Account does not exist"));
+      console.log("login success");
+      flag = true;
     }
+
+    // props.onSuccess(true);
+    // if(flag) {
+    //   setIsLoggedIn(true);
+    //   navigate('/home');
+    // }
+    // setFormIsValid(!flag);
+    setUserFirstName("");
+    setUserLastName("");
+    setUserEmail("");
+    setUserPhoneNumber("");
+    setUserPassword("");
+    setUserConfirmPassword("");
+  }
   return (
     <div style={styles}>
       <CardWrap className={styles.signup}>
-      <div className={styles.heading}>
+        <div className={styles.heading}>
           <h4>Sign-Up</h4>
         </div>
         {errorFound && <Alert severity="error">{errorMessage}</Alert>}
         <form onSubmit={submitHandler}>
-        <div className={styles.tagline}>
-          <p>Choose who you are:</p>
+          <div className={styles.tagline}>
+            <p>Choose who you are:</p>
           </div>
           <div className={styles.switchcase}>
-            <div >
+            <div>
               <label>User</label>
             </div>
-          <Radio checked={typeOfUser === "User"} name="useradio" value="User" color="primary" onChange={()=> setTypeofUser("User")} />
-          <div >
+            <Radio
+              checked={typeOfUser === "User"}
+              name="useradio"
+              value="User"
+              color="primary"
+              onChange={() => setTypeofUser("User")}
+            />
+            <div>
               <label>Host</label>
             </div>
-            <Radio checked={typeOfUser === "Host"} name="hostradio" value="Host" color="primary" onChange={()=> setTypeofUser("Host")}/>
+            <Radio
+              checked={typeOfUser === "Host"}
+              name="hostradio"
+              value="Host"
+              color="primary"
+              onChange={() => setTypeofUser("Host")}
+            />
           </div>
           <div className={styles.control}>
             <label htmlFor="firstname">First Name</label>
@@ -194,7 +213,7 @@ const SignUp = (props) => {
             />
           </div>
           <div className={styles.control}>
-            <label htmlFor="userconfpassword"></label>
+            <label htmlFor="userconfpassword">Confirm Password</label>
             <input
               id="userconfpassword"
               type="password"
@@ -205,12 +224,16 @@ const SignUp = (props) => {
           </div>
           <div className={styles.actions}>
             {!isLoggedIn && <NavLink to="/home"></NavLink>}
-            <PageButton type="submit" className="btn">Register</PageButton>
-            <p>Already a user? <NavLink to="/login">Login</NavLink></p>
+            <PageButton type="submit" className="btn">
+              Register
+            </PageButton>
+            <p>
+              Already a user? <NavLink to="/login">Login</NavLink>
+            </p>
           </div>
         </form>
       </CardWrap>
-      </div>
+    </div>
   );
 };
 

@@ -30,14 +30,13 @@ const Login = (props) => {
 
   // If user is already logged in send them to homepage
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem('user'));
+    const data = JSON.parse(localStorage.getItem("user"));
     console.log(data);
     if (data && data.isLoggedIn) {
-    setIsLoggedIn(true);
-      navigate('/');
+      setIsLoggedIn(true);
+      navigate("/");
     }
   });
-
 
   // google auth
   const onLoginSuccess = (res) => {
@@ -45,8 +44,7 @@ const Login = (props) => {
     setIsLoggedIn(true);
     navigate("/");
   };
-  
-  
+
   function handleUserName(event) {
     setUserName(event.target.value);
   }
@@ -63,12 +61,12 @@ const Login = (props) => {
     // Check that Recaptcha is valid
     // Username and Password are empty
     if (userName === "" && userPassword === "") {
-        setErrorFound(true);
-        setErrorMessage("Enter both fields");
-        return;
-      }
-    
-    // Check Username and Password meet requirements 
+      setErrorFound(true);
+      setErrorMessage("Enter both fields");
+      return;
+    }
+
+    // Check Username and Password meet requirements
     let flag = false;
     if (userName.includes("@") && userPassword.trim().length > 6) {
       flag = true;
@@ -79,47 +77,50 @@ const Login = (props) => {
     }
 
     // Create Axios API rrequest
-    var axios = require('axios');
-    var FormData = require('form-data');
+    var axios = require("axios");
+    var FormData = require("form-data");
     var data = new FormData();
-    data.append('Email', userName);
-    data.append('Password', userPassword);
-    data.append('Type', typeOfUser); // type of user
-    data.append('Authorization',  'Token xxxxxxxxxxxxxxxxxxx'); // Not implemented yet in the backend
+    data.append("Email", userName);
+    data.append("Password", userPassword);
+    data.append("Type", typeOfUser); // type of user
+    data.append("Authorization", "Token xxxxxxxxxxxxxxxxxxx"); // Not implemented yet in the backend
 
     var config = {
-      method: 'post',
-      url: 'http://127.0.0.1:8000/login/',
-      data : data
+      method: "post",
+      url: "http://127.0.0.1:8000/login/",
+      data: data,
     };
 
     axios(config)
-    .then(response => {
+      .then((response) => {
         // console.log(response);
-        if(response.data.status === 'error') {
+        if (response.data.status === "error") {
           console.log("Entered error");
           setErrorFound(true);
           setErrorMessage("Email doesn't exist");
           // setErrorMessage(response.data.message);
-          return ;
-        }
-        else {
+          return;
+        } else {
           // console.log(response);
-        setFormIsValid(!flag);
-        setIsLoggedIn(true);
-        const mdata = {fname: response.data.user_fname ,email: userName, type:typeOfUser, isLoggedIn : true}
-        localStorage.setItem('user', JSON.stringify(mdata));
-        
-        setUserName("");
-        setUserPassword("");
-        navigate("/");
+          setFormIsValid(!flag);
+          setIsLoggedIn(true);
+          const mdata = {
+            fname: response.data.user_fname,
+            email: userName,
+            type: typeOfUser,
+            isLoggedIn: true,
+          };
+          localStorage.setItem("user", JSON.stringify(mdata));
+          localStorage.setItem('starttime', JSON.stringify(new Date()));
+          setUserName("");
+          setUserPassword("");
+          navigate("/");
         }
-        
       })
-    .catch((err) => {
-      alert("Invalid Login Credentials")
-                console.log(err)})
-        
+      .catch((err) => {
+        alert("Invalid Login Credentials");
+        console.log(err);
+      });
   }
   // function handleswitchtype() {
   //   setSwitchOn(!switchOn);
@@ -135,17 +136,32 @@ const Login = (props) => {
         </div>
         {errorFound && <Alert severity="error">{errorMessage}</Alert>}
         <form onSubmit={submitHandler}>
+          <div className={styles.tagline}>
+            <p>Choose who you are:</p>
+          </div>
           <div className={styles.switchcase}>
-            <div >
+            <div>
               <label>User</label>
             </div>
-            <Radio checked={typeOfUser === "User"} name="useradio" value="User" color="primary" onChange={()=> setTypeofUser("User")} />
-            <div >
+            <Radio
+              checked={typeOfUser === "User"}
+              name="useradio"
+              value="User"
+              color="primary"
+              onChange={() => setTypeofUser("User")}
+            />
+            <div>
               <label>Host</label>
             </div>
-            <Radio checked={typeOfUser === "Host"} name="hostradio" value="Host" color="primary" onChange={()=> setTypeofUser("Host")}/>
+            <Radio
+              checked={typeOfUser === "Host"}
+              name="hostradio"
+              value="Host"
+              color="primary"
+              onChange={() => setTypeofUser("Host")}
+            />
           </div>
-      
+
           <div className={styles.control}>
             <label htmlFor="username">User Name</label>
             <input
@@ -154,7 +170,7 @@ const Login = (props) => {
               placeholder="UserName"
               value={userName}
               onChange={handleUserName}
-            />  
+            />
           </div>
 
           <div className={styles.control}>

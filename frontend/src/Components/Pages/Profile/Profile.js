@@ -53,9 +53,9 @@ function Profile(props) {
       <CardWrap>
         <div className={styles.container}>
           <div className={styles.userdiv}>
-            <h5>UserName:{userData.Email}</h5>
-            <h5>FirstName:{userData.FirstName}</h5>
-            <h5>UserName:{userData.LastName}</h5>
+            <h5>UserName:   {userData.Email}</h5>
+            <h5>FirstName:   {userData.FirstName}</h5>
+            <h5>UserName:   {userData.LastName}</h5>
           </div>
 
           <div className={styles.usercalendar}>

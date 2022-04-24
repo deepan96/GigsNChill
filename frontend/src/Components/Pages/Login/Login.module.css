@@ -53,6 +53,7 @@
   align-items: center;
 }
 .tagline {
+  font-weight: bold;
   padding-left: 0rem;
   display: flex;
   flex-direction: row;
@@ -76,11 +77,10 @@
   display: inline-block;
 }
 .googlediv {
-  margin: 3rem auto;
-  text-align: left;
+  margin: 2rem 11rem 0rem 12rem;
 }
 .googlediv button {
-  font-weight: bold  !important;
+  font-weight: bold !important;
   color: white !important;
   background-color: #1976d2 !important;
 }
