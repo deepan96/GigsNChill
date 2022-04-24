@@ -9,8 +9,9 @@
   margin-top: 3rem;
   padding-left: 30px;
   /* min-width: 20%;
-  max-width: 50%; */
+  max-width: 50%;
   border: 1px solid gray;
+  border-bottom: 1px solid gray; */
   max-height: auto;
 }
 .rightDiv {

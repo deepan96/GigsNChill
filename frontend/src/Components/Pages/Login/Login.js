@@ -21,6 +21,7 @@ const Login = (props) => {
   const [userPassword, setUserPassword] = useState("");
   const [typeOfUser, setTypeofUser] = useState("User");
   const [formIsValid, setFormIsValid] = useState(true);
+  const [CaptchaToken, setCaptchaToken] = useState("");
   const { isLoggedIn, setIsLoggedIn } = useContext(LoginStateContext);
   let navigate = useNavigate();
 
@@ -52,6 +53,7 @@ const Login = (props) => {
     setUserPassword(event.target.value);
   }
   function handleReCAPTCHA(value) {
+    setCaptchaToken(value)
     console.log('Captcha value:', value);
   }
   // Handles Submit Button
@@ -59,6 +61,12 @@ const Login = (props) => {
     event.preventDefault();
  
     // Check that Recaptcha is valid
+    if(!CaptchaToken){
+      setErrorFound(true);
+      setErrorMessage("Invalid Captcha Verification");
+      return;
+    }
+
     // Username and Password are empty
     if (userName === "" && userPassword === "") {
       setErrorFound(true);
@@ -161,7 +169,18 @@ const Login = (props) => {
               onChange={() => setTypeofUser("Host")}
             />
           </div>
-
+          <div className={styles.googlediv}>
+          <GoogleLogin
+            clientId={clientNumber}
+            buttonText="Continue with Google"
+            onSuccess={onLoginSuccess}
+            onFailure={() => {
+              window.alert("invalid login with google");
+            }}
+            cookiePolicy={"single_host_origin"}
+          />
+          </div>
+          <hr></hr>
           <div className={styles.control}>
             <label htmlFor="username">User Name</label>
             <input
@@ -192,27 +211,17 @@ const Login = (props) => {
               Log In
             </PageButton>
           </div>
-          <p className={styles.forgotpassword}>
-            <NavLink to="/forgotpassword">ForgotPassword</NavLink>
-          </p>
-          <div className={styles.hyperlink}>
-            <p>
-              <NavLink to="/signup">SignUp</NavLink>
+          <div className={styles.bottom}>
+            <p className={styles.forgotpassword}>
+              <NavLink to="/forgotpassword">ForgotPassword</NavLink>
             </p>
+            <div className={styles.hyperlink}>
+              <p>
+                <NavLink to="/signup">SignUp</NavLink>
+              </p>
+          </div>
           </div>
         </form>
-
-        <div className={styles.googlediv}>
-          <GoogleLogin
-            clientId={clientNumber}
-            buttonText="Continue with Google"
-            onSuccess={onLoginSuccess}
-            onFailure={() => {
-              window.alert("invalid login with google");
-            }}
-            cookiePolicy={"single_host_origin"}
-          />
-        </div>
       </CardWrap>
     </div>
   );

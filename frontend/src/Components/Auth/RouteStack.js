@@ -14,16 +14,17 @@ import ResetPassword from "../Pages/ResetPassword/ResetPassword";
 import Chat from "../Pages/Chat/Chat";
 import Bookmark from "../Pages/Bookmark/Bookmark";
 import BookingPage from "../Pages/BookingPage/BookingPage";
+import MyEvents from "../Pages/HostMyEvents/MyEvents";
 
 export function RouteStack() {
   return (
     <div>
       <Routes>
         <Route path="/*" element={<LandingPage />} />
-        <Route path="login" element={<Login/>} />
-        <Route path="signup" element={<SignUp/>} />
-        <Route path="forgotpassword" element={<ForgotPassword/>} />
-        <Route path='resetpassword' element={<ResetPassword/>}/>
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="forgotpassword" element={<ForgotPassword />} />
+        <Route path="resetpassword" element={<ResetPassword />} />
       </Routes>
     </div>
   );
@@ -36,12 +37,13 @@ export function LoginRouteStack() {
         {/* <Route path="/" element={<LandingPage />} /> */}
         <Route path="/" element={<Home />} />
         <Route path="/eventpage/:id" element={<EventPage />} />
-        <Route path="/profile" element={<Profile/>}/>
-        <Route path="/hostevent" element={<HostEvent/>}/>
-        <Route path="/chat" element={<Chat/>}/>
-        <Route path="/bookmark" element={<Bookmark/>}/>
-        <Route path="/myevents" element={<Bookmark/>}/>
-        {/* <Route path="/confirmbook/:id" element={<BookingPage />}/> */}
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/hostevent" element={<HostEvent />} />
+        <Route path="/chat" element={<Chat />} />
+        <Route path="/bookmark" element={<Bookmark />} />
+        <Route path="/myevents" element={<MyEvents />} />
+        {/* <Route path="/eventdetails" element={<EventDetails />} /> */}
+        <Route path="/booking/:bid" element={<BookingPage />} />
       </Routes>
     </div>
   );
