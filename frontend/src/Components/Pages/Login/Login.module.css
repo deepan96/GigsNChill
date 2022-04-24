@@ -61,23 +61,24 @@
   margin-left: 0.3rem;
 }
 .actions {
+  margin-top: 1rem;
   text-align: center;
 }
 .hyperlink {
+  margin-bottom: 2rem;
   float: left;
   left: 0;
 }
 .forgotpassword {
+  margin-bottom: 2rem;
   float: right;
 }
-.bottom {
-  display: flex;
-  justify-content: center;
-  font-style: italic;
-  display: inline-block;
+.bottom{
+  margin-bottom: 2rem;
 }
+
 .googlediv {
-  margin: 2rem 11rem 0rem 12rem;
+  margin: 0.5rem 0rem 0rem 12rem;
 }
 .googlediv button {
   font-weight: bold !important;

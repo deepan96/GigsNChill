@@ -240,11 +240,11 @@ class ProfileView(generics.ListAPIView):
                 del data["Password"]
                 data["FutureEvents"] = [model_to_dict(eve)
                                         for eve in Event.objects.filter(HostId=Email,
-                                                                        EventDate__gte=date.today())],
+                                                                        EventDate__gte=date.today())]
                 data["PastEvents"] = [model_to_dict(eve)
                                       for eve in Event.objects.filter(HostId=Email,
                                                                       EventDate__lt=date.today())]
-
+                print(data["FutureEvents"], data["PastEvents"])
             return Response({"status": "success", 'data': data},
                             status=status.HTTP_200_OK)
         except Exception as e:
