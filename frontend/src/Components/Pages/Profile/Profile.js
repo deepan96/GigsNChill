@@ -26,7 +26,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 
 function Profile(props) {
   const user_info = JSON.parse(localStorage.getItem("user"));
-  const [date, setDate] = useState(new Date());
   const [userData, setUserData] = useState("");
   const [fEvents, setFEvents] = useState([]);
   const [cEvents, setCEvents] = useState([]);
@@ -38,8 +37,102 @@ function Profile(props) {
   };
   const cancel = () => {};
 
-  function changeUname() {
-    console.log("edit mode");
+
+  // API Put Call for updating account information
+  function apicall(data){
+    var axios = require("axios");
+    
+    console.log(data)
+    var config = {
+      method: "put",
+      url: "http://127.0.0.1:8000/updateprofile/",
+      data: data,
+    };
+
+    axios(config)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((err) => {
+        alert("Unable to update account");
+        console.log(err);
+      });
+
+  }
+
+  // Firstname
+  function changeFname(value){
+
+    console.log(value)
+
+    // Make Request Data
+    var FormData = require("form-data");
+    var data = new FormData();
+    console.log(user_info.email)
+    console.log(value)
+    console.log(user_info.type)
+    data.append("Email", user_info.email);
+    data.append("FirstName", value);
+    data.append("Type", user_info.type); // type of user
+
+    apicall(data)
+
+    return
+  }
+  
+  // Lastname
+  function changeLname(value){
+
+    console.log(value)
+
+    // Make Request Data
+    var FormData = require("form-data");
+    var data = new FormData();
+    console.log(user_info.email)
+    console.log(value)
+    console.log(user_info.type)
+    data.append("Email", user_info.email);
+    data.append("LastName", value);
+    data.append("Type", user_info.type); // type of user
+
+    apicall(data)
+
+    return
+  }
+
+  // Phone
+  function changePhone(value){
+
+    console.log(value)
+
+    // Make Request Data
+    var FormData = require("form-data");
+    var data = new FormData();
+    console.log(user_info.email)
+    console.log(value)
+    console.log(user_info.type)
+    data.append("Email", user_info.email);
+    data.append("Mobile", value);
+    data.append("Type", user_info.type); // type of user
+
+    apicall(data)
+
+    return
+  }
+  
+  // Password
+  function changePwd(value){
+
+    // Make Request Data
+    var FormData = require("form-data");
+    var data = new FormData();
+    data.append("Email", user_info.email);
+    data.append("Password", value);
+    data.append("Type", user_info.type); // type of user
+
+    apicall(data)
+
+    return
   }
 
   var axios = require("axios");
@@ -92,7 +185,7 @@ function Profile(props) {
                 <EasyEdit
                   type="text"
                   placeholder={userData.FirstName}
-                  onSave={save}
+                  onSave={changeFname}
                   onCancel={cancel}
                   saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
@@ -105,7 +198,7 @@ function Profile(props) {
                 <EasyEdit
                   type="text"
                   placeholder={userData.LastName}
-                  onSave={save}
+                  onSave={changeLname}
                   onCancel={cancel}
                   saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
@@ -118,7 +211,7 @@ function Profile(props) {
                 <EasyEdit
                   type="text"
                   placeholder={userData.Mobile}
-                  onSave={save}
+                  onSave={changePhone}
                   onCancel={cancel}
                   saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
@@ -129,9 +222,9 @@ function Profile(props) {
               <div className={styles.TextBox}>
                 <p className={styles.InputText}>Password:</p>
                 <EasyEdit
-                  type="text"
+                  type="password"
                   placeholder="********"
-                  onSave={save}
+                  onSave={changePwd}
                   onCancel={cancel}
                   saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
