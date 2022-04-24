@@ -44,8 +44,7 @@ function Profile(props) {
       console.log("future", res.data.data.FutureEvents);
       setFEvents(res.data.data.FutureEvents);
       setPEvents(res.data.data.PastEvents);
-      // console.log(fEvents);
-      // console.log(fe);
+      console.log("future", fEvents, pEvents);;
     });
   }, []);
 
@@ -104,9 +103,16 @@ function Profile(props) {
                         </h5>
                       </div>
                       <p>{ud.EventDate}</p>
-                      <div>
-                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
-                      </div>
+                      {user_info.type === "Host" && (
+                        <div>
+                          <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
+                        </div>
+                      )}
+                      {user_info.type === "User" && (
+                        <div>
+                          <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
@@ -132,7 +138,7 @@ function Profile(props) {
                     </div>
                     <CardContent className={styles.cardcontent}>
                       <div className={styles.eventtitle}>
-                      <h5>
+                        <h5>
                           {user_info.type === "User" && (
                             <Link
                               className={styles.eventlink}
@@ -152,9 +158,16 @@ function Profile(props) {
                         </h5>
                       </div>
                       <p>{ud.EventDate}</p>
-                      <div>
-                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
-                      </div>
+                      {user_info.type === "Host" && (
+                        <div>
+                          <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
+                        </div>
+                      )}
+                      {user_info.type === "User" && (
+                        <div>
+                          <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 ))}
