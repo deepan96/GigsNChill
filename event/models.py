@@ -44,6 +44,7 @@ class Bookings(models.Model):
     UserId = models.ForeignKey(USER, on_delete=models.CASCADE)
     NoOfSeats = models.IntegerField(default=1)
     EventId = models.ForeignKey(Event, on_delete=models.CASCADE)
+    BookingStatus = models.CharField(max_length=10, default='active')
 
     def __str__(self) -> str:
         return self.BookingId
