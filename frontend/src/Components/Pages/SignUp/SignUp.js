@@ -59,8 +59,6 @@ const SignUp = (props) => {
     data.append("Mobile", userPhoneNumber);
     data.append("Password1", userPassword);
     data.append("Password2", userConfirmPassword);
-    // data.append('Type', typeOfUser); // type of user
-    data.append("Authorization", "Token xxxxxxxxxxxxxxxxxxx"); // Not implemented yet in the backend
 
     var config = {
       method: "post",
@@ -213,7 +211,7 @@ const SignUp = (props) => {
             />
           </div>
           <div className={styles.control}>
-            <label htmlFor="userconfpassword">Confirm Password</label>
+            <label htmlFor="userconfpassword"></label>
             <input
               id="userconfpassword"
               type="password"
