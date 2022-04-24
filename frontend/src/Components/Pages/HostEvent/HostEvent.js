@@ -152,6 +152,9 @@ function HostEvent(props) {
       //handling image
       // uploadFiles(imageAsFile);
 
+      // Email from Local Storage
+      const user_info = JSON.parse(localStorage.getItem("user"));
+
       var data = new FormData();
       data.append("EventName", eventName.toString());
       data.append("EventDescription", eventDesc.toString());
@@ -163,7 +166,7 @@ function HostEvent(props) {
       data.append("Performer", eventPerformer.toString());
       data.append("MaxNoOfSeats", eventCapacity.toString());
       data.append("Price", eventPrice.toString());
-      data.append("HostEmail", eventHMail.toString());
+      data.append("HostEmail", user_info.email.toString());
       data.append("Address", street.toString());
       data.append("City", city.toString());
       data.append("State", eventState.toString());
@@ -232,34 +235,36 @@ function HostEvent(props) {
 
   return (
     <div style={styles}>
+      <div className={styles.formdiv}>
       <CardWrap className={styles.container}>
-        {errorFound && <Alert severity={errorSeverity}>{errorMessage}</Alert>}
-        <div className={styles.heading}>
-          <h4>Excited to see the Event</h4>
-        </div>
-        <form onSubmit={submitHandler}>
-          <div className={styles.control}>
-            <label htmlFor="eventname">Event Name</label>
-            <input
-              id="eventname"
-              type="text"
-              placeholder="Event Name"
-              value={eventName}
-              onChange={(e) => setEventName(e.target.value)}
-            />
+        
+          {errorFound && <Alert severity={errorSeverity}>{errorMessage}</Alert>}
+          <div className={styles.heading}>
+            <h4>Excited to see the Event</h4>
           </div>
-          <div className={styles.control}>
-            <label htmlFor="eventdesc">Description</label>
+          <form onSubmit={submitHandler}>
+            <div className={styles.control}>
+              <label htmlFor="eventname">Event Name</label>
+              <input
+                id="eventname"
+                type="text"
+                placeholder="Event Name"
+                value={eventName}
+                onChange={(e) => setEventName(e.target.value)}
+              />
+            </div>
+            <div className={styles.control}>
+              <label htmlFor="eventdesc">Description</label>
 
-            <TextareaAutosize
-              aria-label="empty textarea"
-              placeholder="Description"
-              minRows={3}
-              value={eventDesc}
-              onChange={(e) => setEventDesc(e.target.value)}
-            />
-          </div>
-          {/* <div className={styles.control}>
+              <TextareaAutosize
+                aria-label="empty textarea"
+                placeholder="Description"
+                minRows={3}
+                value={eventDesc}
+                onChange={(e) => setEventDesc(e.target.value)}
+              />
+            </div>
+            {/* <div className={styles.control}>
             <label htmlFor="eventgenre">Genre</label>
             <input
               id="eventgenre"
@@ -270,42 +275,42 @@ function HostEvent(props) {
             />
           </div> */}
 
-          <div className={styles.categorydiv}>
-            <div className={styles.control}>
-              <InputLabel htmlFor="eventgenre">Category</InputLabel>
-              <Select
-                required
-                sx={{ width: "250px", background: "white" }}
-                value={eventGenre}
-                onChange={handleSelectCategory}
-                input={<OutlinedInput label="Category" id="eventgenre" />}
-              >
-                {categories.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </Select>
-            </div>
-            <div className={styles.control}>
-              <InputLabel htmlFor="eventtype">Type</InputLabel>
-              <Select
-                sx={{ width: "250px", background: "white" }}
-                value={eventType}
-                onChange={(e) => setEventType(e.target.value)}
-                input={<OutlinedInput label="Type" id="eventtype" />}
-              >
-                {types &&
-                  types.map((name) => (
+            <div className={styles.categorydiv}>
+              <div className={styles.control}>
+                <InputLabel htmlFor="eventgenre">Category</InputLabel>
+                <Select
+                  required
+                  sx={{ width: "250px", background: "white" }}
+                  value={eventGenre}
+                  onChange={handleSelectCategory}
+                  input={<OutlinedInput label="Category" id="eventgenre" />}
+                >
+                  {categories.map((name) => (
                     <MenuItem key={name} value={name}>
                       {name}
                     </MenuItem>
                   ))}
-              </Select>
+                </Select>
+              </div>
+              <div className={styles.control}>
+                <InputLabel htmlFor="eventtype">Type</InputLabel>
+                <Select
+                  sx={{ width: "250px", background: "white" }}
+                  value={eventType}
+                  onChange={(e) => setEventType(e.target.value)}
+                  input={<OutlinedInput label="Type" id="eventtype" />}
+                >
+                  {types &&
+                    types.map((name) => (
+                      <MenuItem key={name} value={name}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </div>
             </div>
-          </div>
 
-          {/* <div className={styles.control}>
+            {/* <div className={styles.control}>
             <label htmlFor="eventtype">Type</label>
             <input
               id="eventtype"
@@ -315,151 +320,152 @@ function HostEvent(props) {
               onChange={(e) => setEventType(e.target.value)}
             />
           </div> */}
-          <div className={styles.control}>
-            <label htmlFor="eventdate">Pick Date</label>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Event On"
-                cancelText="Please select a date"
-                clearable={true}
-                disablePast={true}
-                showTodayButton={true}
-                value={eventDate}
-                onChange={(e) => setEventDate(e)}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-          </div>
-          <div className={styles.control}>
-            <div className={styles.timediv}>
-              <div className={styles.lefttime}>
-                <label htmlFor="eventStime">Start</label>
-                <input
-                  type="time"
-                  value={eventStartTime}
-                  onChange={(e) => setEventStartTime(e.target.value)}
+            <div className={styles.control}>
+              <label htmlFor="eventdate">Pick Date</label>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DatePicker
+                  label="Event On"
+                  cancelText="Please select a date"
+                  clearable={true}
+                  disablePast={true}
+                  showTodayButton={true}
+                  value={eventDate}
+                  onChange={(e) => setEventDate(e)}
+                  renderInput={(params) => <TextField {...params} />}
                 />
-              </div>
+              </LocalizationProvider>
+            </div>
+            <div className={styles.control}>
+              <div className={styles.timediv}>
+                <div className={styles.lefttime}>
+                  <label htmlFor="eventStime">Start</label>
+                  <input
+                    type="time"
+                    value={eventStartTime}
+                    onChange={(e) => setEventStartTime(e.target.value)}
+                  />
+                </div>
 
-              <div className={styles.righttime}>
-                <label htmlFor="eventEtime">End</label>
+                <div className={styles.righttime}>
+                  <label htmlFor="eventEtime">End</label>
+                  <input
+                    type="time"
+                    value={eventEndTime}
+                    onChange={(e) => setEventEndTime(e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className={styles.control}>
+              <label htmlFor="eventperf">Performer</label>
+              <input
+                id="eventperf"
+                type="text"
+                placeholder="Performer"
+                value={eventPerformer}
+                onChange={(e) => setEventPerformer(e.target.value)}
+              />
+            </div>
+            <div className={styles.control}>
+              <label htmlFor="eventcapacity">Max. No. of Seats</label>
+              <input
+                id="eventcapacity"
+                type="number"
+                placeholder="Seats"
+                value={eventCapacity}
+                onChange={(e) => setEventCapacity(e.target.value)}
+              />
+            </div>
+            <div className={styles.control}>
+              <label htmlFor="eventprice">Cost of a Ticket</label>
+              <input
+                id="eventprice"
+                type="number"
+                placeholder="Price"
+                value={eventPrice}
+                onChange={(e) => setEventPrice(e.target.value)}
+              />
+            </div>
+            <div className={styles.control}>
+              <label htmlFor="hostname">Host Name</label>
+              <input
+                id="hostname"
+                type="text"
+                placeholder="Name.."
+                value={eventHName}
+                onChange={(e) => setEventHName(e.target.value)}
+              />
+            </div>
+            {/* <div className={styles.control}>
+              <label htmlFor="hostmail">Mail</label>
+              <input
+                id="hostmail"
+                type="email"
+                placeholder="abc@event.com"
+                value={eventHMail}
+                onChange={(e) => setEventHMail(e.target.value)}
+              />
+            </div> */}
+            <div className={styles.control}>
+              <label htmlFor="address">Address</label>
+              <div className={styles.addressdiv}>
                 <input
-                  type="time"
-                  value={eventEndTime}
-                  onChange={(e) => setEventEndTime(e.target.value)}
+                  id="street"
+                  type="text"
+                  placeholder="Street"
+                  value={street}
+                  onChange={(e) => setStreet(e.target.value)}
+                />
+                <input
+                  id="City"
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                />
+                <input
+                  id="state"
+                  type="text"
+                  placeholder="State"
+                  value={eventState}
+                  onChange={(e) => setEventState(e.target.value)}
                 />
               </div>
             </div>
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="eventperf">Performer</label>
-            <input
-              id="eventperf"
-              type="text"
-              placeholder="Performer"
-              value={eventPerformer}
-              onChange={(e) => setEventPerformer(e.target.value)}
-            />
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="eventcapacity">Max. No. of Seats</label>
-            <input
-              id="eventcapacity"
-              type="number"
-              placeholder="Seats"
-              value={eventCapacity}
-              onChange={(e) => setEventCapacity(e.target.value)}
-            />
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="eventprice">Cost of a Ticket</label>
-            <input
-              id="eventprice"
-              type="number"
-              placeholder="Price"
-              value={eventPrice}
-              onChange={(e) => setEventPrice(e.target.value)}
-            />
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="hostname">Host Name</label>
-            <input
-              id="hostname"
-              type="text"
-              placeholder="Name.."
-              value={eventHName}
-              onChange={(e) => setEventHName(e.target.value)}
-            />
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="hostmail">Mail</label>
-            <input
-              id="hostmail"
-              type="email"
-              placeholder="abc@event.com"
-              value={eventHMail}
-              onChange={(e) => setEventHMail(e.target.value)}
-            />
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="address">Address</label>
-            <div className={styles.addressdiv}>
+            <div className={styles.control}>
+              <label htmlFor="zipcode">ZipCode</label>
               <input
-                id="street"
+                id="zipcode"
                 type="text"
-                placeholder="Street"
-                value={street}
-                onChange={(e) => setStreet(e.target.value)}
-              />
-              <input
-                id="City"
-                type="text"
-                placeholder="City"
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-              />
-              <input
-                id="state"
-                type="text"
-                placeholder="State"
-                value={eventState}
-                onChange={(e) => setEventState(e.target.value)}
+                placeholder="123456"
+                value={eventZipc}
+                onChange={(e) => setEventZipc(e.target.value)}
               />
             </div>
-          </div>
-          <div className={styles.control}>
-            <label htmlFor="zipcode">ZipCode</label>
-            <input
-              id="zipcode"
-              type="text"
-              placeholder="123456"
-              value={eventZipc}
-              onChange={(e) => setEventZipc(e.target.value)}
-            />
-          </div>
-          <div className={styles.control}>
-            <input onChange={handleImageAsFile} type="file" />
-            <Button
-              type="button"
-              variant="contained"
-              component="span"
-              sx={{ width: 90 }}
-              onClick={handleImage}
-            >
-              Upload
-            </Button>
-          </div>
-          <div className={styles.addevent}>
-            <button
-              className={styles.addbutton}
-              type="button"
-              onClick={submitHandler}
-            >
-              Add Event
-            </button>
-          </div>
-        </form>
+            <div className={styles.control}>
+              <input onChange={handleImageAsFile} type="file" />
+              <Button
+                type="button"
+                variant="contained"
+                component="span"
+                sx={{ width: 90 }}
+                onClick={handleImage}
+              >
+                Upload
+              </Button>
+            </div>
+            <div className={styles.addevent}>
+              <button
+                className={styles.addbutton}
+                type="button"
+                onClick={submitHandler}
+              >
+                Add Event
+              </button>
+            </div>
+          </form>
       </CardWrap>
+      </div>
     </div>
   );
 }

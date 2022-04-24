@@ -10,6 +10,7 @@
   flex-direction: column;
   margin-top: 5rem;
   justify-content: space-between;
+  gap: 5px;
 }
 
 .usercalendar {
@@ -32,8 +33,9 @@
 }
 
 .subcontainer {
-    display: flex;
-    /* flex-direction: column; */
+  display: flex;
+  /* flex-direction: column; */
+  gap: 20px;
 }
 .heading {
   margin-top: 2rem;

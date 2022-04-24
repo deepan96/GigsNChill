@@ -11,7 +11,7 @@
   /* min-width: 20%;
   max-width: 50%; */
   border: 1px solid gray;
-  max-height: 300px;
+  max-height: auto;
 }
 .rightDiv {
   width: 80%;
