@@ -1,8 +1,10 @@
+import traceback
 from pyexpat import model
 from .models import USER, HOST
 from event.models import Event, Bookings
 from .serializers import RegisterSerializer, PasswordRecoverySerializer, \
-    UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer
+    UpdatePasswordSerializer, ProfileSerializer, ResetPasswordSerializer, \
+    UpdateProfileSerializer
 from rest_framework import generics, permissions, status
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -192,33 +194,82 @@ class ProfileView(generics.ListAPIView):
                 db_table = USER
                 # get all the events registered(booked) by a user
                 data = model_to_dict(db_table.objects.get(Email=Email))
-                data["FutureEvents"], data["PastEvents"] = [], []
+                data["FutureEvents"], data["PastEvents"], data["CancelledEvents"] = [], [], []
                 User_Events = [model_to_dict(book) for book in
                                Bookings.objects.filter(UserId=Email)]
                 for book in User_Events:
                     # Get the Event details from the Event db based on the booking by Specified User
-                    regeistered_event = model_to_dict(Event.objects.get(EventId=book['EventId']))
-                    # Verify the date of the event and update in the Future/Past Event in the data to be sent as response
-                    if regeistered_event['EventDate'] < date.today():
-                        book.update(regeistered_event)
+                    registered_event = model_to_dict(Event.objects.get(EventId=book['EventId']))
+                    # Verify the date of the event and update in the Future/Past Event
+                    # in the data to be sent as response
+                    book.update(registered_event)
+                    if book['BookingStatus'].lower() == 'cancelled':
+                        data["CancelledEvents"].append(book)
+                    elif registered_event['EventDate'] < date.today():
                         data["PastEvents"].append(book)
                     else:
-                        book.update(regeistered_event)
                         data["FutureEvents"].append(book)
                 del data["Password"]
             else:
                 db_table = HOST
                 data = model_to_dict(db_table.objects.get(Email=Email))
                 del data["Password"]
-                data["FutureEvents"] = [model_to_dict(eve)
+                data["FutureEvents"], data["PastEvents"], data["CancelledEvents"] = [], [], []
+                for eve in Event.objects.filter(HostId=Email):
+                    eve = model_to_dict(eve)
+                    if eve['EventStatus'].lower() == 'cancelled':
+                        data["CancelledEvents"].append(eve)
+                    elif eve['EventDate'] < date.today():
+                        data["PastEvents"].append(eve)
+                    else:
+                        data["FutureEvents"].append(eve)
+                '''data["FutureEvents"] = [model_to_dict(eve)
                                         for eve in Event.objects.filter(HostId=Email,
                                                                         EventDate__gte=date.today())]
                 data["PastEvents"] = [model_to_dict(eve)
                                       for eve in Event.objects.filter(HostId=Email,
                                                                       EventDate__lt=date.today())]
-                print(data["FutureEvents"], data["PastEvents"])
+                print(data["FutureEvents"], data["PastEvents"])'''
             return Response({"status": "success", 'data': data},
                             status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"status": "error", "data": "username does not exist" + str(request.data) + str(e)},
                             status=status.HTTP_200_OK)
+
+
+class UpdateProfileView(APIView):
+    serializer_class = UpdateProfileSerializer
+    def put(self, request):
+        if request.data['Type'].lower() == 'User'.lower():
+            db_table = USER
+        else:
+            db_table = HOST
+        serializer_class = UpdateProfileSerializer(data=request.data)
+        if serializer_class.is_valid():
+            try:
+                try:
+                    user_info = db_table.objects.get(Email=request.data['Email'])
+                except:
+                    return Response({'status': 'error',
+                                     "message": "User account associated with the Email doesnot exist"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+                if 'FirstName' in request.data:
+                    user_info.FirstName = request.data['FirstName']
+                if 'LastName' in request.data:
+                    user_info.LastName = request.data['LastName']
+                if 'Mobile' in request.data:
+                    user_info.Mobile = request.data['Mobile']
+                user_info.save()
+                response = {
+                    'status': 'success',
+                    'code': status.HTTP_200_OK,
+                    'message': 'Profile Updated successfully'
+                }
+                return Response(response, status=status.HTTP_200_OK)
+            except:
+                traceback.print_exc()
+                return Response({"status": "error",
+                                 'message': 'Profile update failed'},
+                                status=status.HTTP_200_OK)
+        return Response({"status": "error", "data": serializer_class.errors,
+                         'message': 'Profile update failed'}, status=status.HTTP_200_OK)

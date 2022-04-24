@@ -55,6 +55,7 @@ class UpdatePasswordSerializer(serializers.Serializer):
         #fields = '__all__'
         fields = ('Email', 'OldPassword', 'Password1', 'Password2', 'VerificationCode')
 
+
 class ProfileSerializer(serializers.Serializer):
     """
     Serializer for profile view endpoint.
@@ -65,3 +66,16 @@ class ProfileSerializer(serializers.Serializer):
         model = [USER, HOST, Event]
         fields = ('Email', 'Type',)
 
+
+class UpdateProfileSerializer(serializers.Serializer):
+    """
+    Serializer for profile view endpoint.
+    """
+    Email = serializers.CharField(required=True)
+    Type = serializers.CharField(required=True)
+    FirstName = serializers.CharField(required=False)
+    LastName = serializers.CharField(required=False)
+    Mobile = serializers.CharField(required=False)
+    class Meta:
+        model = [USER, HOST]
+        fields = ('Email', 'Type', 'FirstName', 'LastName', 'Mobile',)
