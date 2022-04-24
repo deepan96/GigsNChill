@@ -4,7 +4,7 @@ from .models import Event, Location, Bookings, Bookmarks
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponse
 from .serializers import AddNewEventSerializer, SearchEventsSerializer, \
-    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer
+    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer, CancelEventSerializer
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from register.models import HOST, USER
@@ -129,6 +129,29 @@ class BookEventView(APIView):
                     status=status.HTTP_200_OK)
         else:
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
+
+
+class CancelEventView(APIView):
+    """
+    This view should add the new bookings to the Bookings Database
+    when a registered user books a specified number of seats
+    for a particular event.
+    """
+    model = Bookings
+
+    def get(self, request, BookingId=None):
+        try:
+            booking_info = Bookings.objects.get(BookingId=BookingId)
+            if booking_info.BookingStatus == "Active":
+                event_info = Event.objects.get(EventId=booking_info.EventId.EventId)
+                event_info.SeatsAvailable += booking_info.NoOfSeats
+                booking_info.BookingStatus = 'Cancelled'
+                booking_info.save()
+                event_info.save()
+            return JsonResponse({"status": "success", "data": "Booking Cancelled"}, status=status.HTTP_200_OK)
+        except:
+            return JsonResponse({"status": "error", "message": "Couldn't Cancel the event"},
+                                status=status.HTTP_200_OK)
 
 
 class RetrieveBookmarkView(APIView):
