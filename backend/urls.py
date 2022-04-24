@@ -36,19 +36,13 @@ urlpatterns = [
             view_register.ProfileView.as_view(), name="view-profile"),
     re_path('viewprofile/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
             view_register.ProfileView.as_view(), name="view-profile"),
-    # re_path('viewprofile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="viewprofile"),
     path('addnewevent/', view_event.AddNewEventView.as_view(), name="add-new-event"),
     path('searchevent/', view_event.SearchEvents.as_view(), name="search-event"),
     path('bookevent/', view_event.BookEventView.as_view(), name="book-event"),
     path('bookmarkevent/', view_event.BookmarkEventView.as_view(), name="new-bookmark"),
-    #re_path('invitefriends/(?P<Type>[\w-]+)/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
-    #        view_event.InviteFriendsView.as_view(), name="invite-friends"),
-    #re_path('invitefriends/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
-    #        view_event.InviteFriendsView.as_view(), name="invite-friends"),'''
     re_path('bookmarks/(?P<Email>[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4})/$',
             view_event.RetrieveBookmarkView.as_view(), name="bookmarks"),
     path('invitefriends/', view_event.InviteFriendsView.as_view(), name="invite-friends"),
-    path('cancelevent/<int:BookingId>/', view_event.CancelEventView.as_view(), name="cancel_event")
-    # path('invitefriends/', view_event.InviteFriendsView.as_view(), name="invite-friends"),
-    # path(r'^profile/\w+|[\w.%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/', view_register.ProfileView.as_view(), name="profile"),
+    path('cancelevent/<int:BookingId>/', view_event.CancelEventView.as_view(), name="cancel_event"),
+    path('eventattendees/<int:EventId>/', view_event.RetrieveEventParticipantsView.as_view(), name="event_attendees")
 ]

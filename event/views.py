@@ -1,3 +1,5 @@
+import traceback
+
 from django.shortcuts import render
 
 from .models import Event, Location, Bookings, Bookmarks
@@ -148,9 +150,9 @@ class CancelEventView(APIView):
                 booking_info.BookingStatus = 'Cancelled'
                 booking_info.save()
                 event_info.save()
-            return JsonResponse({"status": "success", "data": "Booking Cancelled"}, status=status.HTTP_200_OK)
+            return JsonResponse({"status": "success", "message": "Booking Cancelled"}, status=status.HTTP_200_OK)
         except:
-            return JsonResponse({"status": "error", "message": "Couldn't Cancel the event"},
+            return JsonResponse({"status": "error", "message": "Couldn't cancel the event"},
                                 status=status.HTTP_200_OK)
 
 
@@ -253,3 +255,17 @@ class InviteFriendsView(APIView):
                                  'data': 'Email',
                                  "message": str(sys.exc_info()[2]) + str(e), },
                                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class RetrieveEventParticipantsView(APIView):
+    def get(self, request, EventId):
+        try:
+            participants = []
+            for booking in Bookings.objects.filter(EventId=EventId, BookingStatus="active"):
+                participants.append(booking.UserId.Email)
+            return JsonResponse({"status": "success", "data": list(set(participants))}, status=status.HTTP_200_OK)
+        except:
+            traceback.print_exc()
+            return JsonResponse({"status": "error", "message": "Couldn't retrieve the participants"},
+                                status=status.HTTP_200_OK)
+
