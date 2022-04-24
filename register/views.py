@@ -1,5 +1,3 @@
-import traceback
-from pyexpat import model
 from .models import USER, HOST
 from event.models import Event, Bookings
 from .serializers import RegisterSerializer, PasswordRecoverySerializer, \
@@ -253,12 +251,14 @@ class UpdateProfileView(APIView):
                     return Response({'status': 'error',
                                      "message": "User account associated with the Email doesnot exist"},
                                     status=status.HTTP_400_BAD_REQUEST)
-                if 'FirstName' in request.data:
+                if 'FirstName' in request.data and request.data['FirstName'] != '':
                     user_info.FirstName = request.data['FirstName']
-                if 'LastName' in request.data:
+                if 'LastName' in request.data and request.data['LastName'] != '':
                     user_info.LastName = request.data['LastName']
-                if 'Mobile' in request.data:
+                if 'Mobile' in request.data and request.data['Mobile'] != '':
                     user_info.Mobile = request.data['Mobile']
+                if 'Password' in request.data and request.data['Password'] != '':
+                    user_info.Password = make_password(request.data['Password'])
                 user_info.save()
                 response = {
                     'status': 'success',
@@ -267,7 +267,6 @@ class UpdateProfileView(APIView):
                 }
                 return Response(response, status=status.HTTP_200_OK)
             except:
-                traceback.print_exc()
                 return Response({"status": "error",
                                  'message': 'Profile update failed'},
                                 status=status.HTTP_200_OK)
