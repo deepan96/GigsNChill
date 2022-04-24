@@ -18,7 +18,7 @@ import {
   import ModalPop from "../../ModalPop/ModalPop";
   
   export default function BookingPage(props) {
-    const { id } = useParams();
+    const { bid } = useParams();
     const [event, setEvent] = useState();
     const [eventData, setEventData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ import {
   
         console.log(eventData);
         const eventId = res.data.data.filter(
-          (e) => e.EventId === parseInt(id)
+          (e) => e.EventId === parseInt(bid)
         )[0];
         console.log(eventId);
         setEvent(eventId);
@@ -64,7 +64,7 @@ import {
       // making a bookmark
       var data = new FormData();
       data.append("UserId", user_info.email);
-      data.append("EventId", id);
+      data.append("EventId", bid);
       data.append("BookmarkStatus", fav);
       var config = {
         method: "post",
@@ -94,7 +94,7 @@ import {
       var data = new FormData();
       data.append("UserId", user_info.email);
     //   data.append("NoOfSeats", noftickets);
-      data.append("EventId", id);
+      data.append("EventId", bid);
       var config = {
         method: "post",
         url: "https://gigsnchill.herokuapp.com/bookevent/",
@@ -151,15 +151,15 @@ import {
                         sx={{ color: red[500] }}
                         onClick={handleFav}
                       >
-                        {!fav && <FavoriteIcon sx={{ color: "red" }} />}
-                        {fav && <FavoriteIcon />}
+                        {fav && <FavoriteIcon sx={{ color: "red" }} />}
+                        {!fav && <FavoriteIcon />}
                       </IconButton>
                       <IconButton aria-label="share">
                         <ShareIcon onClick={invokeShare} />
                         {/* {modelOpen && <ModalPop/>} */}
                       </IconButton>
                     </CardActions>
-                    <ModalPop invokefunc={invokeShare} open={modelOpen} />
+                    <ModalPop eventid = {bid}  invokefunc={invokeShare} open={modelOpen} />
                   </div>
                   <div className={styles.eventdetails}>
                     <div className={styles.eventdate}>

@@ -55,6 +55,16 @@ class BookEventSerializer(serializers.Serializer):
         model = Bookings
 
 
+class CancelEventSerializer(serializers.Serializer):
+    """
+    Serializer for booking available events.
+    """
+    BookingId = serializers.CharField(required=True)
+
+    class Meta:
+        model = Bookings
+
+
 class BookmarksSerializer(serializers.Serializer):
     """
     Serializer for bookmarking the favourite events.

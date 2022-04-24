@@ -33,6 +33,7 @@ class Event(models.Model):
     ZipCode = models.CharField(max_length=5, default="47401")
     LocationId = models.ForeignKey(Location, on_delete=models.CASCADE)
     ImageUrl = models.URLField(max_length=500, default="")
+    EventStatus = models.CharField(max_length=10, default='active')
 
     def __str__(self) -> str:
         return self.EventId
@@ -44,6 +45,7 @@ class Bookings(models.Model):
     UserId = models.ForeignKey(USER, on_delete=models.CASCADE)
     NoOfSeats = models.IntegerField(default=1)
     EventId = models.ForeignKey(Event, on_delete=models.CASCADE)
+    BookingStatus = models.CharField(max_length=10, default='active')
 
     def __str__(self) -> str:
         return self.BookingId
