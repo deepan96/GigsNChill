@@ -16,6 +16,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { Alert } from "@mui/material";
 import { red } from "@material-ui/core/colors";
 import ModalPop from "../../ModalPop/ModalPop";
+import moment from "moment";
 
 export default function EventPage(props) {
   const { id } = useParams();
@@ -53,10 +54,11 @@ export default function EventPage(props) {
       )[0];
       console.log(eventId);
       setEvent(eventId);
-      console.log(eventId);
+      console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
       setLoading(false);
     });
     setNoftickets(1);
+    
     // setErrorFound(false);
     // setErrorMessage("");
   }, [successVar]);
@@ -172,15 +174,15 @@ export default function EventPage(props) {
                       {/* {modelOpen && <ModalPop/>} */}
                     </IconButton>
                   </CardActions>
-                  <ModalPop invokefunc={invokeShare} open={modelOpen} />
+                  <ModalPop eventid = {id}  invokefunc={invokeShare} open={modelOpen} />
                 </div>
                 <div className={styles.eventdetails}>
                   <div className={styles.eventdate}>
-                    <p>{Date(event.EventDate)}</p>
+                    <p>{moment(event.EventDate).format("MMMM Do YYYY")}</p>
                   </div>
                   <div className={styles.eventtime}>
                     <p>
-                      Date and time : {event.EventStartTime} ,{" "}
+                      Time : {event.EventStartTime} --{" "}
                       {event.EventEndTime}
                     </p>
                   </div>
@@ -197,7 +199,7 @@ export default function EventPage(props) {
                   </div>
                   <div className={styles.eventtime}>
                     <p>
-                      Date and time : {event.EventStartTime} ,{" "}
+                      Date and time : {event.EventStartTime} -- {" "}
                       {event.EventEndTime}
                     </p>
                   </div>
