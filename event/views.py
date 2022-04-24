@@ -1,10 +1,12 @@
+import traceback
+
 from django.shortcuts import render
 
 from .models import Event, Location, Bookings, Bookmarks
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponse
 from .serializers import AddNewEventSerializer, SearchEventsSerializer, \
-    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer
+    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer, CancelEventSerializer
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from register.models import HOST, USER
@@ -131,6 +133,29 @@ class BookEventView(APIView):
             return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
 
 
+class CancelEventView(APIView):
+    """
+    This view should add the new bookings to the Bookings Database
+    when a registered user books a specified number of seats
+    for a particular event.
+    """
+    model = Bookings
+
+    def get(self, request, BookingId=None):
+        try:
+            booking_info = Bookings.objects.get(BookingId=BookingId)
+            if booking_info.BookingStatus == "Active":
+                event_info = Event.objects.get(EventId=booking_info.EventId.EventId)
+                event_info.SeatsAvailable += booking_info.NoOfSeats
+                booking_info.BookingStatus = 'Cancelled'
+                booking_info.save()
+                event_info.save()
+            return JsonResponse({"status": "success", "message": "Booking Cancelled"}, status=status.HTTP_200_OK)
+        except:
+            return JsonResponse({"status": "error", "message": "Couldn't cancel the event"},
+                                status=status.HTTP_200_OK)
+
+
 class RetrieveBookmarkView(APIView):
     """
     This view should retrieve the bookmarked events from the Bookmarks Database
@@ -230,3 +255,17 @@ class InviteFriendsView(APIView):
                                  'data': 'Email',
                                  "message": str(sys.exc_info()[2]) + str(e), },
                                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class RetrieveEventParticipantsView(APIView):
+    def get(self, request, EventId):
+        try:
+            participants = []
+            for booking in Bookings.objects.filter(EventId=EventId, BookingStatus="active"):
+                participants.append(booking.UserId.Email)
+            return JsonResponse({"status": "success", "data": list(set(participants))}, status=status.HTTP_200_OK)
+        except:
+            traceback.print_exc()
+            return JsonResponse({"status": "error", "message": "Couldn't retrieve the participants"},
+                                status=status.HTTP_200_OK)
+
