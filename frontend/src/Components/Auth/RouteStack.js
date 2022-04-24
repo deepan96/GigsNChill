@@ -13,6 +13,7 @@ import ResetPassword from "../Pages/ResetPassword/ResetPassword";
 
 import Chat from "../Pages/Chat/Chat";
 import Bookmark from "../Pages/Bookmark/Bookmark";
+import BookingPage from "../Pages/BookingPage/BookingPage";
 
 export function RouteStack() {
   return (
@@ -40,6 +41,7 @@ export function LoginRouteStack() {
         <Route path="/chat" element={<Chat/>}/>
         <Route path="/bookmark" element={<Bookmark/>}/>
         <Route path="/myevents" element={<Bookmark/>}/>
+        {/* <Route path="/confirmbook/:id" element={<BookingPage />}/> */}
       </Routes>
     </div>
   );

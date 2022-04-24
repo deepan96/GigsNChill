@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import { InputLabel } from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { tags, categories } from "../../Assets/FilterData";
+import { tags, categories, estates } from "../../Assets/FilterData";
 import { Navigate, useNavigate } from "react-router-dom";
 
 export default function EventHome(props) {
@@ -16,6 +16,7 @@ export default function EventHome(props) {
   const [eventDataFilter, setEventDataFilter] = useState([]);
   const [eventCategory, setEventCategory] = useState("");
   const [eventType, setEventType] = useState("");
+  const [eventState, setEventState] = useState("");
   const [types, setTypes] = useState([]);
   const navigate = useNavigate();
 
@@ -78,6 +79,19 @@ export default function EventHome(props) {
     }
   }, [eventCategory, searchValue, props.searchQuery]);
 
+  // useEffect(()=> {
+  //   var groupData = eventData;
+  //   if (eventState !== "") {
+  //     groupData = eventData.filter((e) => {
+  //       if (e.Eve.toLowerCase().includes(eventCategory.toLowerCase())) {
+  //         return e;
+  //       } else {
+  //         return false;
+  //       }
+  //     });
+  //   }
+  // }, [eventState]);
+
   // handling category and its values
   function handleSelectCategory(e) {
     setEventCategory(e.target.value);
@@ -132,14 +146,14 @@ export default function EventHome(props) {
               <InputLabel htmlFor="eventlocation">Location(State)</InputLabel>
               <Select
                 sx={{ width: "250px", background: "white" }}
-                value={eventCategory}
-                onChange={handleSelectCategory}
-                input={<OutlinedInput label="Category" id="eventlocation" />}
+                value={eventState}
+                onChange={(e) => setEventState(e.target.value)}
+                input={<OutlinedInput label="location" id="eventlocation" />}
               >
                 <MenuItem key="none" value="">
                   None
                 </MenuItem>
-                {categories.map((name) => (
+                {estates.map((name) => (
                   <MenuItem key={name} value={name}>
                     {name}
                   </MenuItem>
