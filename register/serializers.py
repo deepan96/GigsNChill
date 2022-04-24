@@ -53,7 +53,8 @@ class UpdatePasswordSerializer(serializers.Serializer):
     class Meta:
         model = USER
         #fields = '__all__'
-        fields = ('Email', 'OldPassword', 'Password1', 'Password2', 'VerificationCode')
+        fields = ('Email', 'OldPassword', 'Password1', 'Password2')
+
 
 class ProfileSerializer(serializers.Serializer):
     """
@@ -65,3 +66,17 @@ class ProfileSerializer(serializers.Serializer):
         model = [USER, HOST, Event]
         fields = ('Email', 'Type',)
 
+
+class UpdateProfileSerializer(serializers.Serializer):
+    """
+    Serializer for profile view endpoint.
+    """
+    Email = serializers.CharField(required=True)
+    Type = serializers.CharField(required=True)
+    FirstName = serializers.CharField(required=False)
+    LastName = serializers.CharField(required=False)
+    Mobile = serializers.CharField(required=False)
+    Password = serializers.CharField(required=False)
+    class Meta:
+        model = [USER, HOST]
+        fields = ('Email', 'Type', 'FirstName', 'LastName', 'Mobile', 'Password')

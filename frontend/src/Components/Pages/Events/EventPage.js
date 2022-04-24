@@ -54,6 +54,7 @@ export default function EventPage(props) {
       )[0];
       console.log(eventId);
       setEvent(eventId);
+      // setFav(false);
       console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
       setLoading(false);
     });
@@ -64,7 +65,7 @@ export default function EventPage(props) {
   }, [successVar]);
 
   function handleFav() {
-    setFav(!fav);
+    setFav(prev=>!prev);
     console.log("like", fav);
     const user_info = JSON.parse(localStorage.getItem("user"));
     // making a bookmark
@@ -166,8 +167,8 @@ export default function EventPage(props) {
                       sx={{ color: red[500] }}
                       onClick={handleFav}
                     >
-                      {!fav && <FavoriteIcon sx={{ color: "red" }} />}
-                      {fav && <FavoriteIcon />}
+                      {fav && <FavoriteIcon sx={{ color: "red" }} />}
+                      {!fav && <FavoriteIcon />}
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon onClick={invokeShare} />

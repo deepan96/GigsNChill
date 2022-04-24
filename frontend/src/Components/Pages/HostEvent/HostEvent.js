@@ -127,7 +127,7 @@ function HostEvent(props) {
       !eventPerformer ||
       !eventCapacity ||
       !eventPrice ||
-      !eventHMail ||
+      // !eventHMail ||
       !street ||
       !city ||
       !eventState ||
