@@ -34,7 +34,7 @@ export default function BookingPage(props) {
   var axios = require("axios");
   var config = {
     method: "get",
-    url: `http://127.0.0.1:8000/bookinginfo/${bid}/`,
+    url: `https://gigsnchill.herokuapp.com/bookinginfo/${bid}/`,
   };
   // getting events data
 
@@ -81,8 +81,12 @@ export default function BookingPage(props) {
   async function handleCancellation() {
     var config = {
       method: "get",
-      url: `http://127.0.0.1:8000/cancelbooking/${parseInt(bid)}/`,
+      url: `https://gigsnchill.herokuapp.com/cancelbooking/${parseInt(bid)}/`,
     };
+    if (user_info.type === 'Host') {
+        config.url = `https://gigsnchill.herokuapp.com/cancelevent/${eventData.EventId}/`;
+    }
+    
     axios(config)
       .then((res) => {
         if (res.data.status === "error") {

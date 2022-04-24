@@ -14,13 +14,13 @@ import CardWrap from "../../UI/CardWrap/CardWrap";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import bgimage from "../../Pages/Promote-Your-local-event.jpg";
-import { Link, Navigate} from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { red } from "@material-ui/core/colors";
 
 // New
-import EasyEdit from 'react-easy-edit';
+import EasyEdit from "react-easy-edit";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {faCheck, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faMinus } from "@fortawesome/free-solid-svg-icons";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 
@@ -31,15 +31,17 @@ function Profile(props) {
   const [fEvents, setFEvents] = useState([]);
   const [cEvents, setCEvents] = useState([]);
   const [pEvents, setPEvents] = useState([]);
+  const [cnEvents, setCNEvents] = useState([]);
 
+  const save = (value) => {
+    alert(value);
+  };
+  const cancel = () => {};
 
-  const save = (value) => {alert(value)}
-  const cancel = () => {}
-
-  function changeUname(){
-    console.log("edit mode")
+  function changeUname() {
+    console.log("edit mode");
   }
-  
+
   var axios = require("axios");
   // var FormData = require("form-data");
   // var data = new FormData();
@@ -47,34 +49,35 @@ function Profile(props) {
   useEffect(() => {
     var config = {
       method: "get",
-      url: `http://127.0.0.1:8000/viewprofile/${user_info.type.toLowerCase()}/${
+      url: `https://gigsnchill.herokuapp.com/viewprofile/${user_info.type.toLowerCase()}/${
         user_info.email
       }/`,
     };
     var fe = [];
     axios(config).then((res) => {
-      console.log("SUp")
+      console.log("SUp");
       console.log(res.data.data);
       const uad = res.data.data;
       fe = res.data.data.FutureEvents;
 
-      console.log("hi2")
-      console.log(fe)
+      console.log("hi2");
+      console.log(fe);
 
       // Set events for calendar data
-      let CalendarEvents = fe.map(
-        obj => {
-            return {
-                "title" : obj.EventName,
-                "date": obj.EventDate,
-            }
-        })
-          
+      let CalendarEvents = fe.map((obj) => {
+        return {
+          title: obj.EventName,
+          date: obj.EventDate,
+        };
+      });
+      setCEvents(CalendarEvents);
+
       setUserData(res.data.data);
-      setCEvents(CalendarEvents)
+      
       setFEvents(fe);
       setPEvents(res.data.data.PastEvents);
-      console.log("future", fEvents, pEvents);;
+      setCNEvents(res.data.data.CancelledEvents)
+      console.log("future", fEvents, pEvents);
     });
   }, []);
 
@@ -91,10 +94,10 @@ function Profile(props) {
                   placeholder={userData.FirstName}
                   onSave={save}
                   onCancel={cancel}
-                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
-                  saveButtonStyle = {styles.savebutton}
-                  cancelButtonStyle = {styles.cancelbutton}
+                  saveButtonStyle={styles.savebutton}
+                  cancelButtonStyle={styles.cancelbutton}
                 />
               </div>
               <div className={styles.TextBox}>
@@ -104,10 +107,10 @@ function Profile(props) {
                   placeholder={userData.LastName}
                   onSave={save}
                   onCancel={cancel}
-                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
-                  saveButtonStyle = {styles.savebutton}
-                  cancelButtonStyle = {styles.cancelbutton}
+                  saveButtonStyle={styles.savebutton}
+                  cancelButtonStyle={styles.cancelbutton}
                 />
               </div>
               <div className={styles.TextBox}>
@@ -117,10 +120,10 @@ function Profile(props) {
                   placeholder={userData.Mobile}
                   onSave={save}
                   onCancel={cancel}
-                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
-                  saveButtonStyle = {styles.savebutton}
-                  cancelButtonStyle = {styles.cancelbutton}
+                  saveButtonStyle={styles.savebutton}
+                  cancelButtonStyle={styles.cancelbutton}
                 />
               </div>
               <div className={styles.TextBox}>
@@ -130,25 +133,25 @@ function Profile(props) {
                   placeholder="********"
                   onSave={save}
                   onCancel={cancel}
-                  saveButtonLabel={<FontAwesomeIcon icon={faCheck}/>}
+                  saveButtonLabel={<FontAwesomeIcon icon={faCheck} />}
                   cancelButtonLabel={<FontAwesomeIcon icon={faMinus} />}
-                  saveButtonStyle = {styles.savebutton}
-                  cancelButtonStyle = {styles.cancelbutton}
+                  saveButtonStyle={styles.savebutton}
+                  cancelButtonStyle={styles.cancelbutton}
                 />
               </div>
             </div>
-            
+
             <div className={styles.usercalendar}>
               <FullCalendar
                 defaultView="dayGridMonth"
                 header={{
                   left: "prev, next",
                   center: "title",
-                  right: "dayGridMonth,timeGridWeek,timeGridDay"
+                  right: "dayGridMonth,timeGridWeek,timeGridDay",
                 }}
                 themeSystem="Simplex"
                 plugins={[dayGridPlugin]}
-                events= {cEvents}
+                events={cEvents}
                 handleWindowResize={true}
                 showNonCurrentDates={false}
                 height="auto"
@@ -158,119 +161,171 @@ function Profile(props) {
         </CardWrap>
       </div>
 
-      <div className={styles.leftPane}>          
-          <div className={styles.heading}>
-            <h3>Upcoming Events</h3>
-          </div>
+      <div className={styles.leftPane}>
+        <div className={styles.heading}>
+          <h3>Upcoming Events</h3>
+        </div>
 
-          <div className={styles.userupcoming}>
-            <div className={styles.subcontainer}>
-              {fEvents &&
-                fEvents.map((ud) => (
-                  <Card className={styles.eventcard}>
-                    {console.log(ud)}
-                    <div>
-                      <CardMedia
-                        className={styles.cardimage}
-                        image={ud.ImageUrl}
-                        alt="event image"
-                      />
+        <div className={styles.userupcoming}>
+          <div className={styles.subcontainer}>
+            {fEvents &&
+              fEvents.map((ud) => (
+                <Card className={styles.eventcard}>
+                  <div>
+                    <CardMedia
+                      className={styles.cardimage}
+                      image={ud.ImageUrl}
+                      alt="event image"
+                    />
+                  </div>
+                  <CardContent className={styles.cardcontent}>
+                    <div className={styles.eventtitle}>
+                      <h5>
+                        {user_info.type === "User" && (
+                          <Link
+                            className={styles.eventlink}
+                            to={`/booking/${ud.BookingId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        )}
+                        {user_info.type === "Host" && (
+                          <Link
+                            className={styles.eventlink}
+                            to={`/eventdetails/${ud.EventId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        )}
+                      </h5>
                     </div>
-                    <CardContent className={styles.cardcontent}>
-                      <div className={styles.eventtitle}>
-                        <h5>
-                          {user_info.type === "User" && (
-                            <Link
-                              className={styles.eventlink}
-                              to={`/booking/${ud.BookingId}`}
-                            >
-                              {ud.EventName}
-                            </Link>
-                          )}
-                          {user_info.type === "Host" && (
-                            <Link
-                              className={styles.eventlink}
-                              to={`/eventdetails`}
-                            >
-                              {ud.EventName}
-                            </Link>
-                          )}
-                        </h5>
+                    <p>{ud.EventDate}</p>
+                    {user_info.type === "Host" && (
+                      <div>
+                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
                       </div>
-                      <p>{ud.EventDate}</p>
-                      {user_info.type === "Host" && (
-                        <div>
-                          <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
-                        </div>
-                      )}
-                      {user_info.type === "User" && (
-                        <div>
-                          <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              {!fEvents && (
-                <div>No Events to Display. Reserve for a Event now!</div>
-              )}
-            </div>
+                    )}
+                    {user_info.type === "User" && (
+                      <div>
+                        <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            {!fEvents && (
+              <div>No Events to Display. Reserve for a Event now!</div>
+            )}
           </div>
-          <div className={styles.heading}>
-            <h3>Past Events</h3>
-          </div>
-          <div className={styles.userupcoming}>
-            <div className={styles.subcontainer}>
-              {pEvents &&
-                pEvents.map((ud) => (
-                  <Card className={styles.eventcard}>
-                    <div>
-                      <CardMedia
-                        className={styles.cardimage}
-                        image={ud.ImageUrl}
-                        alt="event image"
-                      />
+        </div>
+        <div className={styles.heading}>
+          <h3>Past Events</h3>
+        </div>
+        <div className={styles.userupcoming}>
+          <div className={styles.subcontainer}>
+            {pEvents &&
+              pEvents.map((ud) => (
+                <Card className={styles.eventcard}>
+                  <div>
+                    <CardMedia
+                      className={styles.cardimage}
+                      image={ud.ImageUrl}
+                      alt="event image"
+                    />
+                  </div>
+                  <CardContent className={styles.cardcontent}>
+                    <div className={styles.eventtitle}>
+                      <h5>
+                        {user_info.type === "User" && (
+                          <Link
+                            className={styles.eventlink}
+                            to={`/booking/${ud.BookingId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        )}
+                        {user_info.type === "Host" && (
+                          <Link
+                            className={styles.eventlink}
+                            to={`/eventdetails/${ud.EventId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        )}
+                      </h5>
                     </div>
-                    <CardContent className={styles.cardcontent}>
-                      <div className={styles.eventtitle}>
-                        <h5>
-                          {user_info.type === "User" && (
-                            <Link
-                              className={styles.eventlink}
-                              to={`/booking/${ud.BookingId}`}
-                            >
-                              {ud.EventName}
-                            </Link>
-                          )}
-                          {user_info.type === "Host" && (
-                            <Link
-                              className={styles.eventlink}
-                              to={`/eventdetails`}
-                            >
-                              {ud.EventName}
-                            </Link>
-                          )}
-                        </h5>
+                    <p>{ud.EventDate}</p>
+                    {user_info.type === "Host" && (
+                      <div>
+                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
                       </div>
-                      <p>{ud.EventDate}</p>
-                      {user_info.type === "Host" && (
-                        <div>
-                          <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
-                        </div>
-                      )}
-                      {user_info.type === "User" && (
-                        <div>
-                          <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                ))}
-              {!fEvents && <div>No Events to Display.</div>}
-            </div>
+                    )}
+                    {user_info.type === "User" && (
+                      <div>
+                        <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            {!pEvents && <div>No Events to Display.</div>}
+          </div>
+        </div>
+        <div className={styles.heading}>
+          <h3>Cancelled Events</h3>
+        </div>
+        <div className={styles.userupcoming}>
+          <div className={styles.subcontainer}>
+            {cnEvents &&
+              cnEvents.map((ud) => (
+                <Card className={styles.eventcard}>
+                  <div>
+                    <CardMedia
+                      className={styles.cardimage}
+                      image={ud.ImageUrl}
+                      alt="event image"
+                    />
+                  </div>
+                  <CardContent className={styles.cardcontent}>
+                    <div className={styles.eventtitle}>
+                      <h5>
+                        {user_info.type === "User" && (
+                          <Link
+                            className={styles.eventlink}
+                            to={`/booking/${ud.BookingId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        )}
+                        {user_info.type === "Host" && (
+                          <Link
+                            className={styles.eventlink}
+                            to={`/eventdetails${ud.EventId}`}
+                          >
+                            {ud.EventName}
+                          </Link>
+                        )}
+                      </h5>
+                    </div>
+                    <p>{ud.EventDate}</p>
+                    {user_info.type === "Host" && (
+                      <div>
+                        <p>No. of Tickets Available: {ud.SeatsAvailable}</p>
+                      </div>
+                    )}
+                    {user_info.type === "User" && (
+                      <div>
+                        <p>No. of Tickets Booked: {ud.NoOfSeats}</p>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            {!cnEvents && <div>No Events to Display.</div>}
           </div>
         </div>
       </div>
+    </div>
   );
 }
 
