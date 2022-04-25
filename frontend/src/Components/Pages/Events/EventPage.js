@@ -23,7 +23,7 @@ export default function EventPage(props) {
   const [event, setEvent] = useState();
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [fav, setFav] = useState(false); // setting bookmark
+  const [fav, setFav] = useState(true); // setting bookmark
   const [noftickets, setNoftickets] = useState(1);
   const [modelOpen, setModelOpen] = useState(false);
 

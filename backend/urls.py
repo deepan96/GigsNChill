@@ -47,5 +47,6 @@ urlpatterns = [
     path('invitefriends/', view_event.InviteFriendsView.as_view(), name="invite-friends"),
     path('cancelbooking/<int:BookingId>/', view_event.CancelBookingView.as_view(), name="cancel_booking"),
     path('cancelevent/<int:EventId>/', view_event.CancelEventView.as_view(), name="cancel_event"),
-    path('eventattendees/<int:EventId>/', view_event.RetrieveEventParticipantsView.as_view(), name="event_attendees")
+    path('eventattendees/<int:EventId>/', view_event.RetrieveEventParticipantsView.as_view(), name="event_attendees"),
+    path('eventreview/', view_event.EventReviewView.as_view(), name="event-review")
 ]

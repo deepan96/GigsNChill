@@ -15,6 +15,7 @@ import Chat from "../Pages/Chat/Chat";
 import Bookmark from "../Pages/Bookmark/Bookmark";
 import BookingPage from "../Pages/BookingPage/BookingPage";
 import MyEvents from "../Pages/HostMyEvents/MyEvents";
+import EventDetails from "../Pages/EventDetails/EventDetails";
 
 export function RouteStack() {
   return (
@@ -42,7 +43,7 @@ export function LoginRouteStack() {
         <Route path="/chat" element={<Chat />} />
         <Route path="/bookmark" element={<Bookmark />} />
         <Route path="/myevents" element={<MyEvents />} />
-        {/* <Route path="/eventdetails" element={<EventDetails />} /> */}
+        <Route path="/eventdetails/:id" element={<EventDetails />} />
         <Route path="/booking/:bid" element={<BookingPage />} />
       </Routes>
     </div>

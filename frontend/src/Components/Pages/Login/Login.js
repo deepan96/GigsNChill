@@ -91,11 +91,10 @@ const Login = (props) => {
     data.append("Email", userName);
     data.append("Password", userPassword);
     data.append("Type", typeOfUser); // type of user
-    data.append("Authorization", "Token xxxxxxxxxxxxxxxxxxx"); // Not implemented yet in the backend
 
     var config = {
       method: "post",
-      url: "http://127.0.0.1:8000/login/",
+      url: "https://gigsnchill.herokuapp.com/login/",
       data: data,
     };
 
