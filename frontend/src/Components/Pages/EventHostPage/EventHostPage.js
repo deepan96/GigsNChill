@@ -8,17 +8,14 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import React, { useEffect, useState } from "react";
-import styles from "./BookingPage.module.css";
-import bgimage from "../Promote-Your-local-event.jpg";
+import styles from "./EventHostPage.module.css";
 import { useNavigate, useParams } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
 import { Alert } from "@mui/material";
 import { red } from "@material-ui/core/colors";
 import ModalPop from "../../ModalPop/ModalPop";
 
 export default function BookingPage(props) {
-  const { bid } = useParams();
+  const { id } = useParams();
   const [event, setEvent] = useState();
   const [eventData, setEventData] = useState([]);
   const [fav, setFav] = useState(false); // setting bookmark
@@ -32,17 +29,23 @@ export default function BookingPage(props) {
   const user_info = JSON.parse(localStorage.getItem("user"));
 
   var axios = require("axios");
-  var config = {
-    method: "get",
-    url: `https://gigsnchill.herokuapp.com/bookinginfo/${bid}/`,
-  };
+
   // getting events data
 
   useEffect(() => {
+    var config = {
+      method: "get",
+      url: "https://gigsnchill.herokuapp.com/searchevent/",
+    };
     axios(config).then((res) => {
       console.log(res.data.data);
       setEventData(res.data.data);
-      const eventId = res.data.data;
+
+      console.log(eventData);
+      const eventId = res.data.data.filter(
+        (e) => e.EventId === parseInt(id)
+      )[0];
+      console.log(eventId);
       setEvent(eventId);
     });
   }, []);
@@ -54,7 +57,7 @@ export default function BookingPage(props) {
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
-    data.append("EventId", bid);
+    data.append("EventId", id);
     data.append("BookmarkStatus", fav);
     var config = {
       method: "post",
@@ -81,12 +84,8 @@ export default function BookingPage(props) {
   async function handleCancellation() {
     var config = {
       method: "get",
-      url: `https://gigsnchill.herokuapp.com/cancelbooking/${parseInt(bid)}/`,
+      url: `https://gigsnchill.herokuapp.com/cancelevent/${parseInt(id)}/`,
     };
-    if (user_info.type === 'Host') {
-        config.url = `https://gigsnchill.herokuapp.com/cancelevent/${parseInt(eventData.EventId)}/`;
-    }
-    
     axios(config)
       .then((res) => {
         if (res.data.status === "error") {
@@ -98,9 +97,8 @@ export default function BookingPage(props) {
         } else {
           setErrorSeverity("success");
           setErrorFound(true);
-          setErrorMessage("Reservation Cancelled! :]");
+          setErrorMessage("Event Cancelled! :]");
           console.log("sucess");
-          // navigate("/");
         }
         setTimeout(() => {
           setErrorFound(false);
@@ -114,21 +112,21 @@ export default function BookingPage(props) {
   }
 
   return (
-    <div style={styles}>
-      <div className={styles.fullpage}>
+   <div style={styles}>
+     { event && <div className={styles.fullpage}>
         <Card className={styles.container}>
-          {console.log(eventData)}
           <div className={styles.imagediv}>
+            {console.log(event)}
             <CardMedia
               className={styles.cardimage}
-              image={eventData.ImageUrl}
+              image={event.ImageUrl}
               alt="event image"
             />
           </div>
           <div className={styles.cardcontent}>
             <CardContent>
               <div className={styles.eventtitle}>
-                <h3>{eventData.EventName}</h3>
+                <h3>{event.EventName}</h3>
                 <div>
                   <CardActions disableSpacing>
                     <IconButton
@@ -144,40 +142,40 @@ export default function BookingPage(props) {
                     </IconButton>
                   </CardActions>
                   <ModalPop
-                    eventid={bid}
+                    eventid={id}
                     invokefunc={invokeShare}
                     open={modelOpen}
                   />
                 </div>
                 <div className={styles.eventdetails}>
                   <div className={styles.eventdate}>
-                    <p>{Date(eventData.EventDate)}</p>
+                    <p>{Date(event.EventDate)}</p>
                   </div>
                   <div className={styles.eventtime}>
                     <p>
-                      Date and time : {eventData.EventStartTime} ,{" "}
-                      {eventData.EventEndTime}
+                      Date and time : {event.EventStartTime} ,{" "}
+                      {event.EventEndTime}
                     </p>
                   </div>
                   <div className={styles.eventtype}>
-                    <h5>Category : {eventData.EventGenre}</h5>
-                    <h5>Type : {eventData.EventType}</h5>
+                    <h5>Category : {event.EventGenre}</h5>
+                    <h5>Type : {event.EventType}</h5>
                   </div>
                   <div className={styles.eventlocation}>
                     <p>Address :</p>
                     {}
                     <p>
-                      {eventData.Address},{eventData.ZipCode}
+                      {event.Address},{event.ZipCode}
                     </p>
                   </div>
                   <div className={styles.eventtime}>
                     <p>
-                      Date and time : {eventData.EventStartTime} ,{" "}
-                      {eventData.EventEndTime}
+                      Date and time : {event.EventStartTime} ,{" "}
+                      {event.EventEndTime}
                     </p>
                   </div>
                 </div>
-                <p>{eventData.EventDescription}</p>
+                <p>{event.EventDescription}</p>
               </div>
             </CardContent>
 
@@ -188,7 +186,7 @@ export default function BookingPage(props) {
                 </Alert>
               )}
               <div className={styles.eventseats}>
-                <p>No. of Tickets Booked : {eventData.NoOfSeats}</p>
+                <p>No. of Tickets Available: {event.SeatsAvailable}</p>
               </div>
               <br></br>
             </div>
@@ -199,7 +197,7 @@ export default function BookingPage(props) {
             </div>
           </div>
         </Card>
-      </div>
+      </div>}
     </div>
   );
 }

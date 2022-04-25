@@ -23,7 +23,7 @@ export default function EventPage(props) {
   const [event, setEvent] = useState();
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [fav, setFav] = useState(true); // setting bookmark
+  const [fav, setFav] = useState(false); // setting bookmark
   const [noftickets, setNoftickets] = useState(1);
   const [modelOpen, setModelOpen] = useState(false);
 
@@ -65,14 +65,15 @@ export default function EventPage(props) {
   }, [successVar]);
 
   function handleFav() {
-    setFav(prev=>!prev);
-    console.log("like", fav);
-    const user_info = JSON.parse(localStorage.getItem("user"));
+    console.log(!fav, fav);
+    setFav(prev => !prev);
+    const ii = fav;
+    // console.log(ii);
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
     data.append("EventId", id);
-    data.append("BookmarkStatus", fav);
+    data.append("BookmarkStatus", !fav);
     var config = {
       method: "post",
       url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
@@ -82,7 +83,7 @@ export default function EventPage(props) {
     axios(config)
       .then((res) => {
         console.log(res.data.data);
-        alert("BookMark Success!");
+        alert("BookMark Changed!");
       })
       .catch((err) => {
         alert("Invalid BookMark Request");
