@@ -96,13 +96,22 @@ export default function EventHome(props) {
           return false;
         }
       });
+      if (eventType !== "") {
+        groupData = groupData.filter((e) => {
+          if (e.EventType.toLowerCase().includes(eventType.toLowerCase())) {
+            return e;
+          } else {
+            return false;
+          }
+        });
+      }
     }
     if (searchValue !== "") {
       setEventDataFilter(fil(groupData));
     } else {
       setEventDataFilter(groupData);
     }
-  }, [eventCategory, searchValue, props.searchQuery]);
+  }, [eventCategory, searchValue, props.searchQuery, eventType]);
 
   useEffect(() => {
     var groupData = eventData;
