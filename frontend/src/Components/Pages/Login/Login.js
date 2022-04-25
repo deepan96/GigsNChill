@@ -94,7 +94,7 @@ const Login = (props) => {
 
     var config = {
       method: "post",
-      url: "http://127.0.0.1:8000/login/",
+      url: "https://gigsnchill.herokuapp.com/login/",
       data: data,
     };
 

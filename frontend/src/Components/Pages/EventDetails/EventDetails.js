@@ -17,14 +17,15 @@ export default function EventDetails() {
 
   const user_info = JSON.parse(localStorage.getItem("user"));
 
-  var axios = require("axios");
-  var config = {
-    method: "get",
-    url: "https://gigsnchill.herokuapp.com/searchevent/",
-  };
+  
   // getting events data
 
   useEffect(() => {
+    var axios = require("axios");
+    var config = {
+      method: "get",
+      url: "https://gigsnchill.herokuapp.com/searchevent/",
+    };
     axios(config).then((res) => {
       console.log(res.data.data);
       setEventDetails(res.data.data);

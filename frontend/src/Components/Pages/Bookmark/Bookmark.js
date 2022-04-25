@@ -22,7 +22,7 @@ export default function Bookmark() {
   useEffect(() => {
     var config = {
       method: "get",
-      url: `http://127.0.0.1:8000/bookmarks/${user_info.email}/`,
+      url: `https://gigsnchill.herokuapp.com/bookmarks/${user_info.email}/`,
     };
 
     axios(config).then((res) => {

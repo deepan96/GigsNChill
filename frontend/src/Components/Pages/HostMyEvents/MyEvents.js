@@ -21,7 +21,7 @@ export default function MyEvents() {
   useEffect(() => {
     var config = {
       method: "get",
-      url: `http://127.0.0.1:8000/viewprofile/${user_info.type.toLowerCase()}/${
+      url: `https://gigsnchill.herokuapp.com/viewprofile/${user_info.type.toLowerCase()}/${
         user_info.email
       }/`,
     };
