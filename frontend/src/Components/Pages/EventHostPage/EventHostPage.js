@@ -8,65 +8,35 @@ import {
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import React, { useEffect, useState } from "react";
-import styles from "./EventPage.module.css";
-import bgimage from "../Promote-Your-local-event.jpg";
-import { useParams } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
-import RemoveIcon from "@mui/icons-material/Remove";
+import styles from "./EventHostPage.module.css";
+import { useNavigate, useParams } from "react-router-dom";
 import { Alert } from "@mui/material";
 import { red } from "@material-ui/core/colors";
 import ModalPop from "../../ModalPop/ModalPop";
-import moment from "moment";
 
-// New
-import ReactStars from "react-rating-stars-component";
-import { style } from "@mui/system";
-
-export default function EventPage(props) {
+export default function BookingPage(props) {
   const { id } = useParams();
   const [event, setEvent] = useState();
   const [eventData, setEventData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [fav, setFav] = useState(false); // setting bookmark
-  const [noftickets, setNoftickets] = useState(1);
   const [modelOpen, setModelOpen] = useState(false);
+  const navigate = useNavigate();
 
   const [errorFound, setErrorFound] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [errorSeverity, setErrorSeverity] = useState("error");
-  const [successVar, setSuccessvar] = useState(false);
-
-  const [isBooked, setisBooked] = useState(false);
-  const [futureEvents, setfutureEvents] = useState("");
 
   const user_info = JSON.parse(localStorage.getItem("user"));
 
-  // Review Rating, make API request to put rating in it
-  const ratingChanged = (newRating) => {
-    console.log(newRating);
-  };
-
   var axios = require("axios");
-  
-  // API Request to get Event Details
-  var config = {
-    method: "get",
-    url: "https://gigsnchill.herokuapp.com/searchevent/",
-  };
-
-  // API Request to get Profile Info ( to see if the user has booked this event)
-  var config2 = {
-    method: "get",
-    url: `https://gigsnchill.herokuapp.com/viewprofile/${user_info.type.toLowerCase()}/${
-      user_info.email
-    }/`,
-  };
 
   // getting events data
-  useEffect(() => {
-    setLoading(true);
 
-    // Event Details
+  useEffect(() => {
+    var config = {
+      method: "get",
+      url: "https://gigsnchill.herokuapp.com/searchevent/",
+    };
     axios(config).then((res) => {
       console.log(res.data.data);
       setEventData(res.data.data);
@@ -77,71 +47,18 @@ export default function EventPage(props) {
       )[0];
       console.log(eventId);
       setEvent(eventId);
-      // setFav(false);
-      console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
-      setLoading(false);
-    });
-
-   setNoftickets(1);
-    
-    // setErrorFound(false);
-    // setErrorMessage("");
-  }, [successVar]);
-
-  useEffect(() => {
-
-    // User Details
-    axios(config2).then((res) => {
-    
-      setfutureEvents(res.data.data.FutureEvents)
-     
-
     });
   }, []);
 
-  function checkBook(){
-    console.log("call")
-    
-    // Get event we are currently on
-    const eventId2 = eventData.filter(
-      (e) => e.EventId === parseInt(id)
-    )[0];
-
-    var bookedevent = false 
-
-    // Check if are booked for it
-    try {
-      bookedevent = futureEvents.some(item => item.EventName === eventId2.EventName);
-      console.log(bookedevent)
-      console.log(futureEvents)
-      console.log(eventId2.EventName)
-      if(bookedevent === true){
-        setisBooked(true)
-      }
-      else{
-        setisBooked(false) 
-      }
-    }
-    catch{
-      console.log("not very cool")
-      bookedevent=false
-      setisBooked(false)
-    }
-
-    console.log(bookedevent)
-    return bookedevent
-  }
-
   function handleFav() {
-    console.log(!fav, fav);
-    setFav(prev => !prev);
-    const ii = fav;
-    // console.log(ii);
+    setFav(!fav);
+    console.log("like", fav);
+    const user_info = JSON.parse(localStorage.getItem("user"));
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
     data.append("EventId", id);
-    data.append("BookmarkStatus", !fav);
+    data.append("BookmarkStatus", fav);
     var config = {
       method: "post",
       url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
@@ -151,7 +68,7 @@ export default function EventPage(props) {
     axios(config)
       .then((res) => {
         console.log(res.data.data);
-        alert("BookMark Changed!");
+        alert("BookMark Success!");
       })
       .catch((err) => {
         alert("Invalid BookMark Request");
@@ -164,26 +81,10 @@ export default function EventPage(props) {
     console.log(modelOpen);
   }
 
-  async function countPlus() {
-    await setNoftickets((prev) => (prev + 1 > 6 ? 6 : prev + 1));
-    console.log(noftickets);
-  }
-  async function countMinus() {
-    await setNoftickets((prev) => (prev - 1 > 0 ? prev - 1:1));
-    console.log(noftickets);
-  }
-  
-  async function handleRegistration() {
-    console.log("Making registration");
-    var FormData = require("form-data");
-    var data = new FormData();
-    data.append("UserId", user_info.email);
-    data.append("NoOfSeats", noftickets);
-    data.append("EventId", id);
+  async function handleCancellation() {
     var config = {
-      method: "post",
-      url: "https://gigsnchill.herokuapp.com/bookevent/",
-      data: data,
+      method: "get",
+      url: `https://gigsnchill.herokuapp.com/cancelevent/${parseInt(id)}/`,
     };
     axios(config)
       .then((res) => {
@@ -194,16 +95,15 @@ export default function EventPage(props) {
           setErrorMessage(res.data.message);
           console.log(errorMessage);
         } else {
-          setisBooked(true)
           setErrorSeverity("success");
           setErrorFound(true);
-          setErrorMessage("Successfully booked! :]");
+          setErrorMessage("Event Cancelled! :]");
           console.log("sucess");
-          setSuccessvar((prev) => !prev);
         }
         setTimeout(() => {
           setErrorFound(false);
           setErrorMessage("");
+          navigate("/");
         }, 3000);
       })
       .catch((err) => {
@@ -211,15 +111,12 @@ export default function EventPage(props) {
       });
   }
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div style={styles}>
-      <div className={styles.fullpage}>
+   <div style={styles}>
+     { event && <div className={styles.fullpage}>
         <Card className={styles.container}>
           <div className={styles.imagediv}>
+            {console.log(event)}
             <CardMedia
               className={styles.cardimage}
               image={event.ImageUrl}
@@ -230,7 +127,7 @@ export default function EventPage(props) {
             <CardContent>
               <div className={styles.eventtitle}>
                 <h3>{event.EventName}</h3>
-                <div classname>
+                <div>
                   <CardActions disableSpacing>
                     <IconButton
                       aria-label="add to favorites"
@@ -242,25 +139,21 @@ export default function EventPage(props) {
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon onClick={invokeShare} />
-                      {/* {modelOpen && <ModalPop/>} */}
                     </IconButton>
-                    {checkBook}
-                    {checkBook && <ReactStars
-                      count={5}
-                      onChange={ratingChanged}
-                      size={24}
-                      activeColor="#ffd700"
-                    />}
                   </CardActions>
-                  <ModalPop eventid = {id}  invokefunc={invokeShare} open={modelOpen} />
+                  <ModalPop
+                    eventid={id}
+                    invokefunc={invokeShare}
+                    open={modelOpen}
+                  />
                 </div>
                 <div className={styles.eventdetails}>
                   <div className={styles.eventdate}>
-                    <p>{moment(event.EventDate).format("MMMM Do YYYY")}</p>
+                    <p>{Date(event.EventDate)}</p>
                   </div>
                   <div className={styles.eventtime}>
                     <p>
-                      Time : {event.EventStartTime} --{" "}
+                      Date and time : {event.EventStartTime} ,{" "}
                       {event.EventEndTime}
                     </p>
                   </div>
@@ -277,7 +170,7 @@ export default function EventPage(props) {
                   </div>
                   <div className={styles.eventtime}>
                     <p>
-                      Date and time : {event.EventStartTime} -- {" "}
+                      Date and time : {event.EventStartTime} ,{" "}
                       {event.EventEndTime}
                     </p>
                   </div>
@@ -293,30 +186,18 @@ export default function EventPage(props) {
                 </Alert>
               )}
               <div className={styles.eventseats}>
-                <p>No. of Tickets left : {event.SeatsAvailable}</p>
+                <p>No. of Tickets Available: {event.SeatsAvailable}</p>
               </div>
               <br></br>
-              <div className={styles.countplus}>
-                <IconButton onClick={countMinus}>
-                  <RemoveIcon />
-                </IconButton>
-
-                <div style={{ margin: "1em" }}>{noftickets}</div>
-
-                <IconButton onClick={countPlus}>
-                  {/* () => setNoftickets((prev) => prev + 1) */}
-                  <AddIcon />
-                </IconButton>
-              </div>
             </div>
             <div className={styles.eventregister}>
-              <button type="button" onClick={handleRegistration}>
-                Book Ticket
+              <button type="button" onClick={handleCancellation}>
+                Cancel Reservation
               </button>
             </div>
           </div>
         </Card>
-      </div>
+      </div>}
     </div>
   );
 }

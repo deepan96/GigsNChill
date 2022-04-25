@@ -37,15 +37,14 @@ function Profile(props) {
   };
   const cancel = () => {};
 
-
   // API Put Call for updating account information
-  function apicall(data){
+  function apicall(data) {
     var axios = require("axios");
-    
-    console.log(data)
+
+    console.log(data);
     var config = {
       method: "put",
-      url: "http://127.0.0.1:8000/updateprofile/",
+      url: "https://gigsnchill.herokuapp.com/updateprofile/",
       data: data,
     };
 
@@ -57,72 +56,67 @@ function Profile(props) {
         alert("Unable to update account");
         console.log(err);
       });
-
   }
 
   // Firstname
-  function changeFname(value){
-
-    console.log(value)
+  function changeFname(value) {
+    console.log(value);
 
     // Make Request Data
     var FormData = require("form-data");
     var data = new FormData();
-    console.log(user_info.email)
-    console.log(value)
-    console.log(user_info.type)
+    console.log(user_info.email);
+    console.log(value);
+    console.log(user_info.type);
     data.append("Email", user_info.email);
     data.append("FirstName", value);
     data.append("Type", user_info.type); // type of user
 
-    apicall(data)
+    apicall(data);
 
-    return
+    return;
   }
-  
-  // Lastname
-  function changeLname(value){
 
-    console.log(value)
+  // Lastname
+  function changeLname(value) {
+    console.log(value);
 
     // Make Request Data
     var FormData = require("form-data");
     var data = new FormData();
-    console.log(user_info.email)
-    console.log(value)
-    console.log(user_info.type)
+    console.log(user_info.email);
+    console.log(value);
+    console.log(user_info.type);
     data.append("Email", user_info.email);
     data.append("LastName", value);
     data.append("Type", user_info.type); // type of user
 
-    apicall(data)
+    apicall(data);
 
-    return
+    return;
   }
 
   // Phone
-  function changePhone(value){
-
-    console.log(value)
+  function changePhone(value) {
+    console.log(value);
 
     // Make Request Data
     var FormData = require("form-data");
     var data = new FormData();
-    console.log(user_info.email)
-    console.log(value)
-    console.log(user_info.type)
+    console.log(user_info.email);
+    console.log(value);
+    console.log(user_info.type);
     data.append("Email", user_info.email);
     data.append("Mobile", value);
     data.append("Type", user_info.type); // type of user
 
-    apicall(data)
+    apicall(data);
 
-    return
+    return;
   }
-  
-  // Password
-  function changePwd(value){
 
+  // Password
+  function changePwd(value) {
     // Make Request Data
     var FormData = require("form-data");
     var data = new FormData();
@@ -130,9 +124,9 @@ function Profile(props) {
     data.append("Password", value);
     data.append("Type", user_info.type); // type of user
 
-    apicall(data)
+    apicall(data);
 
-    return
+    return;
   }
 
   var axios = require("axios");
@@ -166,10 +160,10 @@ function Profile(props) {
       setCEvents(CalendarEvents);
 
       setUserData(res.data.data);
-      
+
       setFEvents(fe);
       setPEvents(res.data.data.PastEvents);
-      setCNEvents(res.data.data.CancelledEvents)
+      setCNEvents(res.data.data.CancelledEvents);
       console.log("future", fEvents, pEvents);
     });
   }, []);
@@ -285,7 +279,7 @@ function Profile(props) {
                         {user_info.type === "Host" && (
                           <Link
                             className={styles.eventlink}
-                            to={`/eventdetails/${ud.EventId}`}
+                            to={`/hostedeventdetails/${ud.EventId}`}
                           >
                             {ud.EventName}
                           </Link>
@@ -340,7 +334,7 @@ function Profile(props) {
                         {user_info.type === "Host" && (
                           <Link
                             className={styles.eventlink}
-                            to={`/eventdetails/${ud.EventId}`}
+                            to={`/hostedeventdetails/${ud.EventId}`}
                           >
                             {ud.EventName}
                           </Link>
@@ -393,7 +387,7 @@ function Profile(props) {
                         {user_info.type === "Host" && (
                           <Link
                             className={styles.eventlink}
-                            to={`/eventdetails${ud.EventId}`}
+                            to={`/hostedeventdetails/${ud.EventId}`}
                           >
                             {ud.EventName}
                           </Link>

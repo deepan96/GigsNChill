@@ -84,7 +84,7 @@ export default function BookingPage(props) {
       url: `https://gigsnchill.herokuapp.com/cancelbooking/${parseInt(bid)}/`,
     };
     if (user_info.type === 'Host') {
-        config.url = `https://gigsnchill.herokuapp.com/cancelevent/${eventData.EventId}/`;
+        config.url = `https://gigsnchill.herokuapp.com/cancelevent/${parseInt(eventData.EventId)}/`;
     }
     
     axios(config)
