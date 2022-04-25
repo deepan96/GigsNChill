@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 ]
 
 # Whitelist default react development port
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000' ]
+CORS_ORIGIN_WHITELIST = ['http://localhost:3000']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -18,6 +18,10 @@ import { red } from "@material-ui/core/colors";
 import ModalPop from "../../ModalPop/ModalPop";
 import moment from "moment";
 
+// New
+import ReactStars from "react-rating-stars-component";
+import { style } from "@mui/system";
+
 export default function EventPage(props) {
   const { id } = useParams();
   const [event, setEvent] = useState();
@@ -32,18 +36,37 @@ export default function EventPage(props) {
   const [errorSeverity, setErrorSeverity] = useState("error");
   const [successVar, setSuccessvar] = useState(false);
 
+  const [isBooked, setisBooked] = useState(false);
+  const [futureEvents, setfutureEvents] = useState("");
+
   const user_info = JSON.parse(localStorage.getItem("user"));
 
+  // Review Rating, make API request to put rating in it
+  const ratingChanged = (newRating) => {
+    console.log(newRating);
+  };
+
   var axios = require("axios");
+  
+  // API Request to get Event Details
   var config = {
     method: "get",
     url: "https://gigsnchill.herokuapp.com/searchevent/",
   };
-  // getting events data
 
+  // API Request to get Profile Info ( to see if the user has booked this event)
+  var config2 = {
+    method: "get",
+    url: `https://gigsnchill.herokuapp.com/viewprofile/${user_info.type.toLowerCase()}/${
+      user_info.email
+    }/`,
+  };
+
+  // getting events data
   useEffect(() => {
     setLoading(true);
 
+    // Event Details
     axios(config).then((res) => {
       console.log(res.data.data);
       setEventData(res.data.data);
@@ -58,11 +81,56 @@ export default function EventPage(props) {
       console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
       setLoading(false);
     });
-    setNoftickets(1);
+
+   setNoftickets(1);
     
     // setErrorFound(false);
     // setErrorMessage("");
   }, [successVar]);
+
+  useEffect(() => {
+
+    // User Details
+    axios(config2).then((res) => {
+    
+      setfutureEvents(res.data.data.FutureEvents)
+     
+
+    });
+  }, []);
+
+  function checkBook(){
+    console.log("call")
+    
+    // Get event we are currently on
+    const eventId2 = eventData.filter(
+      (e) => e.EventId === parseInt(id)
+    )[0];
+
+    var bookedevent = false 
+
+    // Check if are booked for it
+    try {
+      bookedevent = futureEvents.some(item => item.EventName === eventId2.EventName);
+      console.log(bookedevent)
+      console.log(futureEvents)
+      console.log(eventId2.EventName)
+      if(bookedevent === true){
+        setisBooked(true)
+      }
+      else{
+        setisBooked(false) 
+      }
+    }
+    catch{
+      console.log("not very cool")
+      bookedevent=false
+      setisBooked(false)
+    }
+
+    console.log(bookedevent)
+    return bookedevent
+  }
 
   function handleFav() {
     setFav(prev=>!prev);
@@ -125,6 +193,7 @@ export default function EventPage(props) {
           setErrorMessage(res.data.message);
           console.log(errorMessage);
         } else {
+          setisBooked(true)
           setErrorSeverity("success");
           setErrorFound(true);
           setErrorMessage("Successfully booked! :]");
@@ -160,7 +229,7 @@ export default function EventPage(props) {
             <CardContent>
               <div className={styles.eventtitle}>
                 <h3>{event.EventName}</h3>
-                <div>
+                <div classname>
                   <CardActions disableSpacing>
                     <IconButton
                       aria-label="add to favorites"
@@ -174,6 +243,13 @@ export default function EventPage(props) {
                       <ShareIcon onClick={invokeShare} />
                       {/* {modelOpen && <ModalPop/>} */}
                     </IconButton>
+                    {checkBook}
+                    {checkBook && <ReactStars
+                      count={5}
+                      onChange={ratingChanged}
+                      size={24}
+                      activeColor="#ffd700"
+                    />}
                   </CardActions>
                   <ModalPop eventid = {id}  invokefunc={invokeShare} open={modelOpen} />
                 </div>
