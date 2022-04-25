@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-1bea^@i73_2m&#2z*fw!v=q^j6vl%y+c$ppy-$9k_j9=lx4img
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['gigsnchill.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['gigsnchill.herokuapp.com', '127.0.0.1', 'gigsnchill-events.web.app']
 
 
 # Application definition
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 ]
 
 # Whitelist default react development port
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000' ]
+CORS_ORIGIN_WHITELIST = ['https://gigsnchill-events.web.app', 'http://localhost:3000' ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
