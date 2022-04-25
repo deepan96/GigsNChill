@@ -18,6 +18,11 @@ export default function EventHome(props) {
   const [eventType, setEventType] = useState("");
   const [eventState, setEventState] = useState("");
   const [eventCost, setEventCost] = useState("");
+  const [bookmarks, setBookmarks] = useState([]);
+  const [booked, setisBooked] = useState(false)
+  const [loading, setLoading] = useState(false);
+
+  const user_info = JSON.parse(localStorage.getItem("user"));
 
   const [types, setTypes] = useState([]);
   const navigate = useNavigate();
@@ -45,7 +50,25 @@ export default function EventHome(props) {
       console.log(res.data.data);
       setEventData(res.data.data);
       setEventDataFilter(res.data.data);
+      let eventId = res.data.data;
+
     });
+  }, []);
+
+  // Get bookmarked events
+  useEffect(() => {
+    var config3 = {
+      method: "get",
+      url: `https://gigsnchill.herokuapp.com/bookmarks/${user_info.email}/`,
+    };
+
+    axios(config3).then((res) => {
+      console.log("hi2")
+      console.log(res.data.data);
+      setBookmarks(res.data.data)
+    });
+
+    setLoading(true)
   }, []);
 
   useEffect(() => {
@@ -124,6 +147,19 @@ export default function EventHome(props) {
     console.log(e.target.value);
     setTypes(tags[e.target.value] || []);
   }
+
+  // function handlebookmarks(events){
+  //   try{
+  //     let bookedevent = "1" // bookmarks.some(item => item.EventId === events.EventId);
+  //     console.log(bookedevent)
+  //     setisBooked(bookedevent)
+  //   }
+  //   catch{
+  //     console.log("sad")
+  //   }
+
+  //   return
+  // }
 
   return (
     <div style={styles}>
@@ -206,15 +242,15 @@ export default function EventHome(props) {
           </div>
           {/* <div>Filter 1</div> */}
         </div>
-        <div className={styles.rightDiv}>
+        {loading && <div className={styles.rightDiv}>
           {searchValue === ""
-            ? eventDataFilter.map((event) => (
-                <EventTile key={event.EventId} event={event} />
+            ? eventDataFilter.map((event) => ({event},
+                <EventTile key={event.EventId} event={event} bookmarks={bookmarks} />
               ))
             : eventDataFilter.map((event) => (
-                <EventTile key={event.EventId} event={event} />
+                <EventTile key={event.EventId} event={event} bookmarks={bookmarks}/>
               ))}
-        </div>
+        </div>}
       </div>
     </div>
   );

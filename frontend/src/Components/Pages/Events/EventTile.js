@@ -5,9 +5,10 @@ import {
   CardMedia,
   IconButton,
 } from "@material-ui/core";
+
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./EventTile.module.css";
 import bgimage from "../../Pages/Promote-Your-local-event.jpg";
 import { Link, Navigate } from "react-router-dom";
@@ -21,7 +22,17 @@ function EventTile(props) {
   const eventDesc = res;
   const eventDate = props.event.EventDate;
   const [fav, setFav] = useState(true); // setting bookmark
+  const [booked, setisBooked] = useState(false); // setting bookmark
 
+  useEffect(() => {
+    try {
+      let bookedevent = props.bookmarks.some(item => item.EventId === props.event.EventId);
+      setisBooked(bookedevent)
+      console.log(bookedevent)
+    }
+    catch{
+    }
+  },[])
   // connection
   var axios = require("axios");
   var FormData = require("form-data");
@@ -31,14 +42,12 @@ function EventTile(props) {
     console.log("Event clicked");
   }
   function handleFav() {
-    setFav(!fav);
-    console.log("like", fav);
 
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
     data.append("EventId", props.event.EventId);
-    data.append("BookmarkStatus", fav);
+    data.append("BookmarkStatus", !booked);
     var config = {
       method: "post",
       url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
@@ -48,6 +57,12 @@ function EventTile(props) {
     axios(config)
       .then((res) => {
         console.log(res.data.data);
+        if (booked){
+          setisBooked(false)
+        }
+        else{
+          setisBooked(true)
+        }
         alert("BookMark Success!");
       })
       .catch((err) => {
@@ -86,8 +101,8 @@ function EventTile(props) {
             sx={{ color: red[500] }}
             onClick={handleFav}
           >
-            {!fav && <FavoriteIcon sx={{ color: "red" }} />}
-            {fav && <FavoriteIcon />}
+            {booked && <FavoriteIcon sx={{ color: "red" }} />}
+            {!booked && <FavoriteIcon />}
           </IconButton>
           {/* <IconButton aria-label="share">
             <ShareIcon />

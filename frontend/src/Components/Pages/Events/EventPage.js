@@ -221,7 +221,7 @@ export default function EventPage(props) {
 
   return (
     <div style={styles}>
-      <div className={styles.fullpage}>
+      {!loading && <div className={styles.fullpage}>
         <Card className={styles.container}>
           <div className={styles.imagediv}>
             <CardMedia
@@ -241,8 +241,7 @@ export default function EventPage(props) {
                       sx={{ color: red[500] }}
                       onClick={handleFav}
                     >
-                      {eventBookmarked && <FavoriteIcon sx={{ color: "red" }} />}
-                      {!eventBookmarked && <FavoriteIcon />}
+                    <FavoriteIcon sx={eventBookmarked === true ? { color: "red" } : { color: "grey" } } />
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon onClick={invokeShare} />
@@ -321,7 +320,7 @@ export default function EventPage(props) {
             </div>
           </div>
         </Card>
-      </div>
+      </div>}
     </div>
   );
 }
