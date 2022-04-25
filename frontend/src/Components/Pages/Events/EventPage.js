@@ -27,7 +27,6 @@ export default function EventPage(props) {
   const [event, setEvent] = useState();
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [fav, setFav] = useState(false); // setting bookmark
   const [noftickets, setNoftickets] = useState(1);
   const [modelOpen, setModelOpen] = useState(false);
 
@@ -37,6 +36,7 @@ export default function EventPage(props) {
   const [successVar, setSuccessvar] = useState(false);
 
   const [isBooked, setisBooked] = useState(false);
+  const [eventBookmarked, setEventBookmarked] = useState(false);
 
   const user_info = JSON.parse(localStorage.getItem("user"));
 
@@ -76,6 +76,12 @@ export default function EventPage(props) {
     }/`,
   };
 
+  // API request to see if user has bookmarked event
+  var config3 = {
+    method: "get",
+    url: `https://gigsnchill.herokuapp.com/bookmarks/${user_info.email}/`,
+  };
+
   // getting events data
   useEffect(() => {
     setLoading(true);
@@ -104,27 +110,34 @@ export default function EventPage(props) {
         }
       });
 
+      // One more API request to check for a bookmark
+      axios(config3).then((res) => {
+        console.log("hi2")
+        console.log(res.data.data);
+        let bookmarks = res.data.data
+
+        try{
+          let eventBookmarked = bookmarks.some(item => item.EventId === eventId.EventId);
+          setEventBookmarked(eventBookmarked);
+        }
+        catch{
+        }
+      });
+
       // setFav(false);
       console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
       setLoading(false);
     });
 
    setNoftickets(1);
-    
-    // setErrorFound(false);
-    // setErrorMessage("");
   }, [successVar]);
 
   function handleFav() {
-    console.log(!fav, fav);
-    setFav(prev => !prev);
-    const ii = fav;
-    // console.log(ii);
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
     data.append("EventId", id);
-    data.append("BookmarkStatus", !fav);
+    data.append("BookmarkStatus", !eventBookmarked);
     var config = {
       method: "post",
       url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
@@ -133,6 +146,13 @@ export default function EventPage(props) {
 
     axios(config)
       .then((res) => {
+
+        if (eventBookmarked){
+          setEventBookmarked(false)
+        }
+        else{
+          setEventBookmarked(true)
+        }
         console.log(res.data.data);
         alert("BookMark Changed!");
       })
@@ -221,8 +241,8 @@ export default function EventPage(props) {
                       sx={{ color: red[500] }}
                       onClick={handleFav}
                     >
-                      {fav && <FavoriteIcon sx={{ color: "red" }} />}
-                      {!fav && <FavoriteIcon />}
+                      {eventBookmarked && <FavoriteIcon sx={{ color: "red" }} />}
+                      {!eventBookmarked && <FavoriteIcon />}
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon onClick={invokeShare} />
