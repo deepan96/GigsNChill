@@ -149,9 +149,10 @@ export default function EventPage(props) {
   }
 
   async function countPlus() {
-    await setNoftickets((prev) => (prev + 1 > 6 ? 6 : prev + 1));
+    await setNoftickets((prev) => (prev + 1 > event.SeatsAvailable ? event.SeatsAvailable : prev + 1));
     console.log(noftickets);
   }
+
   async function countMinus() {
     await setNoftickets((prev) => (prev - 1 > 0 ? prev - 1:1));
     console.log(noftickets);
@@ -302,11 +303,16 @@ export default function EventPage(props) {
                 </IconButton>
               </div>
             </div>
-            <div className={styles.eventregister}>
+            {!isBooked && <div className={styles.eventregister}>
               <button type="button" onClick={handleRegistration}>
                 Book Ticket
               </button>
-            </div>
+            </div>}
+            {isBooked && <div className={styles.eventregister}>
+              <button type="button" disabled={true} onClick={handleRegistration}>
+                Event Booked
+              </button>
+            </div>}
           </div>
         </Card>
       </div>
