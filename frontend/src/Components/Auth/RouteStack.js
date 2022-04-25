@@ -16,7 +16,7 @@ import Bookmark from "../Pages/Bookmark/Bookmark";
 import BookingPage from "../Pages/BookingPage/BookingPage";
 import MyEvents from "../Pages/HostMyEvents/MyEvents";
 import EventDetails from "../Pages/EventDetails/EventDetails";
-
+import EventHostPage from "../Pages/EventHostPage/EventHostPage";
 export function RouteStack() {
   return (
     <div>
@@ -45,6 +45,7 @@ export function LoginRouteStack() {
         <Route path="/myevents" element={<MyEvents />} />
         <Route path="/eventdetails/:id" element={<EventDetails />} />
         <Route path="/booking/:bid" element={<BookingPage />} />
+        <Route path="/hostedeventdetails/:id" element={<EventHostPage />} />
       </Routes>
     </div>
   );
