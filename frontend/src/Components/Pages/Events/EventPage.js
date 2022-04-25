@@ -82,7 +82,6 @@ export default function EventPage(props) {
 
     // Event Details
     axios(config).then((res) => {
-      console.log("nerd")
       console.log(res.data.data);
       setEventData(res.data.data);
       const eventId = res.data.data.filter(
