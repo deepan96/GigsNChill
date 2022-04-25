@@ -37,13 +37,27 @@ export default function EventPage(props) {
   const [successVar, setSuccessvar] = useState(false);
 
   const [isBooked, setisBooked] = useState(false);
-  const [futureEvents, setfutureEvents] = useState("");
 
   const user_info = JSON.parse(localStorage.getItem("user"));
 
   // Review Rating, make API request to put rating in it
   const ratingChanged = (newRating) => {
-    console.log(newRating);
+
+    var FormData = require("form-data");
+    var data = new FormData();
+    data.append("Email", user_info.email);
+    data.append("EventId", event.EventId);
+    data.append("Rating", newRating);
+
+    var config3 = {
+      method: "post",
+      url: "https://gigsnchill.herokuapp.com/eventreview/",
+      data: data,
+    }
+
+    axios(config3).then((res) => {
+      console.log(res)
+    });
   };
 
   var axios = require("axios");
@@ -68,15 +82,29 @@ export default function EventPage(props) {
 
     // Event Details
     axios(config).then((res) => {
+      console.log("nerd")
       console.log(res.data.data);
       setEventData(res.data.data);
-
-      console.log(eventData);
       const eventId = res.data.data.filter(
         (e) => e.EventId === parseInt(id)
       )[0];
       console.log(eventId);
       setEvent(eventId);
+
+      // make another API call to check if user is booked for an event
+      axios(config2).then((res) => {
+      
+        console.log(res)
+        let futureEvents = res.data.data.FutureEvents
+        console.log(futureEvents)
+        try {
+          let bookedevent = futureEvents.some(item => item.EventName === eventId.EventName);
+          setisBooked(bookedevent)
+        }
+        catch{
+        }
+      });
+
       // setFav(false);
       console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
       setLoading(false);
@@ -87,50 +115,6 @@ export default function EventPage(props) {
     // setErrorFound(false);
     // setErrorMessage("");
   }, [successVar]);
-
-  useEffect(() => {
-
-    // User Details
-    axios(config2).then((res) => {
-    
-      setfutureEvents(res.data.data.FutureEvents)
-     
-
-    });
-  }, []);
-
-  function checkBook(){
-    console.log("call")
-    
-    // Get event we are currently on
-    const eventId2 = eventData.filter(
-      (e) => e.EventId === parseInt(id)
-    )[0];
-
-    var bookedevent = false 
-
-    // Check if are booked for it
-    try {
-      bookedevent = futureEvents.some(item => item.EventName === eventId2.EventName);
-      console.log(bookedevent)
-      console.log(futureEvents)
-      console.log(eventId2.EventName)
-      if(bookedevent === true){
-        setisBooked(true)
-      }
-      else{
-        setisBooked(false) 
-      }
-    }
-    catch{
-      console.log("not very cool")
-      bookedevent=false
-      setisBooked(false)
-    }
-
-    console.log(bookedevent)
-    return bookedevent
-  }
 
   function handleFav() {
     console.log(!fav, fav);
@@ -244,11 +228,20 @@ export default function EventPage(props) {
                       <ShareIcon onClick={invokeShare} />
                       {/* {modelOpen && <ModalPop/>} */}
                     </IconButton>
-                    {checkBook}
-                    {checkBook && <ReactStars
+                    {isBooked && <ReactStars
                       count={5}
+                      value={event.Rating}
                       onChange={ratingChanged}
                       size={24}
+                      edit={true}
+                      activeColor="#ffd700"
+                    />}
+                    {!isBooked && <ReactStars
+                      count={5}
+                      value={event.Rating}
+                      onChange={ratingChanged}
+                      size={24}
+                      edit={false}
                       activeColor="#ffd700"
                     />}
                   </CardActions>
