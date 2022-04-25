@@ -1,0 +1,68 @@
+.whole {
+  display: flex;
+  flex-direction: column;
+  margin-top: 7rem;
+  margin-left: 20rem;
+}
+.container {
+  width: fit-content;
+  max-width: 50rem;
+  display: flex;
+  flex-direction: column;
+}
+.imagediv {
+  width: 626px;
+  height: 250px;
+}
+
+.userinfo {
+  display: flex;
+  margin-top: 2rem;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 6px;
+  flex-direction: column;
+}
+
+.cardimage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.cardimage:hover {
+  transform: scale(1.1);
+}
+
+.cardcontent {
+  padding: 1rem;
+}
+
+.eventdetails {
+  display: flex;
+  flex-direction: column;
+  border-top: 0.5px solid rgb(149, 147, 147);
+  border-bottom: 0.5px solid rgb(149, 147, 147);
+}
+
+.eventtitle {
+  font-weight: bold;
+  margin-bottom: 3rem;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+.eventdate {
+  padding-top: 20px;
+  /* padding-left: 10px; */
+}
+.eventlocation {
+  position: relative;
+  display: flex;
+  float: right;
+  padding-right: 3.5rem;
+}
+.eventtype {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+}

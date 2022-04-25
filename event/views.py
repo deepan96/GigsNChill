@@ -2,11 +2,12 @@ import traceback
 
 from django.shortcuts import render
 
-from .models import Event, Location, Bookings, Bookmarks
+from .models import Event, Location, Bookings, Bookmarks, EventReviews
 from rest_framework.views import APIView
 from django.http import JsonResponse, HttpResponse
 from .serializers import AddNewEventSerializer, SearchEventsSerializer, \
-    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer, CancelEventSerializer
+    BookEventSerializer, BookmarksSerializer, InviteFriendsSerializer, \
+    CancelEventSerializer, EventReviewsSerializer
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from register.models import HOST, USER
@@ -84,6 +85,13 @@ class SearchEvents(APIView):
         for event in events:
             location = model_to_dict(Location.objects.get(LocationId=event['LocationId']))
             event.update(location)
+            rating = []
+            for review in EventReviews.objects.filter(EventId=event['EventId']):
+                rating.append(int(review.Rating))
+            if rating:
+                event.update({"Rating":sum(rating)/len(rating)})
+            else:
+                event.update({"Rating":0})
         return JsonResponse({"status": "success", "data": events},
                             status=status.HTTP_200_OK)
 
@@ -134,6 +142,7 @@ class BookEventView(APIView):
                 send_mail(subject, message, email_from, recipient_list)
                 return JsonResponse({"status": "success", "data": serializer_class.data}, status=status.HTTP_200_OK)
             except Exception as e:
+                traceback.print_exc()
                 return JsonResponse(
                     {"status": "error", "data": str(serializer_class.errors) + str(sys.exc_info()[2]) + str(e),
                      "message": "Couldn't book the event"},
@@ -175,6 +184,7 @@ class CancelBookingView(APIView):
 
 class CancelEventView(APIView):
     model = [Event, Bookings]
+    serializer_class = CancelEventSerializer
     def get(self,request, EventId=None):
         try:
             event_info = Event.objects.get(EventId=EventId)
@@ -323,4 +333,30 @@ class RetrieveEventParticipantsView(APIView):
         except:
             return JsonResponse({"status": "error", "message": "Couldn't retrieve the participants"},
                                 status=status.HTTP_200_OK)
+
+
+class EventReviewView(APIView):
+    serializer_class = EventReviewsSerializer
+    model = EventReviews
+
+    def post(self, request):
+        serializer_class = EventReviewsSerializer(data=request.data)
+        if serializer_class.is_valid():
+            try:
+                rating_info = EventReviews.objects.get(Email=request.data['Email'], EventId=request.data['EventId'])
+                rating_info.Rating=request.data['Rating']
+                rating_info.save()
+            except:
+                rating_info = EventReviews.objects.create(Email=USER.objects.get(Email=request.data['Email']),
+                                                          EventId=Event.objects.get(EventId=request.data['EventId']),
+                                                          Rating=request.data['Rating'])
+                rating_info.save()
+            return JsonResponse({'status': 'Success', "message": "Review added successfully"},
+                                status=status.HTTP_200_OK)
+
+
+        else:
+            return JsonResponse({"status": "error", "data": serializer_class.errors}, status=status.HTTP_200_OK)
+
+
 

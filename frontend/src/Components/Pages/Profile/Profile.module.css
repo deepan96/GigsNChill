@@ -1,20 +1,45 @@
 .container {
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
-  margin-left: 10rem;
+  margin-top: 6rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.CardView2{
+  margin: 1rem 1rem 1rem 1rem;
+}
+
+.splitScreen {
+  display: flex;
+  flex-direction: row;
+}
+
+.rightPane {
+  width: 35%;
+  /* border-right: 2px solid rgb(0, 0, 0); */
+  background-color: #ffffff;
+}
+
+.leftPane {
+  width: 65%;
+  margin-left: 2rem;
+  margin-right: 2rem;
 }
 
 .userdiv {
   display: flex;
   flex-direction: column;
-  margin-top: 5rem;
+  margin-top: 2rem;
   justify-content: space-between;
   gap: 5px;
 }
 
 .usercalendar {
+  width: 100%;
+  display: inline-block;
   padding-top: 5rem;
+  padding: 2px 4px;
 }
 
 .userupcoming {
@@ -38,7 +63,7 @@
   gap: 20px;
 }
 .heading {
-  margin-top: 2rem;
+  margin-top: 6rem;
 }
 .cardimage {
   overflow: hidden;
@@ -108,6 +133,28 @@
 }
 .cal .react-calendar__month-view__days__day--weekend {
   color: #000;
+}
+.TextBox{
+  display: flex;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+.InputText{
+  font-weight: bold;
+}
+.savebutton{
+  color:#e5e5e5;
+  background-color: #07a6f0;
+  border: none;
+  border-color: #e5e5e5;
+  margin-left: .5rem;
+}
+.cancelbutton{
+  color:#e5e5e5;
+  background-color: rgb(216, 53, 53);
+  border: none;
+  border-color: #e5e5e5;
+  margin-left: .5rem;
 }
 /* .page{
     margin: 7.0rem;
