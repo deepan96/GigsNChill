@@ -248,22 +248,14 @@ export default function EventPage(props) {
                       <ShareIcon onClick={invokeShare} />
                       {/* {modelOpen && <ModalPop/>} */}
                     </IconButton>
-                    {isBooked && <ReactStars
+                    <ReactStars
                       count={5}
                       value={event.Rating}
                       onChange={ratingChanged}
                       size={24}
-                      edit={true}
+                      edit={isBooked === true ? true: false}
                       activeColor="#ffd700"
-                    />}
-                    {!isBooked && <ReactStars
-                      count={5}
-                      value={event.Rating}
-                      onChange={ratingChanged}
-                      size={24}
-                      edit={false}
-                      activeColor="#ffd700"
-                    />}
+                    />
                   </CardActions>
                   <ModalPop eventid = {id}  invokefunc={invokeShare} open={modelOpen} />
                 </div>
@@ -322,16 +314,11 @@ export default function EventPage(props) {
                 </IconButton>
               </div>
             </div>
-            {!isBooked && <div className={styles.eventregister}>
-              <button type="button" onClick={handleRegistration}>
-                Book Ticket
+            <div className={styles.eventregister}>
+              <button type="button" disabled={isBooked === true ? true: false} onClick={handleRegistration}>
+                {isBooked === true ? "Event Booked": "Book Event"}
               </button>
-            </div>}
-            {isBooked && <div className={styles.eventregister}>
-              <button type="button" disabled={true} onClick={handleRegistration}>
-                Event Booked
-              </button>
-            </div>}
+            </div>
           </div>
         </Card>
       </div>
