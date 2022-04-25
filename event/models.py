@@ -60,3 +60,22 @@ class Bookmarks(models.Model):
 
     def __str__(self) -> str:
         return self.BookmarkId
+
+
+REVIEW_CHOICES = (
+    ("1", "1"),
+    ("2", "2"),
+    ("3", "3"),
+    ("4", "4"),
+    ("5", "5"),)
+
+
+class EventReviews(models.Model):
+    # Each attribute of the model represents a database field.
+    ReviewId = models.AutoField(primary_key=True)
+    Email = models.ForeignKey(USER, on_delete=models.CASCADE)
+    EventId = models.ForeignKey(Event, on_delete=models.CASCADE)
+    Rating = models.CharField(max_length=20, choices=REVIEW_CHOICES)
+
+    def __str__(self) -> str:
+        return self.ReviewId

@@ -6,7 +6,7 @@
 
 from rest_framework import serializers
 from register.models import HOST, USER
-from .models import Event, Bookings, Bookmarks, Location
+from .models import Event, Bookings, Bookmarks, Location, EventReviews
 
 
 class AddNewEventSerializer(serializers.Serializer):
@@ -88,3 +88,13 @@ class InviteFriendsSerializer(serializers.Serializer):
     class Meta:
         model = Event
         fields = ('Email', 'EventId', 'RecipientEmail')
+
+
+class EventReviewsSerializer(serializers.Serializer):
+    Email = serializers.CharField(required=True)
+    EventId = serializers.CharField(required=True)
+    Rating = serializers.CharField(required=True)
+
+    class Meta:
+        model = EventReviews
+        fields = ('Email', 'EventId', 'Rating')
