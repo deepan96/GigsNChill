@@ -154,7 +154,6 @@ export default function EventPage(props) {
           setEventBookmarked(true)
         }
         console.log(res.data.data);
-        alert("BookMark Changed!");
       })
       .catch((err) => {
         alert("Invalid BookMark Request");
