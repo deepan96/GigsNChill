@@ -76,7 +76,8 @@ class RecoverPasswordView(APIView):
         import random
         from datetime import datetime
         verification_code = (''.join([str(random.randint(0,9)) for _ in range(6)]))
-        message = f'Hi {user_details.FirstName}, reset your password at the following link: http://localhost:3000/resetpassword ' \
+        message = f'Hi {user_details.FirstName}, reset your password at the following' \
+                  f' link: https://gigsnchill-events.web.app/resetpassword ' \
                   f'and your verification code is ' + str(verification_code)
         user_details.VerificationCode = verification_code
         user_details.CodeCreationTime = datetime.now().time()

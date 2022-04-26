@@ -315,7 +315,9 @@ class InviteFriendsView(APIView):
             subject = 'GigsNChill Event Invite'
             message = f"Hi {request.data['RecipientEmail']}, You have been invited by " + request.data['Email'] + \
                       "to attend the following event hosted bt Gigs N\' " \
-                      f"Chill. Event ID: " + str(request.data['EventId']) + "Event Name: " + self.event.EventName
+                      f"Chill. Event Link: https://gigsnchill-events.web.app/eventpage/" + \
+                      str(request.data['EventId']) + "Event Name: " + self.event.EventName + \
+                      ". You can create/login to GigsNChill through https://gigsnchill-events.web.app"
             email_from = settings.EMAIL_HOST_USER
             recipient_list = [request.data['RecipientEmail']]
             send_mail(subject, message, email_from, recipient_list)
