@@ -216,6 +216,13 @@ class RetrieveBookingInfoView(APIView):
             booking_info = Bookings.objects.get(BookingId=BookingId)
             info = model_to_dict(booking_info)
             info.update(model_to_dict(booking_info.EventId))
+            rating = []
+            for review in EventReviews.objects.filter(EventId=info['EventId']):
+                rating.append(int(review.Rating))
+            if rating:
+                info.update({"Rating":sum(rating)/len(rating)})
+            else:
+                info.update({"Rating":0})
             return JsonResponse({"status": "success", "data": info}, status=status.HTTP_200_OK)
         except:
             return JsonResponse({"status": "error", "message": "Couldn't retrieve booking details"},
