@@ -142,7 +142,6 @@ function Profile(props) {
     };
     var fe = [];
     axios(config).then((res) => {
-      console.log("SUp");
       console.log(res.data.data);
       const uad = res.data.data;
       fe = res.data.data.FutureEvents;
