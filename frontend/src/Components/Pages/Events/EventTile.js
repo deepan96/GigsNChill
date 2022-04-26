@@ -63,7 +63,6 @@ function EventTile(props) {
         else{
           setisBooked(true)
         }
-        alert("BookMark Success!");
       })
       .catch((err) => {
         alert("Invalid BookMark Request");
