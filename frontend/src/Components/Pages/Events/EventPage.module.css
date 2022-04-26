@@ -2,6 +2,10 @@
   display: flex;
   background: rgb(234, 232, 232);
 }
+
+.rating {
+  margin-left: 10rem;
+}
 .container {
   width: fit-content;
   max-width: 40rem;

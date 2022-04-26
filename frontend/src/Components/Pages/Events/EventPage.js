@@ -18,12 +18,15 @@ import { red } from "@material-ui/core/colors";
 import ModalPop from "../../ModalPop/ModalPop";
 import moment from "moment";
 
+// New
+import ReactStars from "react-rating-stars-component";
+import { style } from "@mui/system";
+
 export default function EventPage(props) {
   const { id } = useParams();
   const [event, setEvent] = useState();
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [fav, setFav] = useState(false); // setting bookmark
   const [noftickets, setNoftickets] = useState(1);
   const [modelOpen, setModelOpen] = useState(false);
 
@@ -32,48 +35,109 @@ export default function EventPage(props) {
   const [errorSeverity, setErrorSeverity] = useState("error");
   const [successVar, setSuccessvar] = useState(false);
 
+  const [isBooked, setisBooked] = useState(false);
+  const [eventBookmarked, setEventBookmarked] = useState(false);
+
   const user_info = JSON.parse(localStorage.getItem("user"));
 
+  // Review Rating, make API request to put rating in it
+  const ratingChanged = (newRating) => {
+
+    var FormData = require("form-data");
+    var data = new FormData();
+    data.append("Email", user_info.email);
+    data.append("EventId", event.EventId);
+    data.append("Rating", newRating);
+
+    var config3 = {
+      method: "post",
+      url: "https://gigsnchill.herokuapp.com/eventreview/",
+      data: data,
+    }
+
+    axios(config3).then((res) => {
+      console.log(res)
+    });
+  };
+
   var axios = require("axios");
+  
+  // API Request to get Event Details
   var config = {
     method: "get",
     url: "https://gigsnchill.herokuapp.com/searchevent/",
   };
-  // getting events data
 
+  // API Request to get Profile Info ( to see if the user has booked this event)
+  var config2 = {
+    method: "get",
+    url: `https://gigsnchill.herokuapp.com/viewprofile/${user_info.type.toLowerCase()}/${
+      user_info.email
+    }/`,
+  };
+
+  // API request to see if user has bookmarked event
+  var config3 = {
+    method: "get",
+    url: `https://gigsnchill.herokuapp.com/bookmarks/${user_info.email}/`,
+  };
+
+  // getting events data
   useEffect(() => {
     setLoading(true);
 
+    // Event Details
     axios(config).then((res) => {
       console.log(res.data.data);
       setEventData(res.data.data);
-
-      console.log(eventData);
       const eventId = res.data.data.filter(
         (e) => e.EventId === parseInt(id)
       )[0];
       console.log(eventId);
       setEvent(eventId);
+
+      // make another API call to check if user is booked for an event
+      axios(config2).then((res) => {
+      
+        console.log(res)
+        let futureEvents = res.data.data.FutureEvents
+        console.log(futureEvents)
+        try {
+          let bookedevent = futureEvents.some(item => item.EventName === eventId.EventName);
+          setisBooked(bookedevent)
+        }
+        catch{
+        }
+      });
+
+      // One more API request to check for a bookmark
+      axios(config3).then((res) => {
+        console.log("hi2")
+        console.log(res.data.data);
+        let bookmarks = res.data.data
+
+        try{
+          let eventBookmarked = bookmarks.some(item => item.EventId === eventId.EventId);
+          setEventBookmarked(eventBookmarked);
+        }
+        catch{
+        }
+      });
+
       // setFav(false);
       console.log(moment(eventId.EventDate).format("MMMM Do YYYY"));
       setLoading(false);
     });
-    setNoftickets(1);
-    
-    // setErrorFound(false);
-    // setErrorMessage("");
+
+   setNoftickets(1);
   }, [successVar]);
 
   function handleFav() {
-    console.log(!fav, fav);
-    setFav(prev => !prev);
-    const ii = fav;
-    // console.log(ii);
     // making a bookmark
     var data = new FormData();
     data.append("UserId", user_info.email);
     data.append("EventId", id);
-    data.append("BookmarkStatus", !fav);
+    data.append("BookmarkStatus", !eventBookmarked);
     var config = {
       method: "post",
       url: "https://gigsnchill.herokuapp.com/bookmarkevent/",
@@ -82,8 +146,14 @@ export default function EventPage(props) {
 
     axios(config)
       .then((res) => {
+
+        if (eventBookmarked){
+          setEventBookmarked(false)
+        }
+        else{
+          setEventBookmarked(true)
+        }
         console.log(res.data.data);
-        alert("BookMark Changed!");
       })
       .catch((err) => {
         alert("Invalid BookMark Request");
@@ -97,9 +167,10 @@ export default function EventPage(props) {
   }
 
   async function countPlus() {
-    await setNoftickets((prev) => (prev + 1 > 6 ? 6 : prev + 1));
+    await setNoftickets((prev) => (prev + 1 > event.SeatsAvailable ? event.SeatsAvailable : prev + 1));
     console.log(noftickets);
   }
+
   async function countMinus() {
     await setNoftickets((prev) => (prev - 1 > 0 ? prev - 1:1));
     console.log(noftickets);
@@ -126,6 +197,7 @@ export default function EventPage(props) {
           setErrorMessage(res.data.message);
           console.log(errorMessage);
         } else {
+          setisBooked(true)
           setErrorSeverity("success");
           setErrorFound(true);
           setErrorMessage("Successfully booked! :]");
@@ -148,7 +220,7 @@ export default function EventPage(props) {
 
   return (
     <div style={styles}>
-      <div className={styles.fullpage}>
+      {!loading && <div className={styles.fullpage}>
         <Card className={styles.container}>
           <div className={styles.imagediv}>
             <CardMedia
@@ -161,20 +233,27 @@ export default function EventPage(props) {
             <CardContent>
               <div className={styles.eventtitle}>
                 <h3>{event.EventName}</h3>
-                <div>
+                <div classname>
                   <CardActions disableSpacing>
                     <IconButton
                       aria-label="add to favorites"
                       sx={{ color: red[500] }}
                       onClick={handleFav}
                     >
-                      {fav && <FavoriteIcon sx={{ color: "red" }} />}
-                      {!fav && <FavoriteIcon />}
+                    <FavoriteIcon sx={eventBookmarked === true ? { color: "red" } : { color: "grey" } } />
                     </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon onClick={invokeShare} />
                       {/* {modelOpen && <ModalPop/>} */}
                     </IconButton>
+                    <ReactStars
+                      count={5}
+                      value={event.Rating}
+                      onChange={ratingChanged}
+                      size={24}
+                      edit={isBooked === true ? true: false}
+                      activeColor="#ffd700"
+                    />
                   </CardActions>
                   <ModalPop eventid = {id}  invokefunc={invokeShare} open={modelOpen} />
                 </div>
@@ -234,13 +313,13 @@ export default function EventPage(props) {
               </div>
             </div>
             <div className={styles.eventregister}>
-              <button type="button" onClick={handleRegistration}>
-                Book Ticket
+              <button type="button" disabled={isBooked === true ? true: false} onClick={handleRegistration}>
+                {isBooked === true ? "Event Booked": "Book Event"}
               </button>
             </div>
           </div>
         </Card>
-      </div>
+      </div>}
     </div>
   );
 }
